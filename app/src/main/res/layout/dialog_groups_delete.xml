@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16sp"
+    android:background="@color/bg_1"
+    android:focusableInTouchMode="true"
+    style="@style/VerticalListDivided">
+
+    <TextView
+        android:text="@string/h2_delete_group"
+        style="@style/H2_center" />
+
+    <TextView
+        android:text="@string/disclaimer_delete_group"
+        android:gravity="center"
+        style="@style/Disclaimer" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RadioGroup
+            android:id="@+id/groups"
+            style="@style/RadioGroup" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/yes_button"
+        android:text="@string/btn_delete_group"
+        style="@style/BTN_danger" />
+
+    <Button
+        android:id="@+id/no_button"
+        android:text="@string/btn_cancel"
+        style="@style/BTN1" />
+</LinearLayout>

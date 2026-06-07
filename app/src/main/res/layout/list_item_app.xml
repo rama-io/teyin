@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/app_row"
+    android:descendantFocusability="blocksDescendants"
+    style="@style/HorizontalList">
+
+    <ImageView
+        android:id="@+id/selection_check"
+        android:layout_width="24sp"
+        android:layout_height="24sp"
+        android:src="@drawable/icon_octagon_check_solid"
+        android:visibility="gone"
+        android:paddingEnd="8sp"
+        android:contentDescription="@string/altdescr_selection_check" />
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
+        android:focusable="false"
+        android:paddingEnd="8sp" />
+
+    <TextView
+        android:id="@+id/open_app_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="12sp"
+        android:paddingBottom="12sp"
+        android:focusable="false"
+        android:clickable="false"
+        android:textSize="32sp"
+        android:textColor="@color/foreground" />
+
+    <FrameLayout
+        android:id="@+id/empty_space"
+        android:layout_width="0dp"
+        android:background="@android:color/transparent"
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:clickable="false"
+        android:layout_weight="1" />
+</LinearLayout>
