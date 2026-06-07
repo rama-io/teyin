@@ -32,6 +32,8 @@
                 android:id="@+id/current_folder_name"
                 android:text="Current Folder Name"
                 android:textColor="@color/h1"
+                android:maxLines="1"
+                android:ellipsize="end"
                 style="@style/H2" />
         </LinearLayout>
 
