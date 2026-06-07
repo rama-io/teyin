@@ -8,8 +8,35 @@
 
     <LinearLayout style="@style/HorizontalListDivided">
 
+        <LinearLayout
+            android:id="@+id/current_dir"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/HorizontalListDivided">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_folder_solid"
+                    android:tint="@color/h1"
+                    android:contentDescription="Folder indicator"
+                    style="@style/Icon24" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/current_folder_name"
+                android:text="Current Folder Name"
+                android:textColor="@color/h1"
+                style="@style/H2" />
+        </LinearLayout>
+
         <FrameLayout
-            android:id="@+id/search_icon"
+            android:id="@+id/search_btn_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12sp">
@@ -21,28 +48,36 @@
                 style="@style/Icon24" />
         </FrameLayout>
 
-        <EditText
-            android:id="@+id/search_field"
+        <LinearLayout
+            android:id="@+id/search_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/bg_2"
-            android:textColorHint="@color/disabled"
             android:visibility="gone"
-            style="@style/EditText" />
+            style="@style/HorizontalListDivided">
 
-        <FrameLayout
-            android:id="@+id/clear_field"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp"
-            android:visibility="gone">
+            <EditText
+                android:id="@+id/search_field"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/bg_2"
+                android:textColorHint="@color/disabled"
+                style="@style/EditText" />
 
-            <ImageView
-                android:src="@drawable/icon_close"
-                android:contentDescription="@string/altdescr_clear_search"
-                style="@style/Icon24" />
-        </FrameLayout>
+            <FrameLayout
+                android:id="@+id/clear_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:src="@drawable/icon_close"
+                    android:contentDescription="@string/altdescr_clear_search"
+                    style="@style/Icon24" />
+            </FrameLayout>
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/settings_btn"

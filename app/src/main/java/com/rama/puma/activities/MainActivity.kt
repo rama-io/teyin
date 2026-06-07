@@ -15,6 +15,7 @@ import android.widget.ListView
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.rama.puma.CsActivity
 import com.rama.puma.R
 import com.rama.puma.managers.PrefsManager
@@ -22,10 +23,13 @@ import com.rama.puma.managers.PrefsManager
 class MainActivity : CsActivity() {
     private lateinit var listView: ListView
     private lateinit var rootView: View
+    private lateinit var searchBar: LinearLayout
     private lateinit var searchField: EditText
-    private lateinit var searchIcon: FrameLayout
+    private lateinit var searchButton: FrameLayout
     private lateinit var clearBtn: FrameLayout
     private lateinit var settingsBtn: FrameLayout
+    private lateinit var currentDir: LinearLayout
+    private lateinit var currentFolderName: TextView
     private var isSearchExpanded = false
     private var isProgrammaticSearchUpdate = false
     private val searchDebounceHandler = Handler(Looper.getMainLooper())
@@ -56,24 +60,27 @@ class MainActivity : CsActivity() {
         rootView.isFocusableInTouchMode = false
         rootView.requestFocus()
         listView = findViewById(R.id.file_list)
-        settingsBtn = findViewById<FrameLayout>(R.id.settings_btn)
+        searchBar = findViewById(R.id.search_bar)
+        settingsBtn = findViewById(R.id.settings_btn)
         settingsBtn.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
             true
         }
+        currentDir = findViewById(R.id.current_dir)
+        currentFolderName = findViewById(R.id.current_folder_name)
 
         initSearchbar()
     }
 
     private fun initSearchbar() {
         searchField = findViewById(R.id.search_field)
-        searchIcon = findViewById(R.id.search_icon)
+        searchButton = findViewById(R.id.search_btn_toggle)
         clearBtn = findViewById(R.id.clear_field)
 
-        searchField.visibility = View.GONE
+        searchBar.visibility = View.GONE
         clearBtn.visibility = View.GONE
 
-        searchIcon.setOnClickListener {
+        searchButton.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
 
             if (isSearchExpanded) {
@@ -114,7 +121,8 @@ class MainActivity : CsActivity() {
     }
 
     private fun expandSearch() {
-        searchField.visibility = View.VISIBLE
+        searchBar.visibility = View.VISIBLE
+        currentDir.visibility = View.GONE
         searchField.requestFocus()
 
         val scaleX = ObjectAnimator.ofFloat(searchField, "scaleX", 0.8f, 1f)
@@ -131,11 +139,15 @@ class MainActivity : CsActivity() {
         val imm =
             getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
         imm.showSoftInput(searchField, 0)
+
+        isSearchExpanded = true
     }
 
     private fun collapseSearch(clearQuery: Boolean = true, hideKeyboard: Boolean = true) {
-        searchField.visibility = View.GONE
+        searchBar.visibility = View.GONE
         clearBtn.visibility = View.GONE
+        currentDir.visibility = View.VISIBLE
+
         searchField.clearFocus()
 
         if (clearQuery) {
@@ -151,13 +163,14 @@ class MainActivity : CsActivity() {
                 getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
             imm.hideSoftInputFromWindow(searchField.windowToken, 0)
         }
+        isSearchExpanded = false
     }
 
     override fun onResume() {
         super.onResume()
         syncSettings()
         schedulePostResumeRefresh()
-        expandSearch()
+        collapseSearch()
     }
 
     override fun onPause() {

@@ -12,12 +12,6 @@
         android:paddingEnd="8sp"
         android:contentDescription="@string/altdescr_selection_check" />
 
-    <ImageView
-        android:id="@+id/app_icon"
-        android:layout_width="32sp"
-        android:layout_height="32sp"
-        android:focusable="false"
-        android:paddingEnd="8sp" />
 
     <TextView
         android:id="@+id/open_app_button"
