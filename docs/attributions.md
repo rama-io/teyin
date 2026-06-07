@@ -17,15 +17,6 @@ minimum by emphasizing clarity and intentional interaction.
 ## Contributors
 
 - [Pombo](https://github.com/pomboverso)
-- [isotjs](https://github.com/isotjs)
-    - Search UX improvements
-    - Fixed back navigation behavior (prevented unintended app close by properly handling navigation
-      stack)
-    - Added temperature unit support (Celsius, Fahrenheit, and system default)
-    - Custom app icon support improvements
-    - Wallpaper functionality
-- [etwasmitbaum](https://github.com/etwasmitbaum)
-    - Search bar always on display
 
 ---
 
