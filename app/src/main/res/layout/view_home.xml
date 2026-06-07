@@ -101,10 +101,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:fillViewport="true"
-        android:dividerHeight="0dp"
-        android:divider="@null"
         android:focusableInTouchMode="false"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        style="@style/VerticalListDivided" />
 
     <LinearLayout
         android:id="@+id/menu_bar"

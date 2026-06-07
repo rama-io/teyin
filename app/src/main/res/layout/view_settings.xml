@@ -68,7 +68,7 @@
 
                     <RadioButton
                         android:id="@+id/theme_puma"
-                        android:text="@string/app_name"
+                        android:text="@string/radio_theme_mako"
                         style="@style/Radio" />
 
                     <RadioButton

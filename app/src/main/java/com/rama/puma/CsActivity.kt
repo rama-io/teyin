@@ -61,28 +61,32 @@ abstract class CsActivity : android.app.Activity() {
         }
     }
 
+    /**
+     * Override to return false if this activity should not be recreated when the theme,
+     * language, or UI scale changes. Subclasses that manage their own re-application
+     * in-place (e.g. MainActivity, singleTask+HOME) should return false.
+     */
+    protected open fun shouldRecreateOnSettingsChange(): Boolean = true
+
     override fun onResume() {
         super.onResume()
 
         val currentLanguage = prefs.getAppLanguage()
         if (currentLanguage != lastKnownAppLanguage) {
             lastKnownAppLanguage = currentLanguage
-            recreate()
-            return
+            if (shouldRecreateOnSettingsChange()) { recreate(); return }
         }
 
         val currentTheme = prefs.getTheme()
         if (currentTheme != lastKnownTheme) {
             lastKnownTheme = currentTheme
-            recreate()
-            return
+            if (shouldRecreateOnSettingsChange()) { recreate(); return }
         }
 
         val currentUiScale = prefs.getUiScale()
         if (currentUiScale != lastKnownUiScale) {
             lastKnownUiScale = currentUiScale
-            recreate()
-            return
+            if (shouldRecreateOnSettingsChange()) { recreate(); return }
         }
 
         applyRotationLock(prefs.getBoolean(PrefsManager.PrefKeys.SYSTEM_PREVENT_ROTATION, false))

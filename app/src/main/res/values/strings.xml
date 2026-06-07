@@ -93,6 +93,7 @@
     <string name="radio_font_custom">Custom font</string>
     <string name="radio_background_wallpaper">Show Wallpaper on Home Screen</string>
     <string name="radio_theme_rama">Rama</string>
+    <string name="radio_theme_mako">Mako</string>
     <string name="radio_theme_custom">Custom</string>
 
     <!-- Checkbox -->

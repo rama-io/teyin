@@ -1,6 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/app_row"
+    android:id="@+id/file_row"
     android:descendantFocusability="blocksDescendants"
+    android:background="@color/bg_2"
+    android:padding="8sp"
     style="@style/HorizontalList">
 
     <ImageView
@@ -12,24 +15,43 @@
         android:paddingEnd="8sp"
         android:contentDescription="@string/altdescr_selection_check" />
 
-
-    <TextView
-        android:id="@+id/open_app_button"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="12sp"
-        android:paddingBottom="12sp"
-        android:focusable="false"
-        android:clickable="false"
-        android:textSize="32sp"
-        android:textColor="@color/foreground" />
+        android:padding="12sp">
 
-    <FrameLayout
-        android:id="@+id/empty_space"
+        <ImageView
+            android:id="@+id/file_icon"
+            android:src="@drawable/icon_disk"
+            android:contentDescription="File"
+            style="@style/Icon24" />
+    </FrameLayout>
+
+    <LinearLayout
         android:layout_width="0dp"
-        android:background="@android:color/transparent"
-        android:layout_height="match_parent"
-        android:focusable="false"
-        android:clickable="false"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp">
+
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="middle"
+            android:textColor="@color/foreground"
+            android:textSize="@dimen/text" />
+
+        <TextView
+            android:id="@+id/file_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/disabled"
+            android:textSize="@dimen/small" />
+    </LinearLayout>
+
 </LinearLayout>

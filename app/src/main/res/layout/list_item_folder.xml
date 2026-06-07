@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
-    style="@style/HorizontalListDivided">
+    android:id="@+id/folder_row"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@color/bg_2"
+    android:padding="8sp"
+    style="@style/HorizontalList">
+
+    <ImageView
+        android:id="@+id/selection_check"
+        android:layout_width="24sp"
+        android:layout_height="24sp"
+        android:src="@drawable/icon_octagon_check_solid"
+        android:visibility="gone"
+        android:paddingEnd="8sp"
+        android:contentDescription="@string/altdescr_selection_check" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -10,11 +22,17 @@
 
         <ImageView
             android:src="@drawable/icon_folder_solid"
-            android:contentDescription="Folder Indicator"
+            android:contentDescription="Folder"
             style="@style/Icon24" />
     </FrameLayout>
 
     <TextView
-        android:text="Folder Name"
+        android:id="@+id/folder_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="14sp"
+        android:paddingBottom="14sp"
         style="@style/Text" />
+
 </LinearLayout>
