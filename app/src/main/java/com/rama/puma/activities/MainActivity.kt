@@ -270,19 +270,20 @@ class MainActivity : CsActivity() {
     }
 
     private fun requestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Environment.isExternalStorageManager()) initFileSystem()
-            else startActivityForResult(
-                Intent(
-                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                    Uri.parse("package:$packageName")
-                ), REQ_MANAGE_ALL_FILES
-            )
-        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
-            ) initFileSystem()
-            else requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQ_STORAGE)
+            ) {
+                initFileSystem()
+            } else {
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    REQ_STORAGE
+                )
+            }
+        } else {
+            // Permissions are granted at install time on API 21-22
+            initFileSystem()
         }
     }
 
