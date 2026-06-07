@@ -58,7 +58,7 @@ object FontManager {
         return tf
     }
 
-    /** Call this after saving a new custom font so the old cached entry is evicted. */
+    // Call this after saving a new custom font so the old cached entry is evicted.
     fun clearCustomCache() {
         cache.keys.filter { it.startsWith("custom:") }.forEach { cache.remove(it) }
     }

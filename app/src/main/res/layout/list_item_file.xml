@@ -4,18 +4,25 @@
     android:descendantFocusability="blocksDescendants"
     android:background="@color/bg_2"
     android:padding="8sp"
+    android:paddingStart="16sp"
     style="@style/HorizontalList">
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/selection_check"
-        android:layout_width="24sp"
-        android:layout_height="24sp"
-        android:src="@drawable/icon_octagon_check_solid"
         android:visibility="gone"
-        android:paddingEnd="8sp"
-        android:contentDescription="@string/altdescr_selection_check" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12sp">
+
+        <ImageView
+            android:src="@drawable/icon_octagon_check_solid"
+            android:contentDescription="@string/altdescr_selection_check"
+            android:tint="@color/accent_1"
+            style="@style/Icon24" />
+    </FrameLayout>
 
     <FrameLayout
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="12sp">

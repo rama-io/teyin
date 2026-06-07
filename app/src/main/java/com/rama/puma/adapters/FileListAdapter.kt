@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.rama.puma.R
@@ -14,12 +15,8 @@ import com.rama.puma.managers.FsEntry
 class FileListAdapter(
     private val context: Context,
 ) : BaseAdapter() {
-
-    // ── Data ───────────────────────────────────────────────────────────────
     private var entries: List<FsEntry> = emptyList()
     private var showUpRow: Boolean = false
-
-    // ── Selection state ────────────────────────────────────────────────────
     var isSelectionMode: Boolean = false
         private set
     private val selectedPaths = mutableSetOf<String>()
@@ -28,8 +25,6 @@ class FileListAdapter(
         get() = entries.filter { it.file.absolutePath in selectedPaths }
 
     val selectedCount: Int get() = selectedPaths.size
-
-    // ── Public API ─────────────────────────────────────────────────────────
 
     fun update(newEntries: List<FsEntry>, hasParent: Boolean) {
         entries = newEntries
@@ -58,8 +53,6 @@ class FileListAdapter(
         selectedPaths.clear()
         notifyDataSetChanged()
     }
-
-    // ── BaseAdapter ────────────────────────────────────────────────────────
 
     // Position 0 is the ".." row when showUpRow is true; all others are offset by 1.
     private val upOffset get() = if (showUpRow) 1 else 0
@@ -110,23 +103,23 @@ class FileListAdapter(
     }
 
     private fun bindSelectionCheck(view: View, isSelected: Boolean) {
-        val check = view.findViewById<ImageView>(R.id.selection_check)
+        val check = view.findViewById<FrameLayout>(R.id.selection_check)
         check.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
         check.alpha = if (isSelected) 1f else 0.25f
     }
 
     private fun iconForExtension(ext: String): Int = when (ext) {
         "jpg", "jpeg", "png", "gif", "webp", "bmp", "svg" -> R.drawable.icon_eye
-        "mp3", "flac", "ogg", "wav", "aac", "m4a"         -> R.drawable.icon_seedlings
-        "mp4", "mkv", "avi", "mov", "webm"                 -> R.drawable.icon_disk
-        "pdf", "doc", "docx", "xls", "xlsx", "txt", "md"  -> R.drawable.icon_edit_solid
-        "zip", "tar", "gz", "bz2", "7z", "rar"            -> R.drawable.icon_folder_enter_solid
-        else                                               -> R.drawable.icon_disk
+        "mp3", "flac", "ogg", "wav", "aac", "m4a" -> R.drawable.icon_seedlings
+        "mp4", "mkv", "avi", "mov", "webm" -> R.drawable.icon_disk
+        "pdf", "doc", "docx", "xls", "xlsx", "txt", "md" -> R.drawable.icon_edit_solid
+        "zip", "tar", "gz", "bz2", "7z", "rar" -> R.drawable.icon_folder_enter_solid
+        else -> R.drawable.icon_disk
     }
 
     companion object {
-        const val TYPE_UP     = 0
+        const val TYPE_UP = 0
         const val TYPE_FOLDER = 1
-        const val TYPE_FILE   = 2
+        const val TYPE_FILE = 2
     }
 }

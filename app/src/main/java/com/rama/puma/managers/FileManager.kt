@@ -15,7 +15,7 @@ data class FsEntry(
 
 class FileManager {
 
-    // Navigation stack — index 0 is root, last is current
+    // Navigation stack, index 0 is root, last is current
     private val stack: ArrayDeque<File> = ArrayDeque()
 
     val currentDir: File get() = stack.last()
@@ -29,21 +29,21 @@ class FileManager {
         stack.addLast(Environment.getExternalStorageDirectory())
     }
 
-    /** Navigate into a child directory. Returns false if not a directory. */
+    // Navigate into a child directory. Returns false if not a directory.
     fun enter(dir: File): Boolean {
         if (!dir.isDirectory) return false
         stack.addLast(dir)
         return true
     }
 
-    /** Go up one level. Returns false if already at root. */
+    // Go up one level. Returns false if already at root.
     fun goUp(): Boolean {
         if (isAtRoot) return false
         stack.removeLast()
         return true
     }
 
-    /** Pop back to root. */
+    // Pop back to root.
     fun goToRoot() {
         while (!isAtRoot) stack.removeLast()
     }

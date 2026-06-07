@@ -30,8 +30,6 @@ import com.rama.puma.managers.FileManager
 import com.rama.puma.managers.PrefsManager
 
 class MainActivity : CsActivity() {
-
-    // ── Views ──────────────────────────────────────────────────────────────
     private lateinit var rootView: View
     private lateinit var listView: ListView
     private lateinit var searchBar: LinearLayout
@@ -41,47 +39,37 @@ class MainActivity : CsActivity() {
     private lateinit var settingsBtn: FrameLayout
     private lateinit var currentDir: LinearLayout
     private lateinit var currentFolderName: TextView
-
-    // ── Multi-select bar ───────────────────────────────────────────────────
     private lateinit var menuBar: LinearLayout
     private lateinit var selectedCount: TextView
     private lateinit var cancelSelectionBtn: FrameLayout
     private lateinit var renameBtn: FrameLayout
     private lateinit var moveToGroupBtn: FrameLayout
     private lateinit var appSettingsBtn: FrameLayout
-
-    // ── File manager ───────────────────────────────────────────────────────
     private val fileManager = FileManager()
     private lateinit var adapter: FileListAdapter
-
-    // ── Search ─────────────────────────────────────────────────────────────
     private var isSearchExpanded = false
     private var isProgrammaticSearchUpdate = false
     private val searchDebounceHandler = Handler(Looper.getMainLooper())
     private var searchDebounceRunnable: Runnable? = null
     private var currentSearchQuery: String = ""
-
-    // ── Misc ───────────────────────────────────────────────────────────────
     private var resumeRefreshRunnable: Runnable? = null
-
-    // ══════════════════════════════════════════════════════════════════════
-    // Lifecycle
-    // ══════════════════════════════════════════════════════════════════════
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_BACK -> {
                 when {
                     adapter.isSelectionMode -> exitSelectionMode()
-                    isSearchExpanded       -> collapseSearch()
-                    !fileManager.isAtRoot  -> navigateUp()
+                    isSearchExpanded -> collapseSearch()
+                    !fileManager.isAtRoot -> navigateUp()
                 }
                 true
             }
+
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_F10 -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
+
             else -> super.onKeyDown(keyCode, event)
         }
     }
@@ -97,18 +85,18 @@ class MainActivity : CsActivity() {
         rootView.isFocusableInTouchMode = false
         rootView.requestFocus()
 
-        listView          = findViewById(R.id.file_list)
-        searchBar         = findViewById(R.id.search_bar)
-        settingsBtn       = findViewById(R.id.settings_btn)
-        currentDir        = findViewById(R.id.current_dir)
+        listView = findViewById(R.id.file_list)
+        searchBar = findViewById(R.id.search_bar)
+        settingsBtn = findViewById(R.id.settings_btn)
+        currentDir = findViewById(R.id.current_dir)
         currentFolderName = findViewById(R.id.current_folder_name)
 
-        menuBar            = findViewById(R.id.menu_bar)
-        selectedCount      = findViewById(R.id.selected_count)
+        menuBar = findViewById(R.id.menu_bar)
+        selectedCount = findViewById(R.id.selected_count)
         cancelSelectionBtn = findViewById(R.id.multi_select_cancel_button)
-        renameBtn          = findViewById(R.id.rename_btn)
-        moveToGroupBtn     = findViewById(R.id.move_to_group_button)
-        appSettingsBtn     = findViewById(R.id.app_settings)
+        renameBtn = findViewById(R.id.rename_btn)
+        moveToGroupBtn = findViewById(R.id.move_to_group_button)
+        appSettingsBtn = findViewById(R.id.app_settings)
 
         settingsBtn.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
@@ -118,10 +106,12 @@ class MainActivity : CsActivity() {
 
         // Placeholder actions — wire to real logic when ready
         renameBtn.setOnClickListener {
-            Toast.makeText(this, "${adapter.selectedCount} item(s) selected", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "${adapter.selectedCount} item(s) selected", Toast.LENGTH_SHORT)
+                .show()
         }
         moveToGroupBtn.setOnClickListener {
-            Toast.makeText(this, "Move: ${adapter.selectedCount} item(s)", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Move: ${adapter.selectedCount} item(s)", Toast.LENGTH_SHORT)
+                .show()
         }
         appSettingsBtn.setOnClickListener {
             Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
@@ -174,20 +164,15 @@ class MainActivity : CsActivity() {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // File list
-    // ══════════════════════════════════════════════════════════════════════
-
     private fun initFileList() {
         adapter = FileListAdapter(this)
         listView.adapter = adapter
 
         listView.setOnItemClickListener { _, _, position, _ ->
             when {
-                // ".." row — always navigates up regardless of selection mode
                 adapter.isUpRow(position) -> navigateUp()
 
-                // In selection mode — tap toggles selection
+                // In selection mode tap toggles selection
                 adapter.isSelectionMode -> {
                     adapter.toggleSelection(adapter.getEntry(position))
                     updateSelectionBar()
@@ -214,7 +199,7 @@ class MainActivity : CsActivity() {
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
             if (adapter.isSelectionMode) {
-                // Already in selection mode — toggle this item
+                // Already in selection mode, toggle this item
                 adapter.toggleSelection(entry)
                 updateSelectionBar()
             } else {
@@ -249,8 +234,6 @@ class MainActivity : CsActivity() {
         refreshList()
     }
 
-    // ── Selection bar ──────────────────────────────────────────────────────
-
     private fun showSelectionBar() {
         menuBar.visibility = View.VISIBLE
         updateSelectionBar()
@@ -270,8 +253,6 @@ class MainActivity : CsActivity() {
         menuBar.visibility = View.GONE
     }
 
-    // ── Open file ──────────────────────────────────────────────────────────
-
     private fun openFile(file: java.io.File) {
         val uri: Uri = androidx.core.content.FileProvider.getUriForFile(
             this, "${packageName}.fileprovider", file
@@ -287,10 +268,6 @@ class MainActivity : CsActivity() {
             Toast.makeText(this, "No app can open this file", Toast.LENGTH_SHORT).show()
         }
     }
-
-    // ══════════════════════════════════════════════════════════════════════
-    // Permissions
-    // ══════════════════════════════════════════════════════════════════════
 
     private fun requestStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -313,17 +290,13 @@ class MainActivity : CsActivity() {
         Toast.makeText(this, "Storage permission required", Toast.LENGTH_LONG).show()
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // Search
-    // ══════════════════════════════════════════════════════════════════════
-
     private fun initSearchbar() {
-        searchField  = findViewById(R.id.search_field)
+        searchField = findViewById(R.id.search_field)
         searchButton = findViewById(R.id.search_btn_toggle)
-        clearBtn     = findViewById(R.id.clear_field)
+        clearBtn = findViewById(R.id.clear_field)
 
         searchBar.visibility = View.GONE
-        clearBtn.visibility  = View.GONE
+        clearBtn.visibility = View.GONE
 
         searchButton.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -343,6 +316,7 @@ class MainActivity : CsActivity() {
                 searchDebounceHandler.postDelayed(searchDebounceRunnable!!, 250)
                 clearBtn.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
             }
+
             override fun afterTextChanged(s: android.text.Editable?) {}
         })
 
@@ -358,7 +332,7 @@ class MainActivity : CsActivity() {
     }
 
     private fun expandSearch() {
-        searchBar.visibility  = View.VISIBLE
+        searchBar.visibility = View.VISIBLE
         currentDir.visibility = View.GONE
         searchField.requestFocus()
 
@@ -366,7 +340,7 @@ class MainActivity : CsActivity() {
             playTogether(
                 ObjectAnimator.ofFloat(searchField, "scaleX", 0.8f, 1f),
                 ObjectAnimator.ofFloat(searchField, "scaleY", 0.8f, 1f),
-                ObjectAnimator.ofFloat(searchField, "alpha",  0f,   1f),
+                ObjectAnimator.ofFloat(searchField, "alpha", 0f, 1f),
             )
             duration = 300
             interpolator = OvershootInterpolator(1.5f)
@@ -378,8 +352,8 @@ class MainActivity : CsActivity() {
     }
 
     private fun collapseSearch(clearQuery: Boolean = true, hideKeyboard: Boolean = true) {
-        searchBar.visibility  = View.GONE
-        clearBtn.visibility   = View.GONE
+        searchBar.visibility = View.GONE
+        clearBtn.visibility = View.GONE
         currentDir.visibility = View.VISIBLE
         searchField.clearFocus()
 
@@ -398,10 +372,6 @@ class MainActivity : CsActivity() {
         isSearchExpanded = false
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // Helpers
-    // ══════════════════════════════════════════════════════════════════════
-
     private fun schedulePostResumeRefresh() {
         clearPendingResumeRefresh()
         resumeRefreshRunnable = Runnable {
@@ -417,7 +387,7 @@ class MainActivity : CsActivity() {
     }
 
     companion object {
-        private const val REQ_STORAGE           = 1001
-        private const val REQ_MANAGE_ALL_FILES  = 1002
+        private const val REQ_STORAGE = 1001
+        private const val REQ_MANAGE_ALL_FILES = 1002
     }
 }
