@@ -1,12 +1,12 @@
 # Branding
 
-This document defines the official visual assets and usage guidelines for Mako.
+This document defines the official visual assets and usage guidelines for Puma.
 
 ---
 
 ## Header
 
-![Mako Header](./img/mako_header_1280x630.svg)
+![Puma Header](./img/puma_header_1280x630.svg)
 
 Standard header image for social previews and repository sharing.
 
@@ -14,13 +14,13 @@ Standard header image for social previews and repository sharing.
 
 ## Header (TV)
 
-![Mako Header TV](./img/mako_tvBanner_1280x720.svg)
+![Puma Header TV](./img/puma_tvBanner_1280x720.svg)
 
 Optimized for TV and wide-screen displays.
 
 ## Feature Graphic
 
-![Mako Header TV](./img/mako_featureGraphic_1024x500.svg)
+![Puma Header TV](./img/puma_featureGraphic_1024x500.svg)
 
 Feature graphic on f-droid.
 
@@ -30,7 +30,7 @@ Feature graphic on f-droid.
 
 ### Foreground (Fill)
 
-![Mako Icon Fill](./img/mako_icon_fill.svg)
+![Puma Icon Fill](./img/puma_icon_fill.svg)
 
 Primary icon version using solid fill.
 
@@ -38,7 +38,7 @@ Primary icon version using solid fill.
 
 ### Foreground (Negative)
 
-![Mako Icon Negative](./img/mako_icon_negative.svg)
+![Puma Icon Negative](./img/puma_icon_negative.svg)
 
 The negative variant can be used with any background color.  
 For demonstration purposes, green is used to showcase visibility in both light and dark markdown
@@ -48,7 +48,7 @@ previews.
 
 ### Icon Outline
 
-![Mako Icon Negative Outline](./img/mako_icon_outline.svg)
+![Puma Icon Negative Outline](./img/puma_icon_outline.svg)
 
 Outline variant for minimal or subtle UI contexts.
 

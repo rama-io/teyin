@@ -8,28 +8,15 @@ plugins {
 val currentYear = LocalDate.now().year
 
 android {
-    namespace = "com.rama.mako"
+    namespace = "com.rama.puma"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.rama.mako"
+        applicationId = "com.rama.puma"
         minSdk = 21
         targetSdk = 36
-        versionCode = 42
+        versionCode = 1
         versionName = "$currentYear.$versionCode"
-    }
-
-    flavorDimensions += "version"
-
-    productFlavors {
-        create("base") {
-            dimension = "version"
-        }
-        create("ext") {
-            dimension = "version"
-            applicationIdSuffix = ".ext"
-            versionNameSuffix = "-ext"
-        }
     }
 
     buildTypes {
@@ -57,7 +44,7 @@ android {
     applicationVariants.all {
         outputs.all {
             this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            outputFileName = "mako_${versionName}.apk"
+            outputFileName = "puma_${versionName}.apk"
         }
     }
 
@@ -83,6 +70,4 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation("androidx.activity:activity-ktx:1.9.3")
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

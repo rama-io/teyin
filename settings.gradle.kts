@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Mako"
+rootProject.name = "Puma"
 include(":app")
  

@@ -1,12 +1,12 @@
-![Preview](./docs/img/mako_header_1200x630.svg)
-![Badge](https://rama-io.github.io/img/badge_mako.svg)
+![Preview](./docs/img/puma_header_1200x630.svg)
+![Badge](https://rama-io.github.io/img/badge_puma.svg)
 
-# Mako
+# Puma
 
-**Mako** is a **minimal, privacy-first Android launcher** designed for focus, speed, and
+**Puma** is a **minimal, privacy-first Android launcher** designed for focus, speed, and
 simplicity.
 
-Built entirely in **native Kotlin**, Mako runs fully **on-device**, avoids tracking, and keeps
+Built entirely in **native Kotlin**, Puma runs fully **on-device**, avoids tracking, and keeps
 distractions to a minimum by emphasizing clarity and intentional interaction.
 
 ---
@@ -29,7 +29,7 @@ distractions to a minimum by emphasizing clarity and intentional interaction.
 
 ## Permissions
 
-Mako requires **only essential permissions**:
+Puma requires **only essential permissions**:
 
 - **Set as Home App** – to function as a launcher
 - **Query Installed Apps** – to list and launch applications
@@ -51,7 +51,7 @@ No network access is required.
 ## Usage
 
 - Long-press in an empty area of the **App List** to open **Settings**.
-- Watch the **[Mako Demo / Walkthrough](https://www.youtube.com/watch?v=cfble2DRqyM)** for a quick
+- Watch the **[Puma Demo / Walkthrough](https://www.youtube.com/watch?v=cfble2DRqyM)** for a quick
   overview.
 - Join the **[Discord Community](https://discord.gg/zFFupY8PFE)** for support and updates.
 
@@ -59,8 +59,8 @@ No network access is required.
 
 ## Installation
 
-- Available on **[F-Droid](https://f-droid.org/app/com.rama.mako)** for easy installation and updates.
-- Download the latest APK from the **[Releases page](https://github.com/rama-io/mako/releases)** or use **[Obtanium](https://github.com/ImranR98/Obtainium)** to get the newest version directly
+- Available on **[F-Droid](https://f-droid.org/app/com.rama.puma)** for easy installation and updates.
+- Download the latest APK from the **[Releases page](https://github.com/rama-io/puma/releases)** or use **[Obtanium](https://github.com/ImranR98/Obtainium)** to get the newest version directly
   from the github releases.
 
 ## Signing certificate hash
@@ -75,7 +75,7 @@ No network access is required.
 
 ## License
 
-**Mako** is Free Software. You are free to use, study, share, and improve it under the terms of the
+**Puma** is Free Software. You are free to use, study, share, and improve it under the terms of the
 **GNU General Public License v3** or later.
 
 ---

@@ -14,7 +14,7 @@
 ## 42
 
 - Add click on icon open app settings checkbox
-- Add different ways to add admin access to mako to be able to turn off screen
+- Add different ways to add admin access to puma to be able to turn off screen
 
 ## 41
 
