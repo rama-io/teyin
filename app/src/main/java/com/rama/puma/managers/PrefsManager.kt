@@ -51,16 +51,9 @@ class PrefsManager private constructor(context: Context) {
         const val SETTINGS_SECTION_FONTS = "settings:section:fonts"
         const val SETTINGS_SECTION_SYSTEM = "settings:section:system"
         const val SETTINGS_SECTION_LANGUAGE = "settings:section:language"
-        const val SETTINGS_SECTION_DATA = "settings:section:data"
-        const val SETTINGS_SECTION_APPS = "settings:section:apps"
         const val SETTINGS_SECTION_THEMES = "settings:section:themes"
 
         const val APP_UI_SCALE = "app:ui_scale"
-
-        fun appKey(pkg: String, userHandle: UserHandle): String {
-            val userId = userHandle.hashCode()
-            return if (userId == 0) "app:$pkg" else "app:$pkg:profile_$userId"
-        }
     }
 
     object FontStyle {
@@ -86,9 +79,9 @@ class PrefsManager private constructor(context: Context) {
     }
 
     fun initPrefs() {
-        val hasPrefs = prefs.getStringSet(PrefKeys.APP_LANGUAGE, null)
+        val hasPrefs = prefs.contains(PrefKeys.APP_LANGUAGE)
 
-        if (hasPrefs.isNullOrEmpty()) {
+        if (hasPrefs) {
             prefs.edit()
                 .putString(PrefKeys.FONT_STYLE, FontStyle.JERSEY_25)
                 .putString(PrefKeys.APP_LANGUAGE, Language.SYSTEM)
@@ -100,8 +93,6 @@ class PrefsManager private constructor(context: Context) {
                 .putBoolean(PrefKeys.SETTINGS_SECTION_FONTS, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_SYSTEM, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_LANGUAGE, true)
-                .putBoolean(PrefKeys.SETTINGS_SECTION_DATA, true)
-                .putBoolean(PrefKeys.SETTINGS_SECTION_APPS, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_THEMES, true)
 
                 .apply()
@@ -163,7 +154,7 @@ class PrefsManager private constructor(context: Context) {
 
     fun setString(key: String, value: String) =
         prefs.edit().putString(key, value).apply()
-    
+
     // Core builder
 
     private fun buildExportJson(): JSONObject {

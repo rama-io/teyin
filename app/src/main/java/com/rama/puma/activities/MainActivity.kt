@@ -25,6 +25,7 @@ class MainActivity : CsActivity() {
     private lateinit var searchField: EditText
     private lateinit var searchIcon: FrameLayout
     private lateinit var clearBtn: FrameLayout
+    private lateinit var settingsBtn: FrameLayout
     private var isSearchExpanded = false
     private var isProgrammaticSearchUpdate = false
     private val searchDebounceHandler = Handler(Looper.getMainLooper())
@@ -54,10 +55,9 @@ class MainActivity : CsActivity() {
         applyCurrentTheme(rootView)
         rootView.isFocusableInTouchMode = false
         rootView.requestFocus()
-        listView = findViewById(R.id.app_list)
-
-        val appLayout = findViewById<LinearLayout>(R.id.apps_layout)
-        appLayout.setOnLongClickListener {
+        listView = findViewById(R.id.file_list)
+        settingsBtn = findViewById<FrameLayout>(R.id.settings_btn)
+        settingsBtn.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
             true
         }

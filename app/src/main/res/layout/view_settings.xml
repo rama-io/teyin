@@ -30,76 +30,10 @@
                 app:header="@string/h3_system"
                 app:defaultExpanded="true">
 
-                <Button
-                    android:id="@+id/activate_button"
-                    android:text="@string/btn_set_default"
-                    style="@style/BTN2" />
-
-                <Button
-                    android:id="@+id/reset_button"
-                    android:text="@string/btn_refresh_launcher"
-                    style="@style/BTN2" />
-
-                <Button
-                    android:id="@+id/change_apps_button"
-                    android:text="@string/btn_edit_apps"
-                    style="@style/BTN2" />
-
                 <com.rama.puma.widgets.WdCheckbox
                     android:id="@+id/show_system_bar"
                     android:text="@string/checkbox_show_system_bar"
                     style="@style/Checkbox" />
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/double_tap_sleep"
-                    android:text="@string/double_tap_sleep_label"
-                    style="@style/Checkbox" />
-
-                <LinearLayout
-                    android:id="@+id/double_tap_lock_method_container"
-                    android:visibility="gone"
-                    style="@style/VerticalListDivided_BG2">
-
-                    <TextView
-                        android:text="@string/double_tap_lock_method_label"
-                        style="@style/Text" />
-
-                    <LinearLayout
-                        android:id="@+id/double_tap_lock_method_group"
-                        style="@style/VerticalListDivided">
-
-                        <LinearLayout style="@style/HorizontalListDivided">
-
-                            <RadioButton
-                                android:id="@+id/lock_method_device_admin"
-                                android:text="@string/double_tap_lock_method_device_admin"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                style="@style/Radio" />
-
-                            <ImageButton
-                                android:id="@+id/lock_method_admin_info"
-                                style="@style/InfoButton" />
-
-                        </LinearLayout>
-
-                        <LinearLayout style="@style/HorizontalListDivided">
-
-                            <RadioButton
-                                android:id="@+id/lock_method_accessibility"
-                                android:text="@string/double_tap_lock_method_accessibility"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                style="@style/Radio" />
-
-                            <ImageButton
-                                android:id="@+id/lock_method_accessibility_info"
-                                style="@style/InfoButton" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
 
                 <com.rama.puma.widgets.WdCheckbox
                     android:id="@+id/prevent_home_screen_rotation"
@@ -118,38 +52,6 @@
                         style="@style/BlockFlow" />
 
                 </LinearLayout>
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Groups-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_GROUPS"
-                app:header="@string/h3_groups"
-                app:defaultExpanded="true">
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_group_header"
-                    android:text="@string/checkbox_show_group_header"
-                    style="@style/Checkbox" />
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/has_collapsible_groups"
-                    android:text="@string/checkbox_has_collapsible_groups"
-                    style="@style/Checkbox" />
-
-                <View style="@style/Separator" />
-
-                <LinearLayout
-                    android:id="@+id/groups"
-                    android:focusableInTouchMode="true"
-                    android:orientation="vertical"
-                    style="@style/VerticalListDivided_BG2" />
-
-                <Button
-                    android:id="@+id/add_group"
-                    android:text="@string/btn_add_group"
-                    style="@style/BTN2" />
-
             </com.rama.puma.widgets.WdCollapsibleSection>
 
             <!--Themes-->
@@ -286,95 +188,6 @@
                 </LinearLayout>
             </com.rama.puma.widgets.WdCollapsibleSection>
 
-            <!--Background-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_BACKGROUND"
-                app:header="@string/h3_background"
-                app:defaultExpanded="true">
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/home_background_wallpaper"
-                    android:text="@string/radio_background_wallpaper"
-                    style="@style/Checkbox" />
-
-                <LinearLayout
-                    android:id="@+id/screen_opacity_container"
-                    style="@style/VerticalListDivided_BG2">
-
-                    <TextView
-                        android:text="@string/label_screen_opacity_strength"
-                        style="@style/Text" />
-
-                    <com.rama.puma.widgets.WdRange
-                        android:id="@+id/screen_opacity"
-                        app:valuesArray="@array/wallpaper_screen_opacity_strength"
-                        style="@style/BlockFlow" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/wallpaper_button"
-                    android:text="@string/btn_change_wallpaper"
-                    style="@style/BTN2" />
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Icons-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_ICONS"
-                app:header="@string/h3_icons"
-                app:defaultExpanded="true">
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/icons_open_settings"
-                    android:text="@string/checkbox_click_on_icons_open_app_settings"
-                    style="@style/Checkbox" />
-
-                <RadioGroup
-                    android:id="@+id/icon_source_group"
-                    style="@style/RadioGroup">
-
-                    <RadioButton
-                        android:id="@+id/icon_source_none"
-                        android:text="@string/radio_none"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/icon_source_system"
-                        android:text="@string/radio_default"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/icon_source_monochrome"
-                        android:text="@string/radio_icons_monochrome"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/icon_source_icon_pack"
-                        android:text="@string/radio_custom_icon_pack"
-                        style="@style/Radio" />
-                </RadioGroup>
-
-                <LinearLayout
-                    android:id="@+id/icon_pack_controls"
-                    style="@style/VerticalListDivided_BG2">
-
-                    <TextView
-                        android:id="@+id/selected_icon_pack_label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="16sp"
-                        android:text="@string/filepicker_icon_pack_not_selected"
-                        android:textColor="@color/foreground"
-                        android:textSize="16sp" />
-
-                    <Button
-                        android:id="@+id/select_icon_pack_button"
-                        android:text="@string/btn_select_icon_pack"
-                        style="@style/BTN2" />
-                </LinearLayout>
-            </com.rama.puma.widgets.WdCollapsibleSection>
             <!--Fonts-->
             <com.rama.puma.widgets.WdCollapsibleSection
                 android:layout_width="match_parent"
@@ -425,152 +238,7 @@
                 </LinearLayout>
 
             </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Clock-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_CLOCK"
-                app:header="@string/h3_clock"
-                app:defaultExpanded="true">
 
-                <RadioGroup
-                    android:id="@+id/clock_format_group"
-                    style="@style/RadioGroup">
-
-                    <RadioButton
-                        android:id="@+id/clock_none"
-                        android:text="@string/radio_clock_none"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/clock_system"
-                        android:text="@string/radio_default_system"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/clock_24"
-                        android:text="@string/radio_clock_24"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/clock_12"
-                        android:text="@string/radio_clock_12"
-                        style="@style/Radio" />
-                </RadioGroup>
-
-                <Button
-                    android:id="@+id/set_clock_app_button"
-                    android:text="@string/btn_set_clock_app"
-                    style="@style/BTN2" />
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Date-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_DATE"
-                app:header="@string/h3_date"
-                app:defaultExpanded="true">
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_date"
-                    android:text="@string/checkbox_show_date"
-                    style="@style/Checkbox" />
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_year_day"
-                    android:text="@string/checkbox_show_year_day"
-                    style="@style/Checkbox" />
-
-                <Button
-                    android:id="@+id/set_date_app_button"
-                    android:text="@string/btn_set_date_app"
-                    style="@style/BTN2" />
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Battery-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_BATTERY"
-                app:header="@string/h3_battery"
-                app:defaultExpanded="true">
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_battery"
-                    android:text="@string/checkbox_show_battery"
-                    style="@style/Checkbox" />
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_battery_temperature"
-                    android:text="@string/checkbox_show_battery_temperature"
-                    style="@style/Checkbox" />
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_battery_charge_status"
-                    android:text="@string/checkbox_show_battery_charge_status"
-                    style="@style/Checkbox" />
-
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Temperature-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_TEMPERATURE"
-                app:header="@string/h3_temperature"
-                app:defaultExpanded="true">
-
-                <RadioGroup
-                    android:id="@+id/temperature_format_group"
-                    style="@style/RadioGroup">
-
-                    <RadioButton
-                        android:id="@+id/temperature_system"
-                        android:text="@string/radio_default_system"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/temperature_celsius"
-                        android:text="@string/radio_celsius"
-                        style="@style/Radio" />
-
-                    <RadioButton
-                        android:id="@+id/temperature_fahrenheit"
-                        android:text="@string/radio_fahrenheit"
-                        style="@style/Radio" />
-                </RadioGroup>
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Search-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_SEARCH"
-                app:header="@string/h3_search"
-                app:defaultExpanded="true">
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_search"
-                    android:text="@string/checkbox_show_search"
-                    style="@style/Checkbox" />
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/always_show_search"
-                    android:text="@string/checkbox_always_show_search_bar"
-                    style="@style/Checkbox" />
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Apps-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_APPS"
-                app:header="@string/h3_apps"
-                app:defaultExpanded="true">
-
-                <com.rama.puma.widgets.WdCheckbox
-                    android:id="@+id/show_profile_indicator"
-                    android:text="@string/checkbox_show_profile_indicator"
-                    style="@style/Checkbox" />
-
-            </com.rama.puma.widgets.WdCollapsibleSection>
-           
             <!--Language-->
             <com.rama.puma.widgets.WdCollapsibleSection
                 android:layout_width="match_parent"
@@ -582,24 +250,6 @@
                 <RadioGroup
                     android:id="@+id/language_group"
                     style="@style/RadioGroup" />
-            </com.rama.puma.widgets.WdCollapsibleSection>
-            <!--Data-->
-            <com.rama.puma.widgets.WdCollapsibleSection
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:key="SETTINGS_SECTION_DATA"
-                app:header="@string/h3_data"
-                app:defaultExpanded="true">
-
-                <Button
-                    android:id="@+id/export_button"
-                    android:text="@string/btn_export_data"
-                    style="@style/BTN_danger" />
-
-                <Button
-                    android:id="@+id/clear_prefs_button"
-                    android:text="@string/btn_clear_data"
-                    style="@style/BTN_danger" />
             </com.rama.puma.widgets.WdCollapsibleSection>
         </LinearLayout>
     </ScrollView>

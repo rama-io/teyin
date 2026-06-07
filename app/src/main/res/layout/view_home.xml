@@ -6,107 +6,20 @@
     android:orientation="vertical"
     style="@style/VerticalListDivided">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:scrollbars="none">
+    <LinearLayout style="@style/HorizontalListDivided">
 
-        <LinearLayout
-            android:id="@+id/apps_layout"
-            style="@style/VerticalList">
+        <FrameLayout
+            android:id="@+id/search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
 
-            <LinearLayout
-                android:gravity="start"
-                style="@style/HorizontalList">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="16sp">
-
-                    <Button
-                        android:id="@+id/time"
-                        android:background="@android:color/transparent"
-                        android:layout_width="wrap_content"
-                        android:focusable="false"
-                        android:textColor="@color/h1"
-                        style="@style/H1" />
-
-                    <LinearLayout
-                        android:id="@+id/date_row"
-                        android:paddingBottom="4sp"
-                        android:gravity="start"
-                        style="@style/HorizontalListDivided">
-
-                        <ImageView
-                            android:layout_width="16sp"
-                            android:layout_height="16sp"
-                            android:tint="@color/icon"
-                            android:src="@drawable/icon_calendar_today" />
-
-                        <TextView
-                            android:id="@+id/date"
-                            android:textSize="16sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="?attr/foregroundColor" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/battery_row"
-                        style="@style/HorizontalListDivided">
-
-                        <ImageView
-                            android:layout_width="16sp"
-                            android:layout_height="16sp"
-                            android:tint="@color/icon"
-                            android:src="@drawable/icon_battery_full_alt" />
-
-                        <TextView
-                            android:id="@+id/battery"
-                            android:textSize="16sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="?attr/foregroundColor" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <FrameLayout
-                    android:id="@+id/search_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="12sp">
-
-                    <ImageView
-                        android:layout_gravity="center"
-                        android:src="@drawable/icon_search"
-                        android:contentDescription="@string/altdescr_search_icon"
-                        style="@style/Icon24" />
-                </FrameLayout>
-            </LinearLayout>
-
-            <ListView
-                android:id="@+id/app_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:dividerHeight="0dp"
-                android:divider="@null"
-                android:focusableInTouchMode="false"
-                android:nestedScrollingEnabled="false" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/searchbar"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/icon_search"
+                android:contentDescription="@string/altdescr_search_icon"
+                style="@style/Icon24" />
+        </FrameLayout>
 
         <EditText
             android:id="@+id/search_field"
@@ -115,7 +28,6 @@
             android:layout_weight="1"
             android:background="@color/bg_2"
             android:textColorHint="@color/disabled"
-            android:hint="@string/hint_search_apps"
             android:visibility="gone"
             style="@style/EditText" />
 
@@ -131,7 +43,31 @@
                 android:contentDescription="@string/altdescr_clear_search"
                 style="@style/Icon24" />
         </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/settings_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/icon_cog_solid"
+                android:contentDescription="@string/altdescr_open_settings"
+                style="@style/Icon24" />
+        </FrameLayout>
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/file_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:focusableInTouchMode="false"
+        android:nestedScrollingEnabled="false" />
 
     <LinearLayout
         android:id="@+id/menu_bar"

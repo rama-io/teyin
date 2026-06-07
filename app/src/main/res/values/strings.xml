@@ -173,6 +173,7 @@
     <string name="altdescr_delete_group">Delete group</string>
     <string name="altdescr_toggle_pin_visibility">Toggle PIN visibility</string>
     <string name="altdescr_save_pin">Save PIN</string>
+    <string name="altdescr_open_settings">Open settings</string>
 
     <!-- APP -->
     <string name="app_name" translatable="false">Puma</string>
@@ -249,8 +250,4 @@
     <string name="multi_select_count">%d selected</string>
     <string name="multi_select_move_to_group">Move to group</string>
     <string name="multi_select_cancel">Cancel</string>
-
-    <!-- Easter Egg -->
-    <string name="easter_eggs_unlock">Can you please stop playing with it xD</string>
-    <string name="easter_eggs_counter">%d more...</string>
 </resources>
