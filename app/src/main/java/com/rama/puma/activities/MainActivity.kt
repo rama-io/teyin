@@ -1,6 +1,5 @@
 package com.rama.puma.activities
 
-import android.Manifest
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
@@ -105,7 +104,7 @@ class MainActivity : CsActivity() {
 
         cancelSelectionBtn.setOnClickListener { exitSelectionMode() }
 
-        // Placeholder actions — wire to real logic when ready
+        // TODO: Placeholder actions, waiting for real logic
         renameBtn.setOnClickListener {
             Toast.makeText(this, "${adapter.selectedCount} item(s) selected", Toast.LENGTH_SHORT)
                 .show()

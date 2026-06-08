@@ -80,7 +80,7 @@ class PrefsManager private constructor(context: Context) {
     fun initPrefs() {
         val hasPrefs = prefs.contains(PrefKeys.APP_LANGUAGE)
 
-        if (hasPrefs) {
+        if (!hasPrefs) {
             prefs.edit()
                 .putString(PrefKeys.FONT_STYLE, FontStyle.JERSEY_25)
                 .putString(PrefKeys.APP_LANGUAGE, Language.SYSTEM)
