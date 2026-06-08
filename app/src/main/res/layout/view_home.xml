@@ -22,7 +22,7 @@
 
                 <ImageView
                     android:layout_gravity="center"
-                    android:src="@drawable/icon_folder_solid"
+                    android:src="@drawable/icon_folder_open_solid"
                     android:tint="@color/h1"
                     android:contentDescription="Folder indicator"
                     style="@style/Icon24" />
@@ -82,6 +82,19 @@
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/toggle_directories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/icon_sitemap_solid"
+                android:contentDescription="Directories"
+                style="@style/Icon24" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/settings_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,6 +106,29 @@
                 android:contentDescription="@string/altdescr_open_settings"
                 style="@style/Icon24" />
         </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/directories"
+        android:layout_weight="1"
+        android:baselineAligned="false"
+        android:visibility="gone"
+        style="@style/VerticalListDivided">
+
+        <ListView
+            android:id="@+id/directory_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:focusableInTouchMode="false"
+            android:nestedScrollingEnabled="false"
+            style="@style/VerticalListDivided" />
+
+        <Button
+            android:id="@+id/add_to_favorites_button"
+            android:text="Add Current Folder"
+            style="@style/BTN1" />
     </LinearLayout>
 
     <ListView
@@ -132,6 +168,42 @@
             android:textColor="@color/foreground" />
 
         <FrameLayout
+            android:id="@+id/paste_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
+
+            <ImageView
+                android:src="@drawable/icon_clipboard_solid"
+                android:contentDescription="Paste"
+                style="@style/Icon24" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/copy_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
+
+            <ImageView
+                android:src="@drawable/icon_copy_solid"
+                android:contentDescription="Copy"
+                style="@style/Icon24" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/move_to_folder_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
+
+            <ImageView
+                android:src="@drawable/icon_folder_enter_solid"
+                android:contentDescription="Move to folder"
+                style="@style/Icon24" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/rename_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -139,19 +211,7 @@
 
             <ImageView
                 android:src="@drawable/icon_edit_solid"
-                android:contentDescription="@string/ctxmenu_rename_app"
-                style="@style/Icon24" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/move_to_group_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
-
-            <ImageView
-                android:src="@drawable/icon_folder_enter_solid"
-                android:contentDescription="@string/ctxmenu_move_to_group"
+                android:contentDescription="@string/ctxmenu_rename"
                 style="@style/Icon24" />
         </FrameLayout>
 

@@ -117,7 +117,7 @@
     <string name="checkbox_click_on_icons_open_app_settings">Open app settings when clicking icons</string>
 
     <!-- ContextMenu -->
-    <string name="ctxmenu_rename_app">Rename app...</string>
+    <string name="ctxmenu_rename">Rename</string>
     <string name="ctxmenu_move_to_group">Change group...</string>
     <string name="ctxmenu_open_settings">App settings...</string>
 

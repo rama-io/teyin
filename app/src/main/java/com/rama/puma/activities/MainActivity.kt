@@ -42,7 +42,7 @@ class MainActivity : CsActivity() {
     private lateinit var selectedCount: TextView
     private lateinit var cancelSelectionBtn: FrameLayout
     private lateinit var renameBtn: FrameLayout
-    private lateinit var moveToGroupBtn: FrameLayout
+    private lateinit var moveToFolderBtn: FrameLayout
     private lateinit var appSettingsBtn: FrameLayout
     private val fileManager = FileManager()
     private lateinit var adapter: FileListAdapter
@@ -95,7 +95,7 @@ class MainActivity : CsActivity() {
         selectedCount = findViewById(R.id.selected_count)
         cancelSelectionBtn = findViewById(R.id.multi_select_cancel_button)
         renameBtn = findViewById(R.id.rename_btn)
-        moveToGroupBtn = findViewById(R.id.move_to_group_button)
+        moveToFolderBtn = findViewById(R.id.move_to_folder_button)
         appSettingsBtn = findViewById(R.id.app_settings)
 
         settingsBtn.setOnClickListener {
@@ -109,7 +109,7 @@ class MainActivity : CsActivity() {
             Toast.makeText(this, "${adapter.selectedCount} item(s) selected", Toast.LENGTH_SHORT)
                 .show()
         }
-        moveToGroupBtn.setOnClickListener {
+        moveToFolderBtn.setOnClickListener {
             Toast.makeText(this, "Move: ${adapter.selectedCount} item(s)", Toast.LENGTH_SHORT)
                 .show()
         }
