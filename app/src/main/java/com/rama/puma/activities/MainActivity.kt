@@ -53,6 +53,7 @@ class MainActivity : CsActivity() {
     private var searchDebounceRunnable: Runnable? = null
     private var currentSearchQuery: String = ""
     private var resumeRefreshRunnable: Runnable? = null
+    private var fileSystemReady = false
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
@@ -127,8 +128,11 @@ class MainActivity : CsActivity() {
     override fun onResume() {
         super.onResume()
         applyCurrentTheme(rootView)
-        schedulePostResumeRefresh()
-        collapseSearch()
+
+        if (fileSystemReady) {
+            schedulePostResumeRefresh()
+            collapseSearch()
+        }
     }
 
     override fun onPause() {
@@ -213,14 +217,20 @@ class MainActivity : CsActivity() {
 
     private fun initFileSystem() {
         fileManager.init()
+        fileSystemReady = true
         refreshList()
     }
 
     private fun refreshList() {
+        if (!fileSystemReady) return
+
         val entries = fileManager.listCurrent(currentSearchQuery)
         adapter.update(entries, hasParent = !fileManager.isAtRoot)
 
-        val dirName = if (fileManager.isAtRoot) "Storage" else fileManager.currentDir.name
+        val dirName =
+            if (fileManager.isAtRoot) "Storage"
+            else fileManager.currentDir.name
+
         currentFolderName.text = dirName
 
         if (adapter.isSelectionMode) updateSelectionBar()
@@ -270,17 +280,14 @@ class MainActivity : CsActivity() {
     }
 
     private fun requestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED
-            ) {
-                initFileSystem()
-            } else {
-                requestPermissions(
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQ_STORAGE
-                )
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) initFileSystem()
+            else startActivityForResult(
+                Intent(
+                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    Uri.parse("package:$packageName")
+                ), REQ_MANAGE_ALL_FILES
+            )
         } else {
             // Permissions are granted at install time on API 21-22
             initFileSystem()
