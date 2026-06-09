@@ -7,7 +7,7 @@ data class FsEntry(
     val file: File,
     val isDirectory: Boolean,
     val name: String,
-    val size: Long,           // 0 for directories
+    val size: Long, // 0 for directories
     val lastModified: Long,
 ) {
     val extension: String get() = if (isDirectory) "" else file.extension.lowercase()
@@ -58,7 +58,6 @@ class FileManager {
         val files = currentDir.listFiles() ?: return emptyList()
         val q = query.trim().lowercase()
         return files
-            .filter { !it.name.startsWith(".") }
             .filter { q.isEmpty() || it.name.lowercase().contains(q) }
             .sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
             .map { f ->

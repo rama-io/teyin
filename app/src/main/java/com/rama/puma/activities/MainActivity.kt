@@ -26,6 +26,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.rama.puma.CsActivity
 import com.rama.puma.R
+import com.rama.puma.adapters.DirEntry
 import com.rama.puma.adapters.DirectoryListAdapter
 import com.rama.puma.adapters.FileListAdapter
 import com.rama.puma.managers.FileManager
@@ -70,8 +71,11 @@ class MainActivity : CsActivity() {
     private var fileSystemReady = false
     private var showDirs = false
 
-    /** Paths staged for copy (null = clipboard empty) */
+    private enum class ClipboardMode { COPY, MOVE }
+
+    /** Paths staged for copy/move (null = clipboard empty) */
     private var clipboard: List<String>? = null
+    private var clipboardMode: ClipboardMode = ClipboardMode.COPY
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
@@ -206,18 +210,18 @@ class MainActivity : CsActivity() {
 
     private fun initDirectoryList() {
         dirAdapter = DirectoryListAdapter(this) { path ->
+            // For user bookmarks, remove from prefs. For USB Fixed entries (removable=true),
+            // just refresh — the volume will no longer appear once dismissed.
             PrefsManager.getInstance(this).removeFavoriteDir(path)
             refreshFavorites()
         }
         directoryList.adapter = dirAdapter
 
         directoryList.setOnItemClickListener { _, _, position, _ ->
-            val path = dirAdapter.getItem(position)
+            val path = dirAdapter.pathAt(position) ?: return@setOnItemClickListener
             val dir = File(path)
             if (dir.isDirectory) {
-                // Navigate to the chosen favorite and switch back to file view
                 fileManager.goToRoot()
-                // Walk the path into the file manager stack
                 navigateToAbsolutePath(dir)
                 showDirs = false
                 directoriesButton.setBackgroundColor(Color.TRANSPARENT)
@@ -248,8 +252,77 @@ class MainActivity : CsActivity() {
     }
 
     private fun refreshFavorites() {
-        val dirs = PrefsManager.getInstance(this).getFavoriteDirs()
-        dirAdapter.update(dirs)
+        val list = mutableListOf<DirEntry>()
+
+        // Fixed: root (only if accessible — rooted devices)
+        val rootDir = File("/")
+        if (rootDir.canRead()) {
+            list += DirEntry.Fixed(
+                label = "Root",
+                path = "/",
+                iconRes = R.drawable.icon_android,
+            )
+        }
+
+        // Fixed: USB / external volumes
+        val mainExternal = Environment.getExternalStorageDirectory().canonicalPath
+        val storageDir = File("/storage")
+        if (storageDir.isDirectory) {
+            storageDir.listFiles()
+                ?.filter { it.isDirectory && it.name != "emulated" && it.name != "self" }
+                ?.mapNotNull { volumeDir ->
+                    val candidate = File(volumeDir, "0").takeIf { it.isDirectory } ?: volumeDir
+                    if (candidate.canRead() && candidate.canonicalPath != mainExternal)
+                        candidate else null
+                }
+                ?.forEach { usb ->
+                    list += DirEntry.Fixed(
+                        label = "USB – ${usb.parentFile?.name ?: usb.name}",
+                        path = usb.canonicalPath,
+                        iconRes = R.drawable.icon_cassette_tape_solid,
+                        removable = true,
+                    )
+                }
+        }
+
+        // Fixed: storage root
+        val storageRoot = Environment.getExternalStorageDirectory()
+        if (storageRoot.isDirectory) {
+            list += DirEntry.Fixed(
+                label = "Storage",
+                path = storageRoot.absolutePath,
+                iconRes = R.drawable.icon_android,
+            )
+        }
+
+        // Fixed: standard folders (only if they exist)
+        val standardDirs = listOf(
+            "DCIM" to Environment.DIRECTORY_DCIM,
+            "Pictures" to Environment.DIRECTORY_PICTURES,
+            "Music" to Environment.DIRECTORY_MUSIC,
+            "Movies" to Environment.DIRECTORY_MOVIES,
+//            "Documents" to Environment.DIRECTORY_DOCUMENTS,
+            "Download" to Environment.DIRECTORY_DOWNLOADS,
+        )
+        for ((name, envDir) in standardDirs) {
+            val dir = Environment.getExternalStoragePublicDirectory(envDir)
+            if (dir.isDirectory) {
+                list += DirEntry.Fixed(
+                    label = name,
+                    path = dir.absolutePath,
+                    iconRes = R.drawable.icon_folder_solid,
+                )
+            }
+        }
+
+        // Divider + user bookmarks
+        val userDirs = PrefsManager.getInstance(this).getFavoriteDirs()
+        if (userDirs.isNotEmpty()) {
+            list += DirEntry.Divider
+            userDirs.forEach { list += DirEntry.UserAdded(it) }
+        }
+
+        dirAdapter.update(list)
     }
 
     private fun navigateToAbsolutePath(target: File) {
@@ -368,6 +441,7 @@ class MainActivity : CsActivity() {
         val paths = adapter.selectedEntries.map { it.file.absolutePath }
         if (paths.isEmpty()) return
         clipboard = paths
+        clipboardMode = ClipboardMode.COPY
         Toast.makeText(this, getString(R.string.toast_copy_queued), Toast.LENGTH_SHORT).show()
         exitSelectionMode()
     }
@@ -375,16 +449,40 @@ class MainActivity : CsActivity() {
     private fun pasteClipboard() {
         val sources = clipboard ?: return
         if (!fileSystemReady) return
+        val isMove = clipboardMode == ClipboardMode.MOVE
 
         var failed = 0
+        val successfullySources = mutableListOf<File>()
+
         for (sourcePath in sources) {
             val src = File(sourcePath)
             val dest = File(fileManager.currentDir, src.name)
             try {
-                if (src.isDirectory) src.copyRecursively(dest, overwrite = true)
-                else src.copyTo(dest, overwrite = true)
+                if (src.isDirectory) {
+                    src.copyRecursively(dest, overwrite = true)
+                    // For directories verify total size matches
+                    val srcSize = src.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
+                    val destSize = dest.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
+                    if (destSize == srcSize) successfullySources.add(src)
+                    else {
+                        dest.deleteRecursively(); failed++
+                    }
+                } else {
+                    src.copyTo(dest, overwrite = true)
+                    if (dest.length() == src.length()) successfullySources.add(src)
+                    else {
+                        dest.delete(); failed++
+                    }
+                }
             } catch (_: Exception) {
                 failed++
+            }
+        }
+
+        // For move: delete sources that were verified successfully
+        if (isMove) {
+            for (src in successfullySources) {
+                if (src.isDirectory) src.deleteRecursively() else src.delete()
             }
         }
 
@@ -450,8 +548,8 @@ class MainActivity : CsActivity() {
     private fun moveSelected() {
         val paths = adapter.selectedEntries.map { it.file.absolutePath }
         if (paths.isEmpty()) return
-        // Stage as clipboard — user navigates to destination and pastes
         clipboard = paths
+        clipboardMode = ClipboardMode.MOVE
         Toast.makeText(this, "Navigate to destination and paste", Toast.LENGTH_SHORT).show()
         exitSelectionMode()
     }

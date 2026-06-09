@@ -11,6 +11,7 @@
         android:padding="12sp">
 
         <ImageView
+            android:id="@+id/dir_icon"
             android:src="@drawable/icon_folder_solid"
             android:tint="@color/accent_3"
             android:contentDescription="Favorite folder"
