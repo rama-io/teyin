@@ -1,6 +1,9 @@
 package com.rama.puma.activities
 
+import android.Manifest
 import android.animation.AnimatorSet
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.content.Intent
@@ -194,8 +197,9 @@ class MainActivity : CsActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQ_STORAGE) {
-            if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) initFileSystem()
-            else showPermissionDenied()
+            val allGranted = grantResults.isNotEmpty() &&
+                grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+            if (allGranted) initFileSystem() else showPermissionDenied()
         }
     }
 
@@ -580,7 +584,15 @@ class MainActivity : CsActivity() {
                 ), REQ_MANAGE_ALL_FILES
             )
         } else {
-            initFileSystem()
+            val perms = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            )
+            val needsRequest = perms.any {
+                ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+            }
+            if (needsRequest) ActivityCompat.requestPermissions(this, perms, REQ_STORAGE)
+            else initFileSystem()
         }
     }
 
