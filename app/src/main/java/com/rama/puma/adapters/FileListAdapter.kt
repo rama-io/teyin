@@ -10,7 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.rama.puma.R
 import com.rama.puma.managers.FileManager
+import com.rama.puma.managers.FontManager
 import com.rama.puma.managers.FsEntry
+import com.rama.puma.managers.PrefsManager
+import com.rama.puma.managers.ThemeManager
 
 class FileListAdapter(
     private val context: Context,
@@ -80,26 +83,40 @@ class FileListAdapter(
         val inflater = LayoutInflater.from(context)
 
         if (isUpRow(position)) {
-            return convertView ?: inflater.inflate(R.layout.list_item_up, parent, false)
+            val view = convertView ?: inflater.inflate(R.layout.list_item_up, parent, false)
+            applyThemeAndFont(view)
+            return view
         }
 
         val entry = entries[position - upOffset]
         val isSelected = entry.file.absolutePath in selectedPaths
 
-        return if (entry.isDirectory) {
-            val view = convertView ?: inflater.inflate(R.layout.list_item_folder, parent, false)
-            view.findViewById<TextView>(R.id.folder_name).text = entry.name
-            bindSelectionCheck(view, isSelected)
-            view
+        val view = if (entry.isDirectory) {
+            val v = convertView ?: inflater.inflate(R.layout.list_item_folder, parent, false)
+            v.findViewById<TextView>(R.id.folder_name).text = entry.name
+            bindSelectionCheck(v, isSelected)
+            v
         } else {
-            val view = convertView ?: inflater.inflate(R.layout.list_item_file, parent, false)
-            view.findViewById<TextView>(R.id.file_name).text = entry.name
-            view.findViewById<TextView>(R.id.file_size).text = FileManager.formatSize(entry.size)
-            view.findViewById<ImageView>(R.id.file_icon)
+            val v = convertView ?: inflater.inflate(R.layout.list_item_file, parent, false)
+            v.findViewById<TextView>(R.id.file_name).text = entry.name
+            v.findViewById<TextView>(R.id.file_size).text = FileManager.formatSize(entry.size)
+            v.findViewById<ImageView>(R.id.file_icon)
                 .setImageResource(iconForExtension(entry.extension))
-            bindSelectionCheck(view, isSelected)
-            view
+            bindSelectionCheck(v, isSelected)
+            v
         }
+
+        applyThemeAndFont(view)
+        return view
+    }
+
+    private fun applyThemeAndFont(view: View) {
+        ThemeManager.applyTheme(context, view)
+        val typeface = FontManager.getTypeface(
+            context,
+            PrefsManager.getInstance(context).getFontStyle() ?: PrefsManager.FontStyle.DEFAULT
+        )
+        FontManager.applyTypefaceToView(view, typeface)
     }
 
     private fun bindSelectionCheck(view: View, isSelected: Boolean) {

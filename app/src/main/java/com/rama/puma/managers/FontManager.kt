@@ -75,4 +75,7 @@ object FontManager {
             }
         }
     }
+
+    /** Public single-view entry point used by adapters to theme individual rows. */
+    fun applyTypefaceToView(view: View, typeface: Typeface?) = applyRecursively(view, typeface)
 }

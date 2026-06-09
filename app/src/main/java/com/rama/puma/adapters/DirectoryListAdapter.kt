@@ -8,6 +8,9 @@ import android.widget.BaseAdapter
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.rama.puma.R
+import com.rama.puma.managers.FontManager
+import com.rama.puma.managers.PrefsManager
+import com.rama.puma.managers.ThemeManager
 import java.io.File
 
 class DirectoryListAdapter(
@@ -39,6 +42,13 @@ class DirectoryListAdapter(
         view.findViewById<FrameLayout>(R.id.remove_favorite_btn).setOnClickListener {
             onRemove(path)
         }
+
+        ThemeManager.applyTheme(context, view)
+        val typeface = FontManager.getTypeface(
+            context,
+            PrefsManager.getInstance(context).getFontStyle() ?: PrefsManager.FontStyle.DEFAULT
+        )
+        FontManager.applyTypefaceToView(view, typeface)
 
         return view
     }
