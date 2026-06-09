@@ -2,8 +2,10 @@ package com.rama.puma.activities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,6 +37,9 @@ class MainActivity : CsActivity() {
     private lateinit var searchField: EditText
     private lateinit var searchButton: FrameLayout
     private lateinit var clearBtn: FrameLayout
+    private lateinit var directoriesButton: FrameLayout
+    private lateinit var directoriesFragment: LinearLayout
+    private lateinit var filesFragment: LinearLayout
     private lateinit var settingsBtn: FrameLayout
     private lateinit var currentDir: LinearLayout
     private lateinit var currentFolderName: TextView
@@ -53,6 +58,7 @@ class MainActivity : CsActivity() {
     private var currentSearchQuery: String = ""
     private var resumeRefreshRunnable: Runnable? = null
     private var fileSystemReady = false
+    private var showDirs = false
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
@@ -90,13 +96,31 @@ class MainActivity : CsActivity() {
         settingsBtn = findViewById(R.id.settings_btn)
         currentDir = findViewById(R.id.current_dir)
         currentFolderName = findViewById(R.id.current_folder_name)
+        directoriesButton = findViewById(R.id.toggle_directories)
 
+        directoriesFragment = findViewById(R.id.directories_fragment)
+        filesFragment = findViewById(R.id.files_fragment)
         menuBar = findViewById(R.id.menu_bar)
         selectedCount = findViewById(R.id.selected_count)
         cancelSelectionBtn = findViewById(R.id.multi_select_cancel_button)
         renameBtn = findViewById(R.id.rename_btn)
         moveToFolderBtn = findViewById(R.id.move_to_folder_button)
         appSettingsBtn = findViewById(R.id.app_settings)
+
+        directoriesButton.setOnClickListener {
+            showDirs = !showDirs
+            if (showDirs) {
+                it.setBackgroundColor(
+                    resources.getColor(R.color.button_selected)
+                )
+                directoriesFragment.visibility = View.VISIBLE
+                filesFragment.visibility = View.GONE
+            } else {
+                it.setBackgroundColor(Color.TRANSPARENT)
+                directoriesFragment.visibility = View.GONE
+                filesFragment.visibility = View.VISIBLE
+            }
+        }
 
         settingsBtn.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))

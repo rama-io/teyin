@@ -109,7 +109,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/directories"
+        android:id="@+id/directories_fragment"
         android:layout_weight="1"
         android:baselineAligned="false"
         android:visibility="gone"
@@ -128,105 +128,110 @@
         <Button
             android:id="@+id/add_to_favorites_button"
             android:text="Add Current Folder"
-            style="@style/BTN1" />
+            style="@style/BTN2" />
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/file_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:focusableInTouchMode="false"
-        android:nestedScrollingEnabled="false"
-        style="@style/VerticalListDivided" />
 
     <LinearLayout
-        android:id="@+id/menu_bar"
-        android:visibility="gone"
-        android:padding="4sp"
-        style="@style/HorizontalList_BG2">
+        android:id="@+id/files_fragment"
+        android:layout_weight="1"
+        android:baselineAligned="false"
+        style="@style/VerticalListDivided">
 
-        <FrameLayout
-            android:id="@+id/multi_select_cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
-
-            <ImageView
-                android:src="@drawable/icon_arrow_left_solid"
-                android:contentDescription="@string/btn_cancel"
-                style="@style/Icon24" />
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/selected_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <ListView
+            android:id="@+id/file_list"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="@color/foreground" />
+            android:fillViewport="true"
+            android:focusableInTouchMode="false"
+            android:nestedScrollingEnabled="false"
+            style="@style/VerticalListDivided" />
 
-        <FrameLayout
-            android:id="@+id/paste_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
+        <LinearLayout
+            android:id="@+id/menu_bar"
+            android:visibility="gone"
+            android:padding="4sp"
+            style="@style/HorizontalList_BG2">
 
-            <ImageView
-                android:src="@drawable/icon_clipboard_solid"
-                android:contentDescription="Paste"
-                style="@style/Icon24" />
-        </FrameLayout>
+            <FrameLayout
+                android:id="@+id/multi_select_cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
 
-        <FrameLayout
-            android:id="@+id/copy_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
+                <ImageView
+                    android:src="@drawable/icon_arrow_left_solid"
+                    android:contentDescription="@string/btn_cancel"
+                    style="@style/Icon24" />
+            </FrameLayout>
 
-            <ImageView
-                android:src="@drawable/icon_copy_solid"
-                android:contentDescription="Copy"
-                style="@style/Icon24" />
-        </FrameLayout>
+            <TextView
+                android:id="@+id/selected_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="@color/foreground" />
 
-        <FrameLayout
-            android:id="@+id/move_to_folder_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
+            <FrameLayout
+                android:id="@+id/paste_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
 
-            <ImageView
-                android:src="@drawable/icon_folder_enter_solid"
-                android:contentDescription="Move to folder"
-                style="@style/Icon24" />
-        </FrameLayout>
+                <ImageView
+                    android:src="@drawable/icon_clipboard_solid"
+                    android:contentDescription="Paste"
+                    style="@style/Icon24" />
+            </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/rename_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
+            <FrameLayout
+                android:id="@+id/copy_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
 
-            <ImageView
-                android:src="@drawable/icon_edit_solid"
-                android:contentDescription="@string/ctxmenu_rename"
-                style="@style/Icon24" />
-        </FrameLayout>
+                <ImageView
+                    android:src="@drawable/icon_copy_solid"
+                    android:contentDescription="Copy"
+                    style="@style/Icon24" />
+            </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/app_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
+            <FrameLayout
+                android:id="@+id/move_to_folder_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
 
-            <ImageView
-                android:src="@drawable/icon_cog_solid"
-                android:contentDescription="@string/ctxmenu_open_settings"
-                style="@style/Icon24" />
-        </FrameLayout>
+                <ImageView
+                    android:src="@drawable/icon_folder_enter_solid"
+                    android:contentDescription="Move to folder"
+                    style="@style/Icon24" />
+            </FrameLayout>
 
+            <FrameLayout
+                android:id="@+id/rename_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
+
+                <ImageView
+                    android:src="@drawable/icon_edit_solid"
+                    android:contentDescription="@string/ctxmenu_rename"
+                    style="@style/Icon24" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/app_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
+
+                <ImageView
+                    android:src="@drawable/icon_cog_solid"
+                    android:contentDescription="@string/ctxmenu_open_settings"
+                    style="@style/Icon24" />
+            </FrameLayout>
+
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

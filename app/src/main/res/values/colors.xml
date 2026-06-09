@@ -13,6 +13,7 @@
     <color name="input">#16161F</color>
     <color name="button_1">#459984</color>
     <color name="button_2">#6194AF</color>
+    <color name="button_selected">#6194AF</color>
     <color name="danger">#DC6364</color>
     <color name="collapsible_header">#878787</color>
 </resources>
