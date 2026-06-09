@@ -15,7 +15,7 @@ class AboutActivity : CsActivity() {
 
         setContentView(R.layout.view_about)
 
-        val root = findViewById<View>(android.R.id.content)
+        val root = findViewById<View>(R.id.root)
         applyEdgeToEdgePadding(root)
         applyCurrentTheme(root)
 
