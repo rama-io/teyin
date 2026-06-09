@@ -2,7 +2,7 @@ package com.rama.puma.activities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -18,17 +18,19 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
-import android.widget.FrameLayout
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import com.rama.puma.CsActivity
 import com.rama.puma.R
+import com.rama.puma.adapters.DirectoryListAdapter
 import com.rama.puma.adapters.FileListAdapter
 import com.rama.puma.managers.FileManager
 import com.rama.puma.managers.PrefsManager
+import java.io.File
 
 class MainActivity : CsActivity() {
     private lateinit var rootView: View
@@ -48,7 +50,15 @@ class MainActivity : CsActivity() {
     private lateinit var cancelSelectionBtn: FrameLayout
     private lateinit var renameBtn: FrameLayout
     private lateinit var moveToFolderBtn: FrameLayout
+    private lateinit var copyBtn: FrameLayout
+    private lateinit var pasteBtn: FrameLayout
     private lateinit var appSettingsBtn: FrameLayout
+
+    // Directory list (favorites)
+    private lateinit var directoryList: ListView
+    private lateinit var addToFavoritesBtn: View
+    private lateinit var dirAdapter: DirectoryListAdapter
+
     private val fileManager = FileManager()
     private lateinit var adapter: FileListAdapter
     private var isSearchExpanded = false
@@ -59,6 +69,9 @@ class MainActivity : CsActivity() {
     private var resumeRefreshRunnable: Runnable? = null
     private var fileSystemReady = false
     private var showDirs = false
+
+    /** Paths staged for copy (null = clipboard empty) */
+    private var clipboard: List<String>? = null
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
@@ -105,16 +118,20 @@ class MainActivity : CsActivity() {
         cancelSelectionBtn = findViewById(R.id.multi_select_cancel_button)
         renameBtn = findViewById(R.id.rename_btn)
         moveToFolderBtn = findViewById(R.id.move_to_folder_button)
+        copyBtn = findViewById(R.id.copy_btn)
+        pasteBtn = findViewById(R.id.paste_btn)
         appSettingsBtn = findViewById(R.id.app_settings)
+
+        directoryList = findViewById(R.id.directory_list)
+        addToFavoritesBtn = findViewById(R.id.add_to_favorites_button)
 
         directoriesButton.setOnClickListener {
             showDirs = !showDirs
             if (showDirs) {
-                it.setBackgroundColor(
-                    resources.getColor(R.color.button_selected)
-                )
+                it.setBackgroundColor(resources.getColor(R.color.button_selected))
                 directoriesFragment.visibility = View.VISIBLE
                 filesFragment.visibility = View.GONE
+                refreshFavorites()
             } else {
                 it.setBackgroundColor(Color.TRANSPARENT)
                 directoriesFragment.visibility = View.GONE
@@ -128,19 +145,15 @@ class MainActivity : CsActivity() {
 
         cancelSelectionBtn.setOnClickListener { exitSelectionMode() }
 
-        // TODO: Placeholder actions, waiting for real logic
-        renameBtn.setOnClickListener {
-            Toast.makeText(this, "${adapter.selectedCount} item(s) selected", Toast.LENGTH_SHORT)
-                .show()
-        }
-        moveToFolderBtn.setOnClickListener {
-            Toast.makeText(this, "Move: ${adapter.selectedCount} item(s)", Toast.LENGTH_SHORT)
-                .show()
-        }
+        copyBtn.setOnClickListener { copySelected() }
+        pasteBtn.setOnClickListener { pasteClipboard() }
+        renameBtn.setOnClickListener { showRenameDialog() }
+        moveToFolderBtn.setOnClickListener { moveSelected() }
         appSettingsBtn.setOnClickListener {
             Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
         }
 
+        initDirectoryList()
         initSearchbar()
         initFileList()
         requestStoragePermission()
@@ -191,6 +204,70 @@ class MainActivity : CsActivity() {
         }
     }
 
+    private fun initDirectoryList() {
+        dirAdapter = DirectoryListAdapter(this) { path ->
+            PrefsManager.getInstance(this).removeFavoriteDir(path)
+            refreshFavorites()
+        }
+        directoryList.adapter = dirAdapter
+
+        directoryList.setOnItemClickListener { _, _, position, _ ->
+            val path = dirAdapter.getItem(position)
+            val dir = File(path)
+            if (dir.isDirectory) {
+                // Navigate to the chosen favorite and switch back to file view
+                fileManager.goToRoot()
+                // Walk the path into the file manager stack
+                navigateToAbsolutePath(dir)
+                showDirs = false
+                directoriesButton.setBackgroundColor(Color.TRANSPARENT)
+                directoriesFragment.visibility = View.GONE
+                filesFragment.visibility = View.VISIBLE
+                refreshList()
+            } else {
+                Toast.makeText(this, "Folder no longer exists", Toast.LENGTH_SHORT).show()
+                PrefsManager.getInstance(this).removeFavoriteDir(path)
+                refreshFavorites()
+            }
+        }
+
+        addToFavoritesBtn.setOnClickListener {
+            if (!fileSystemReady) return@setOnClickListener
+            val prefs = PrefsManager.getInstance(this)
+            val path = fileManager.currentDir.absolutePath
+            val existing = prefs.getFavoriteDirs()
+            if (path in existing) {
+                Toast.makeText(this, getString(R.string.toast_dir_exists), Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                prefs.addFavoriteDir(path)
+                Toast.makeText(this, getString(R.string.toast_dir_added), Toast.LENGTH_SHORT).show()
+                refreshFavorites()
+            }
+        }
+    }
+
+    private fun refreshFavorites() {
+        val dirs = PrefsManager.getInstance(this).getFavoriteDirs()
+        dirAdapter.update(dirs)
+    }
+
+    private fun navigateToAbsolutePath(target: File) {
+        val root = Environment.getExternalStorageDirectory().canonicalPath
+        val targetCanon = target.canonicalPath
+
+        if (!targetCanon.startsWith(root)) return
+
+        // Build segment list between root and target
+        val relative = targetCanon.removePrefix(root).trimStart('/')
+        if (relative.isEmpty()) return   // target IS root
+
+        for (segment in relative.split("/")) {
+            val next = File(fileManager.currentDir, segment)
+            if (next.isDirectory) fileManager.enter(next)
+        }
+    }
+
     private fun initFileList() {
         adapter = FileListAdapter(this)
         listView.adapter = adapter
@@ -199,13 +276,11 @@ class MainActivity : CsActivity() {
             when {
                 adapter.isUpRow(position) -> navigateUp()
 
-                // In selection mode tap toggles selection
                 adapter.isSelectionMode -> {
                     adapter.toggleSelection(adapter.getEntry(position))
                     updateSelectionBar()
                 }
 
-                // Normal tap
                 else -> {
                     val entry = adapter.getEntry(position)
                     if (entry.isDirectory) {
@@ -226,11 +301,9 @@ class MainActivity : CsActivity() {
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
             if (adapter.isSelectionMode) {
-                // Already in selection mode, toggle this item
                 adapter.toggleSelection(entry)
                 updateSelectionBar()
             } else {
-                // Enter selection mode with this item pre-selected
                 adapter.enterSelectionMode(entry)
                 showSelectionBar()
             }
@@ -263,7 +336,7 @@ class MainActivity : CsActivity() {
 
     private fun navigateUp() {
         fileManager.goUp()
-        exitSelectionMode()   // always clear selection when changing directory
+        exitSelectionMode()
         refreshList()
     }
 
@@ -274,19 +347,116 @@ class MainActivity : CsActivity() {
 
     private fun updateSelectionBar() {
         val count = adapter.selectedCount
-        selectedCount.text = resources.getQuantityString(
-            R.plurals.selected_count, count, count
-        )
-        // If all items were deselected via tapping, exit automatically
+        selectedCount.text = resources.getQuantityString(R.plurals.selected_count, count, count)
         if (count == 0) exitSelectionMode()
+        // Show paste button only when clipboard is non-empty and nothing is selected
+        // (paste is context-aware, not dependent on selection count)
+        pasteBtn.visibility = if (clipboard != null) View.VISIBLE else View.GONE
     }
 
     private fun exitSelectionMode() {
         adapter.exitSelectionMode()
-        menuBar.visibility = View.GONE
+        menuBar.visibility = if (clipboard != null) View.VISIBLE else View.GONE
+        if (clipboard != null) {
+            // Keep bar visible for paste, reset count label
+            selectedCount.text = ""
+            pasteBtn.visibility = View.VISIBLE
+        }
     }
 
-    private fun openFile(file: java.io.File) {
+    private fun copySelected() {
+        val paths = adapter.selectedEntries.map { it.file.absolutePath }
+        if (paths.isEmpty()) return
+        clipboard = paths
+        Toast.makeText(this, getString(R.string.toast_copy_queued), Toast.LENGTH_SHORT).show()
+        exitSelectionMode()
+    }
+
+    private fun pasteClipboard() {
+        val sources = clipboard ?: return
+        if (!fileSystemReady) return
+
+        var failed = 0
+        for (sourcePath in sources) {
+            val src = File(sourcePath)
+            val dest = File(fileManager.currentDir, src.name)
+            try {
+                if (src.isDirectory) src.copyRecursively(dest, overwrite = true)
+                else src.copyTo(dest, overwrite = true)
+            } catch (_: Exception) {
+                failed++
+            }
+        }
+
+        clipboard = null
+        pasteBtn.visibility = View.GONE
+        if (menuBar.visibility == View.VISIBLE && !adapter.isSelectionMode) {
+            menuBar.visibility = View.GONE
+        }
+
+        val msg = if (failed == 0) getString(R.string.toast_paste_success)
+        else getString(R.string.toast_paste_failed)
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        refreshList()
+    }
+
+    private fun showRenameDialog() {
+        val entries = adapter.selectedEntries
+        if (entries.size != 1) {
+            Toast.makeText(this, "Select exactly one item to rename", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val target = entries[0].file
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_rename_file, null)
+        val editText = dialogView.findViewById<EditText>(R.id.edit_text)
+        editText.setText(target.name)
+        editText.selectAll()
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<FrameLayout>(R.id.yes_button).setOnClickListener {
+            val newName = editText.text.toString().trim()
+            if (newName.isNotEmpty() && newName != target.name) {
+                val dest = File(target.parent, newName)
+                val ok = target.renameTo(dest)
+                Toast.makeText(
+                    this,
+                    if (ok) getString(R.string.toast_rename_success)
+                    else getString(R.string.toast_rename_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
+                if (ok) {
+                    exitSelectionMode()
+                    refreshList()
+                }
+            }
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.no_button).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+
+        // Show keyboard
+        editText.requestFocus()
+        (getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
+            .showSoftInput(editText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun moveSelected() {
+        val paths = adapter.selectedEntries.map { it.file.absolutePath }
+        if (paths.isEmpty()) return
+        // Stage as clipboard — user navigates to destination and pastes
+        clipboard = paths
+        Toast.makeText(this, "Navigate to destination and paste", Toast.LENGTH_SHORT).show()
+        exitSelectionMode()
+    }
+
+    private fun openFile(file: File) {
         val uri: Uri = androidx.core.content.FileProvider.getUriForFile(
             this, "${packageName}.fileprovider", file
         )
@@ -312,7 +482,6 @@ class MainActivity : CsActivity() {
                 ), REQ_MANAGE_ALL_FILES
             )
         } else {
-            // Permissions are granted at install time on API 21-22
             initFileSystem()
         }
     }

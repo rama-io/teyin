@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16sp"
+    android:background="@color/bg_1"
+    android:focusableInTouchMode="true"
+    style="@style/VerticalListDivided">
+
+    <TextView
+        android:id="@+id/rename_title"
+        android:text="@string/dialog_rename_file"
+        style="@style/H2_center" />
+
+    <LinearLayout style="@style/HorizontalList_BG2">
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusableInTouchMode="true"
+            style="@style/EditText" />
+
+        <FrameLayout
+            android:id="@+id/yes_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
+
+            <ImageView
+                android:src="@drawable/icon_disk"
+                android:contentDescription="@string/altdescr_save"
+                style="@style/Icon24" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/no_button"
+        android:text="@string/btn_cancel"
+        style="@style/BTN1" />
+</LinearLayout>

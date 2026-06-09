@@ -47,6 +47,8 @@ class PrefsManager private constructor(context: Context) {
         const val APP_THEME_COLLAPSIBLE_HEADER = "app:theme:collapsible_header"
         const val APP_THEME_ICON = "app:theme:icon"
 
+        const val FAVORITE_DIRS = "file:favorite_dirs"
+
         const val SETTINGS_SECTION_FONTS = "settings:section:fonts"
         const val SETTINGS_SECTION_SYSTEM = "settings:section:system"
         const val SETTINGS_SECTION_LANGUAGE = "settings:section:language"
@@ -203,6 +205,29 @@ class PrefsManager private constructor(context: Context) {
             false
         }
     }
+
+    // --------------- Favorite directories ---------------
+
+    fun getFavoriteDirs(): List<String> {
+        val raw = prefs.getString(PrefKeys.FAVORITE_DIRS, "") ?: ""
+        return if (raw.isBlank()) emptyList() else raw.split("\n").filter { it.isNotBlank() }
+    }
+
+    fun addFavoriteDir(path: String) {
+        val current = getFavoriteDirs().toMutableList()
+        if (path !in current) {
+            current.add(path)
+            prefs.edit().putString(PrefKeys.FAVORITE_DIRS, current.joinToString("\n")).apply()
+        }
+    }
+
+    fun removeFavoriteDir(path: String) {
+        val current = getFavoriteDirs().toMutableList()
+        current.remove(path)
+        prefs.edit().putString(PrefKeys.FAVORITE_DIRS, current.joinToString("\n")).apply()
+    }
+
+    // --------------- Clipboard (copy/move paths) ---------------
 
     fun clearAllPrefs(): Result<Unit> {
         return try {
