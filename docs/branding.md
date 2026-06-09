@@ -1,12 +1,12 @@
 # Branding
 
-This document defines the official visual assets and usage guidelines for Puma.
+This document defines the official visual assets and usage guidelines for Teyin.
 
 ---
 
 ## Header
 
-![Puma Header](./img/puma_header_1280x630.svg)
+![Teyin Header](./img/teyin_header_1280x630.svg)
 
 Standard header image for social previews and repository sharing.
 
@@ -14,13 +14,13 @@ Standard header image for social previews and repository sharing.
 
 ## Header (TV)
 
-![Puma Header TV](./img/puma_tvBanner_1280x720.svg)
+![Teyin Header TV](./img/teyin_tvBanner_1280x720.svg)
 
 Optimized for TV and wide-screen displays.
 
 ## Feature Graphic
 
-![Puma Header TV](./img/puma_featureGraphic_1024x500.svg)
+![Teyin Header TV](./img/teyin_featureGraphic_1024x500.svg)
 
 Feature graphic on f-droid.
 
@@ -30,7 +30,7 @@ Feature graphic on f-droid.
 
 ### Foreground (Fill)
 
-![Puma Icon Fill](./img/puma_icon_fill.svg)
+![Teyin Icon Fill](./img/teyin_icon_fill.svg)
 
 Primary icon version using solid fill.
 
@@ -38,7 +38,7 @@ Primary icon version using solid fill.
 
 ### Foreground (Negative)
 
-![Puma Icon Negative](./img/puma_icon_negative.svg)
+![Teyin Icon Negative](./img/teyin_icon_negative.svg)
 
 The negative variant can be used with any background color.  
 For demonstration purposes, green is used to showcase visibility in both light and dark markdown
@@ -48,7 +48,7 @@ previews.
 
 ### Icon Outline
 
-![Puma Icon Negative Outline](./img/puma_icon_outline.svg)
+![Teyin Icon Negative Outline](./img/teyin_icon_outline.svg)
 
 Outline variant for minimal or subtle UI contexts.
 

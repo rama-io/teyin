@@ -8,11 +8,11 @@ plugins {
 val currentYear = LocalDate.now().year
 
 android {
-    namespace = "com.rama.puma"
+    namespace = "com.rama.teyin"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.rama.puma"
+        applicationId = "com.rama.teyin"
         minSdk = 21
         targetSdk = 36
         versionCode = 1
@@ -44,7 +44,7 @@ android {
     applicationVariants.all {
         outputs.all {
             this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            outputFileName = "puma_${versionName}.apk"
+            outputFileName = "teyin_${versionName}.apk"
         }
     }
 

@@ -5,8 +5,8 @@
 ### Start App
 ```
 ./gradlew installBaseDebug &&
-adb shell am start -n com.rama.puma.debug/com.rama.puma.activities.MainActivity &&
-adb logcat --pid=$(adb shell pidof -s com.rama.puma.debug)
+adb shell am start -n com.rama.teyin.debug/com.rama.teyin.activities.MainActivity &&
+adb logcat --pid=$(adb shell pidof -s com.rama.teyin.debug)
 ```
 
 ## Building
@@ -40,7 +40,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 ### Launch the app after install
 ```
-adb shell am start -n com.rama.puma/.activities.MainActivity
+adb shell am start -n com.rama.teyin/.activities.MainActivity
 ```
 
 ## Gradle
@@ -69,10 +69,10 @@ adb devices
 
 ### Watch logcat (filtered to your app)
 ```
-adb logcat --pid=$(adb shell pidof -s com.rama.puma)
+adb logcat --pid=$(adb shell pidof -s com.rama.teyin)
 ```
 
 ### Uninstall
 ```
-adb uninstall com.rama.puma
+adb uninstall com.rama.teyin
 ```

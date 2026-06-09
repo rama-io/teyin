@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Puma"
+rootProject.name = "Teyin"
 include(":app")
  

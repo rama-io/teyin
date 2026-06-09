@@ -8,7 +8,7 @@ Built entirely in native Kotlin, runs fully on-device, avoids tracking, and keep
 minimum by emphasizing clarity and intentional interaction.
 
 - Original author: [Pombo](https://github.com/pomboverso)
-- Original repository: https://github.com/rama-io/puma
+- Original repository: https://github.com/rama-io/teyin
 - License: **GPL 3.0**
 - License link: https://www.gnu.org/licenses/gpl-3.0
 
