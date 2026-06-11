@@ -84,13 +84,8 @@ class DirectoryListAdapter(
                 v.findViewById<ImageView>(R.id.dir_icon).setImageResource(entry.iconRes)
                 v.findViewById<TextView>(R.id.dir_name).text = entry.label
                 v.findViewById<TextView>(R.id.dir_path).text = entry.path
-                val removeBtn = v.findViewById<FrameLayout>(R.id.remove_favorite_btn)
-                if (entry.removable) {
-                    removeBtn.visibility = View.VISIBLE
-                    removeBtn.setOnClickListener { onRemove(entry.path) }
-                } else {
-                    removeBtn.visibility = View.GONE
-                }
+                // Fixed entries (system, SD card, USB) never show a remove button
+                v.findViewById<FrameLayout>(R.id.remove_favorite_btn).visibility = View.GONE
                 v
             }
 

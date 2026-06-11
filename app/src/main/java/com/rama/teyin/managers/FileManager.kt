@@ -37,6 +37,17 @@ class FileManager {
         return true
     }
 
+    /**
+     * Jump directly to any absolute directory, replacing the current stack root.
+     * Use this for SD card / USB entries which aren't under the primary storage root.
+     */
+    fun enterAbsolute(dir: File): Boolean {
+        if (!dir.isDirectory) return false
+        stack.clear()
+        stack.addLast(dir)
+        return true
+    }
+
     // Go up one level. Returns false if already at root.
     fun goUp(): Boolean {
         if (isAtRoot) return false

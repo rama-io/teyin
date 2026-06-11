@@ -268,8 +268,8 @@ class MainActivity : CsActivity() {
             val path = dirAdapter.pathAt(position) ?: return@setOnItemClickListener
             val dir = File(path)
             if (dir.isDirectory) {
-                fileManager.goToRoot()
-                navigateToAbsolutePath(dir)
+                // enterAbsolute works for SD card, USB, and internal paths alike
+                fileManager.enterAbsolute(dir)
                 showDirs = false
                 directoriesButton.setBackgroundColor(Color.TRANSPARENT)
                 directoriesFragment.visibility = View.GONE
@@ -311,25 +311,63 @@ class MainActivity : CsActivity() {
             )
         }
 
-        // Fixed: USB / external volumes
-        val storageDir = File("/storage")
-        if (storageDir.isDirectory) {
-            val uuidPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
-            storageDir.listFiles()
-                ?.filter { it.isDirectory && uuidPattern.matches(it.name) }
-                ?.mapNotNull { volumeDir ->
-                    // Root is the volumeDir itself on most devices; some OEMs add /0
-                    val candidate = File(volumeDir, "0").takeIf { it.isDirectory } ?: volumeDir
-                    if (candidate.canRead()) candidate else null
-                }
-                ?.forEach { usb ->
+        // Fixed: USB / SD card / external volumes via StorageManager
+        val sm = getSystemService(STORAGE_SERVICE) as android.os.storage.StorageManager
+        val primaryCanonical = try {
+            Environment.getExternalStorageDirectory().canonicalPath
+        } catch (_: Exception) { "" }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            // API 24+: use StorageVolume list
+            sm.storageVolumes
+                .filter { vol -> !vol.isPrimary && vol.state == android.os.Environment.MEDIA_MOUNTED }
+                .forEach { vol ->
+                    val path = try {
+                        val m = vol.javaClass.getMethod("getPath")
+                        m.invoke(vol) as? String
+                    } catch (_: Exception) { null } ?: return@forEach
+                    val dir = File(path)
+                    if (!dir.canRead()) return@forEach
+                    val isUsb = vol.isRemovable &&
+                        !path.contains("sd", ignoreCase = true) &&
+                        !path.matches(Regex(".*/[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}(/.*)?"))
+                    val label = vol.getDescription(this)
+                        ?: if (isUsb) "USB" else "SD Card"
                     list += DirEntry.Fixed(
-                        label = "USB – ${usb.parentFile?.name ?: usb.name}",
-                        path = usb.canonicalPath,
-                        iconRes = R.drawable.icon_cassette_tape_solid,
+                        label = label,
+                        path = dir.canonicalPath,
+                        iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
+                                  else R.drawable.icon_disk,
                         removable = true,
                     )
                 }
+        } else {
+            // API 21-23: fallback — scan /storage for anything that isn't primary or known system dirs
+            val storageDir = File("/storage")
+            val skipNames = setOf("emulated", "self", "enc_emulated")
+            if (storageDir.isDirectory) {
+                storageDir.listFiles()
+                    ?.filter { it.isDirectory && it.name !in skipNames }
+                    ?.mapNotNull { volumeDir ->
+                        val candidate = File(volumeDir, "0").takeIf { it.isDirectory } ?: volumeDir
+                        try {
+                            if (candidate.canRead() && candidate.canonicalPath != primaryCanonical)
+                                candidate else null
+                        } catch (_: Exception) { null }
+                    }
+                    ?.forEach { vol ->
+                        val uuidPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
+                        val isUsb = !uuidPattern.matches(vol.parentFile?.name ?: "")
+                        list += DirEntry.Fixed(
+                            label = if (isUsb) "USB – ${vol.parentFile?.name ?: vol.name}"
+                                    else "SD Card – ${vol.parentFile?.name ?: vol.name}",
+                            path = vol.canonicalPath,
+                            iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
+                                      else R.drawable.icon_disk,
+                            removable = true,
+                        )
+                    }
+            }
         }
 
         // Fixed: storage root
@@ -441,12 +479,18 @@ class MainActivity : CsActivity() {
         if (!fileSystemReady) return
 
         val entries = fileManager.listCurrent(currentSearchQuery)
-        adapter.update(entries, hasParent = !fileManager.isAtRoot)
+        val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+        val hasParent = !fileManager.isAtRoot ||
+            fileManager.currentDir.absolutePath != primaryRoot
+        adapter.update(entries, hasParent = hasParent)
 
-        val dirName =
-            if (fileManager.isAtRoot) "Storage"
-            else fileManager.currentDir.name
-
+        val dirName = fileManager.currentDir.let { dir ->
+            when {
+                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> "Storage"
+                dir.name.isEmpty() -> "/"
+                else -> dir.name
+            }
+        }
         currentFolderName.text = dirName
 
         if (adapter.isSelectionMode) updateSelectionBar()
@@ -455,7 +499,12 @@ class MainActivity : CsActivity() {
     }
 
     private fun navigateUp() {
-        fileManager.goUp()
+        if (fileManager.isAtRoot) {
+            // We're at an external volume root (SD card / USB) — go back to primary storage
+            fileManager.init()
+        } else {
+            fileManager.goUp()
+        }
         exitSelectionMode()
         refreshList()
     }

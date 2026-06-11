@@ -40,6 +40,22 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Show in "Explore" chooser when a USB/SD is mounted -->
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_UI" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- Handle Browse/View intent for directories -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="resource/folder" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.document/directory" />
+            </intent-filter>
         </activity>
 
         <!-- FileProvider for opening files via Intent.ACTION_VIEW -->
