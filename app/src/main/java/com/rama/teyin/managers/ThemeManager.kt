@@ -328,6 +328,16 @@ object ThemeManager {
             DRACULA.accent_1, MELANGE.accent_1, TOKYO_NIGHT.accent_1, custom.accent_1,
             context.resources.getColor(R.color.accent_1) -> palette.accent_1
 
+            // accent_2
+            MAKO.accent_2, RAMA.accent_2, CATPPUCCIN_MOCHA.accent_2, CATPPUCCIN_LATTE.accent_2,
+            DRACULA.accent_2, MELANGE.accent_2, TOKYO_NIGHT.accent_2, custom.accent_2,
+            context.resources.getColor(R.color.accent_2) -> palette.accent_2
+
+            // accent_3
+            MAKO.accent_3, RAMA.accent_3, CATPPUCCIN_MOCHA.accent_3, CATPPUCCIN_LATTE.accent_3,
+            DRACULA.accent_3, MELANGE.accent_3, TOKYO_NIGHT.accent_3, custom.accent_3,
+            context.resources.getColor(R.color.accent_3) -> palette.accent_3
+
             // collapsible_header
             MAKO.collapsible_header, RAMA.collapsible_header, CATPPUCCIN_MOCHA.collapsible_header, CATPPUCCIN_LATTE.collapsible_header,
             DRACULA.collapsible_header, MELANGE.collapsible_header, TOKYO_NIGHT.collapsible_header, custom.collapsible_header,

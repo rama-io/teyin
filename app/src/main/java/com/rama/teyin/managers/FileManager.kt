@@ -1,6 +1,7 @@
 package com.rama.teyin.managers
 
 import android.os.Environment
+import android.os.StatFs
 import java.io.File
 
 data class FsEntry(
@@ -72,11 +73,68 @@ class FileManager {
     }
 
     companion object {
+
         fun formatSize(bytes: Long): String = when {
             bytes < 1_024L -> "$bytes B"
             bytes < 1_048_576L -> "%.1f KB".format(bytes / 1_024f)
             bytes < 1_073_741_824L -> "%.1f MB".format(bytes / 1_048_576f)
             else -> "%.1f GB".format(bytes / 1_073_741_824f)
+        }
+
+        /**
+         * Returns the free bytes on the volume that contains [dir].
+         * Uses StatFs for accuracy on both internal and removable storage.
+         */
+        fun getFreeBytes(dir: File): Long {
+            return try {
+                val stat = StatFs(dir.absolutePath)
+                stat.availableBlocksLong * stat.blockSizeLong
+            } catch (_: Exception) {
+                Long.MAX_VALUE // be permissive if we can't stat
+            }
+        }
+
+        /**
+         * Recursively sums the size of [src] (file or directory).
+         */
+        fun totalSize(src: File): Long = when {
+            src.isFile -> src.length()
+            src.isDirectory -> src.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
+            else -> 0L
+        }
+
+        /**
+         * Returns true if [destDir] has enough space to hold [requiredBytes],
+         * with a small safety margin (1 MB).
+         */
+        fun hasEnoughSpace(destDir: File, requiredBytes: Long): Boolean {
+            val free = getFreeBytes(destDir)
+            val margin = 1_048_576L // 1 MB safety margin
+            return free >= requiredBytes + margin
+        }
+
+        /**
+         * Returns a [File] in [destDir] that does not collide with any existing entry.
+         * If [baseName] is free, it is returned as-is.
+         * Otherwise names are tried: "baseName (2)", "baseName (3)", etc.
+         * For files the extension is preserved: "photo (2).jpg".
+         */
+        fun resolveNonConflictingName(destDir: File, baseName: String): File {
+            val candidate = File(destDir, baseName)
+            if (!candidate.exists()) return candidate
+
+            // Split name and extension for files
+            val dotIndex = baseName.lastIndexOf('.')
+            val nameNoExt = if (dotIndex > 0) baseName.substring(0, dotIndex) else baseName
+            val ext = if (dotIndex > 0) baseName.substring(dotIndex) else "" // includes the dot
+
+            var counter = 2
+            while (true) {
+                val newName = "$nameNoExt ($counter)$ext"
+                val f = File(destDir, newName)
+                if (!f.exists()) return f
+                counter++
+            }
         }
     }
 }

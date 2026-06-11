@@ -80,6 +80,15 @@ class MainActivity : CsActivity() {
     private var clipboard: List<String>? = null
     private var clipboardMode: ClipboardMode = ClipboardMode.COPY
 
+    /**
+     * Cached SAF tree URIs granted for removable volumes (SD card, USB).
+     * Key = volume root path (e.g. "/storage/1234-ABCD/0"), value = tree Uri.
+     */
+    private val safUriCache = mutableMapOf<String, Uri>()
+
+    /** Pending SAF callback invoked after the user grants access. */
+    private var pendingSafCallback: (() -> Unit)? = null
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_BACK -> {
@@ -205,10 +214,44 @@ class MainActivity : CsActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQ_MANAGE_ALL_FILES) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager())
-                initFileSystem()
-            else showPermissionDenied()
+        when (requestCode) {
+            REQ_MANAGE_ALL_FILES -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager())
+                    initFileSystem()
+                else showPermissionDenied()
+            }
+            REQ_SAF -> {
+                val treeUri = data?.data
+                if (resultCode == RESULT_OK && treeUri != null) {
+                    // Persist the grant so it survives reboots
+                    contentResolver.takePersistableUriPermission(
+                        treeUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                    // Cache against every removable volume whose UUID appears in the granted URI
+                    val uriDecoded = Uri.decode(treeUri.toString())
+                    val uuidRegex = Regex("[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}")
+                    val uuidDirPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
+                    val storageDir = File("/storage")
+                    storageDir.listFiles()
+                        ?.filter { it.isDirectory && uuidDirPattern.matches(it.name) }
+                        ?.forEach { volumeDir ->
+                            val volUuid = uuidRegex.find(volumeDir.name)?.value ?: volumeDir.name
+                            if (uriDecoded.contains(volUuid, ignoreCase = true)) {
+                                val volRoot = try {
+                                    File(volumeDir, "0").takeIf { it.isDirectory }?.canonicalPath
+                                        ?: volumeDir.canonicalPath
+                                } catch (_: Exception) { volumeDir.absolutePath }
+                                safUriCache[volRoot] = treeUri
+                            }
+                        }
+                    // Retry the pending operation
+                    pendingSafCallback?.invoke()
+                } else {
+                    Toast.makeText(this, getString(R.string.toast_saf_denied), Toast.LENGTH_SHORT).show()
+                }
+                pendingSafCallback = null
+            }
         }
     }
 
@@ -269,15 +312,15 @@ class MainActivity : CsActivity() {
         }
 
         // Fixed: USB / external volumes
-        val mainExternal = Environment.getExternalStorageDirectory().canonicalPath
         val storageDir = File("/storage")
         if (storageDir.isDirectory) {
+            val uuidPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
             storageDir.listFiles()
-                ?.filter { it.isDirectory && it.name != "emulated" && it.name != "self" }
+                ?.filter { it.isDirectory && uuidPattern.matches(it.name) }
                 ?.mapNotNull { volumeDir ->
+                    // Root is the volumeDir itself on most devices; some OEMs add /0
                     val candidate = File(volumeDir, "0").takeIf { it.isDirectory } ?: volumeDir
-                    if (candidate.canRead() && candidate.canonicalPath != mainExternal)
-                        candidate else null
+                    if (candidate.canRead()) candidate else null
                 }
                 ?.forEach { usb ->
                     list += DirEntry.Fixed(
@@ -453,30 +496,43 @@ class MainActivity : CsActivity() {
     private fun pasteClipboard() {
         val sources = clipboard ?: return
         if (!fileSystemReady) return
+        val destDir = fileManager.currentDir
         val isMove = clipboardMode == ClipboardMode.MOVE
 
+        // ── 1. Space check ──────────────────────────────────────────────────
+        val requiredBytes = sources.sumOf { FileManager.totalSize(File(it)) }
+        if (!FileManager.hasEnoughSpace(destDir, requiredBytes)) {
+            Toast.makeText(this, getString(R.string.toast_not_enough_space), Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // ── 2. SAF permission check for removable storage ──────────────────
+        val destVolume = removableVolumeRootFor(destDir.absolutePath)
+        if (destVolume != null && !hasSafAccess(destVolume)) {
+            pendingSafCallback = { pasteClipboard() }
+            requestSafAccess(destVolume)
+            return
+        }
+
+        // ── 3. Execute copy / move ─────────────────────────────────────────
         var failed = 0
         val successfullySources = mutableListOf<File>()
 
         for (sourcePath in sources) {
             val src = File(sourcePath)
-            val dest = File(fileManager.currentDir, src.name)
+            // Resolve a non-conflicting destination name
+            val dest = FileManager.resolveNonConflictingName(destDir, src.name)
             try {
                 if (src.isDirectory) {
-                    src.copyRecursively(dest, overwrite = true)
-                    // For directories verify total size matches
+                    src.copyRecursively(dest, overwrite = false)
                     val srcSize = src.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
                     val destSize = dest.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
                     if (destSize == srcSize) successfullySources.add(src)
-                    else {
-                        dest.deleteRecursively(); failed++
-                    }
+                    else { dest.deleteRecursively(); failed++ }
                 } else {
-                    src.copyTo(dest, overwrite = true)
+                    src.copyTo(dest, overwrite = false)
                     if (dest.length() == src.length()) successfullySources.add(src)
-                    else {
-                        dest.delete(); failed++
-                    }
+                    else { dest.delete(); failed++ }
                 }
             } catch (_: Exception) {
                 failed++
@@ -510,6 +566,14 @@ class MainActivity : CsActivity() {
         }
         val target = entries[0].file
 
+        // SAF check for rename on removable storage
+        val targetVolume = removableVolumeRootFor(target.absolutePath)
+        if (targetVolume != null && !hasSafAccess(targetVolume)) {
+            pendingSafCallback = { showRenameDialog() }
+            requestSafAccess(targetVolume)
+            return
+        }
+
         val dialogView = layoutInflater.inflate(R.layout.dialog_rename_file, null)
         val editText = dialogView.findViewById<EditText>(R.id.edit_text)
         editText.setText(target.name)
@@ -523,8 +587,12 @@ class MainActivity : CsActivity() {
         dialogView.findViewById<FrameLayout>(R.id.yes_button).setOnClickListener {
             val newName = editText.text.toString().trim()
             if (newName.isNotEmpty() && newName != target.name) {
-                val dest = File(target.parent, newName)
-                val ok = target.renameTo(dest)
+                // If a file/folder with that name already exists, use a unique name
+                val resolvedDest = FileManager.resolveNonConflictingName(
+                    target.parentFile ?: fileManager.currentDir,
+                    newName
+                )
+                val ok = target.renameTo(resolvedDest)
                 Toast.makeText(
                     this,
                     if (ok) getString(R.string.toast_rename_success)
@@ -556,6 +624,60 @@ class MainActivity : CsActivity() {
         clipboardMode = ClipboardMode.MOVE
         Toast.makeText(this, "Navigate to destination and paste", Toast.LENGTH_SHORT).show()
         exitSelectionMode()
+    }
+
+    // ── SAF (Storage Access Framework) helpers ─────────────────────────────
+
+    /**
+     * Returns true if we already have a persistent write grant for [volumeRoot].
+     */
+    private fun hasSafAccess(volumeRoot: String): Boolean {
+        if (safUriCache.containsKey(volumeRoot)) return true
+        // Check persisted grants across restarts
+        val persisted = contentResolver.persistedUriPermissions
+        return persisted.any { perm ->
+            perm.isWritePermission && safUriMatchesVolume(perm.uri, volumeRoot)
+        }.also { found ->
+            if (found) {
+                val uri = persisted.first { perm ->
+                    perm.isWritePermission && safUriMatchesVolume(perm.uri, volumeRoot)
+                }.uri
+                safUriCache[volumeRoot] = uri
+            }
+        }
+    }
+
+    /**
+     * Launches the SAF directory picker so the user can grant write access to [volumeRoot].
+     *
+     * Note: FLAG_GRANT_* flags must NOT be set on the outgoing intent on API < 26 —
+     * they are declared by the picker and returned on the result uri. We only need
+     * FLAG_GRANT_PERSISTABLE_URI_PERMISSION when calling takePersistableUriPermission().
+     */
+    private fun requestSafAccess(volumeRoot: String) {
+        Toast.makeText(this, getString(R.string.toast_saf_required), Toast.LENGTH_LONG).show()
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        startActivityForResult(intent, REQ_SAF)
+    }
+
+    /**
+     * Checks whether a SAF tree [uri] corresponds to [volumeRoot].
+     * SAF URIs look like:
+     *   content://com.android.externalstorage.documents/tree/1234-ABCD%3A
+     * We extract the volume UUID from both the URI and the file path and compare.
+     */
+    private fun safUriMatchesVolume(uri: Uri, volumeRoot: String): Boolean {
+        val uriStr = Uri.decode(uri.toString())
+        // Extract UUID-like segment from the volume root path
+        // e.g. /storage/1234-ABCD → "1234-ABCD", /storage/1234-ABCD/0 → "1234-ABCD"
+        val uuidRegex = Regex("[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}")
+        val volumeUuid = uuidRegex.find(volumeRoot)?.value
+        if (volumeUuid != null) {
+            return uriStr.contains(volumeUuid, ignoreCase = true)
+        }
+        // Fallback: match on the last meaningful path segment of volumeRoot
+        val seg = volumeRoot.trimEnd('/').substringAfterLast('/')
+        return seg.isNotEmpty() && uriStr.contains(seg, ignoreCase = true)
     }
 
     private fun openFile(file: File) {
@@ -699,5 +821,67 @@ class MainActivity : CsActivity() {
     companion object {
         private const val REQ_STORAGE = 1001
         private const val REQ_MANAGE_ALL_FILES = 1002
+        private const val REQ_SAF = 1003
+
+        /**
+         * Returns the canonical volume root for [path] if it lives on a removable
+         * volume (SD card, USB), or null if it is on primary/internal storage.
+         *
+         * Android exposes removable volumes under several roots depending on version:
+         *   /storage/<UUID>          – API 21+ standard
+         *   /storage/<UUID>/0        – some OEMs
+         *   /mnt/media_rw/<UUID>     – Android 6 raw mount point
+         *   /mnt/sdcard, /mnt/extSdCard, /sdcard1 – older OEM paths
+         *
+         * We collect all known primary-storage canonical paths and treat anything
+         * else under /storage or /mnt as removable.
+         */
+        fun removableVolumeRootFor(path: String): String? {
+            val canonicalPath = try { File(path).canonicalPath } catch (_: Exception) { path }
+
+            // Collect all primary-storage aliases
+            val primaryAliases = mutableSetOf<String>()
+            try {
+                val ext = Environment.getExternalStorageDirectory()
+                primaryAliases += ext.absolutePath
+                primaryAliases += ext.canonicalPath
+            } catch (_: Exception) {}
+            // /storage/emulated/0 and /storage/self/primary are always primary
+            primaryAliases += "/storage/emulated/0"
+            primaryAliases += "/storage/self/primary"
+
+            if (primaryAliases.any { canonicalPath.startsWith(it) }) return null
+
+            // Check /storage/<UUID> and /storage/<UUID>/0
+            val storageMatch = Regex("^/storage/([^/]+)").find(canonicalPath)
+            if (storageMatch != null) {
+                val vol = storageMatch.groupValues[1]
+                if (vol == "emulated" || vol == "self") return null
+                val deep = File("/storage/$vol/0")
+                return try {
+                    if (deep.isDirectory) deep.canonicalPath else File("/storage/$vol").canonicalPath
+                } catch (_: Exception) { "/storage/$vol" }
+            }
+
+            // Check /mnt/media_rw/<UUID> (Android 6 raw mount) or /mnt/sdcard etc.
+            val mntMatch = Regex("^/mnt/(?:media_rw|sdcard|extSdCard|external_sd)/([^/]*)").find(canonicalPath)
+            if (mntMatch != null) {
+                // Try to find the /storage equivalent
+                val vol = mntMatch.groupValues[1].ifEmpty { null }
+                if (vol != null) {
+                    val storageEquiv = File("/storage/$vol")
+                    return try {
+                        if (storageEquiv.isDirectory) storageEquiv.canonicalPath
+                        else {
+                            val end = canonicalPath.indexOf('/', mntMatch.value.length).takeIf { it > 0 } ?: canonicalPath.length
+                            canonicalPath.substring(0, end)
+                        }
+                    } catch (_: Exception) { storageEquiv.absolutePath }
+                }
+                return canonicalPath.split("/").take(4).joinToString("/")
+            }
+
+            return null
+        }
     }
 }
