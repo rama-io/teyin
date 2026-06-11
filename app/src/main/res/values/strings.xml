@@ -18,6 +18,7 @@
     <string name="toast_not_enough_space">Not enough space on destination</string>
     <string name="toast_saf_required">Grant write access to this storage</string>
     <string name="toast_saf_denied">Write access not granted</string>
+    <string name="toast_storage_unavailable">Storage is not available</string>
     <string name="toast_dir_added">Folder added to favorites</string>
     <string name="toast_dir_exists">Already in favorites</string>
     <string name="toast_delete_success">Deleted</string>

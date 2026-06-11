@@ -276,9 +276,18 @@ class MainActivity : CsActivity() {
                 filesFragment.visibility = View.VISIBLE
                 refreshList()
             } else {
-                Toast.makeText(this, "Folder no longer exists", Toast.LENGTH_SHORT).show()
-                PrefsManager.getInstance(this).removeFavoriteDir(path)
-                refreshFavorites()
+                // Distinguish: fixed volume entries (SD/USB) vs user bookmarks
+                val entry = dirAdapter.getItem(position)
+                if (entry is DirEntry.Fixed) {
+                    // Volume was unplugged — just refresh so it disappears from the list
+                    Toast.makeText(this, "Storage is not available", Toast.LENGTH_SHORT).show()
+                    refreshFavorites()
+                } else {
+                    // Stale user bookmark — remove it
+                    Toast.makeText(this, "Folder no longer exists", Toast.LENGTH_SHORT).show()
+                    PrefsManager.getInstance(this).removeFavoriteDir(path)
+                    refreshFavorites()
+                }
             }
         }
 
@@ -477,6 +486,13 @@ class MainActivity : CsActivity() {
 
     private fun refreshList() {
         if (!fileSystemReady) return
+
+        // If current directory no longer exists (e.g. SD card unplugged mid-browse),
+        // fall back to primary storage gracefully
+        if (!fileManager.currentDir.isDirectory) {
+            Toast.makeText(this, "Storage is no longer available", Toast.LENGTH_SHORT).show()
+            fileManager.init()
+        }
 
         val entries = fileManager.listCurrent(currentSearchQuery)
         val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
