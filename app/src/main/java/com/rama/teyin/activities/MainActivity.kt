@@ -675,7 +675,7 @@ class MainActivity : CsActivity() {
             .create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<Button>(R.id.yes_button).setOnClickListener {
+        dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
             val newName = editText.text.toString().trim()
             if (newName.isNotEmpty() && newName != target.name) {
                 // If a file/folder with that name already exists, use a unique name
@@ -725,7 +725,7 @@ class MainActivity : CsActivity() {
             .create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<Button>(R.id.yes_button).setOnClickListener {
+        dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
             val name = editText.text.toString().trim()
             if (name.isNotEmpty()) {
                 val destDir = fileManager.currentDir
@@ -776,7 +776,7 @@ class MainActivity : CsActivity() {
             .create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<Button>(R.id.yes_button).setOnClickListener {
+        dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
             val volume = entries.map { it.file.absolutePath }
                 .firstNotNullOfOrNull { removableVolumeRootFor(it) }
             if (volume != null && !hasSafAccess(volume)) {
