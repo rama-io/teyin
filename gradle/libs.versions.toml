@@ -2,9 +2,11 @@
 agp = "8.13.2"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
+activityKtx = "1.9.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

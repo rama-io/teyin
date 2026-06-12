@@ -8,13 +8,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.activity.ComponentActivity
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.ThemeManager
 import com.rama.teyin.utils.dp
 import com.rama.teyin.managers.PrefsManager
 import com.rama.teyin.utils.LocaleHelper
 
-abstract class CsActivity : android.app.Activity() {
+abstract class CsActivity : ComponentActivity() {
 
     val prefs by lazy { PrefsManager.getInstance(this) }
     private var lastKnownAppLanguage: String? = null

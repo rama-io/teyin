@@ -23,7 +23,8 @@
                 android:layout_height="120dp"
                 android:src="@drawable/teyin"
                 android:tint="@color/accent_1"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:contentDescription="@null" />
 
             <TextView
                 android:id="@+id/name_version"

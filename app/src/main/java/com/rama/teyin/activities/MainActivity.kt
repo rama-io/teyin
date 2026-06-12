@@ -18,7 +18,6 @@ import android.os.Looper
 import android.provider.Settings
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
-import android.window.OnBackInvokedDispatcher
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
@@ -29,6 +28,7 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import com.rama.teyin.CsActivity
 import com.rama.teyin.R
 import com.rama.teyin.adapters.DirEntry
@@ -106,16 +106,8 @@ class MainActivity : CsActivity() {
         }
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun onBackPressed() = handleBackPress()
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
-            KeyEvent.KEYCODE_BACK -> {
-                handleBackPress()
-                true
-            }
-
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_F10 -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
@@ -196,11 +188,7 @@ class MainActivity : CsActivity() {
         initFileList()
         requestStoragePermission()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(
-                OnBackInvokedDispatcher.PRIORITY_DEFAULT
-            ) { handleBackPress() }
-        }
+        onBackPressedDispatcher.addCallback(this) { handleBackPress() }
     }
 
     override fun shouldRecreateOnSettingsChange(): Boolean = false
@@ -238,7 +226,7 @@ class MainActivity : CsActivity() {
         super.dispatchTouchEvent(ev)
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQ_STORAGE) {

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:background="?attr/bgColor"
     android:layout_height="match_parent"
     android:orientation="vertical"
     style="@style/VerticalListDivided">
 
-    <LinearLayout style="@style/HorizontalListDivided">
+    <LinearLayout
+        android:baselineAligned="false"
+        style="@style/HorizontalListDivided">
 
         <LinearLayout
             android:id="@+id/current_dir"
@@ -63,8 +66,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="text"
+                android:hint="@string/altdescr_search_icon"
                 android:background="@color/bg_2"
                 android:textColorHint="@color/disabled"
+                android:autofillHints=""
+                tools:ignore="NestedWeights"
                 style="@style/EditText" />
 
             <FrameLayout
@@ -130,8 +137,10 @@
 
         <ListView
             android:id="@+id/directory_list"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            tools:ignore="Suspicious0dp,InefficientWeight,NestedWeights"
             android:fillViewport="true"
             android:focusableInTouchMode="false"
             android:nestedScrollingEnabled="false"
@@ -151,8 +160,10 @@
 
         <ListView
             android:id="@+id/file_list"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            tools:ignore="Suspicious0dp,InefficientWeight,NestedWeights"
             android:fillViewport="true"
             android:focusableInTouchMode="false"
             android:nestedScrollingEnabled="false"
@@ -249,14 +260,6 @@
             <!--                android:id="@+id/app_settings"-->
             <!--                android:layout_width="wrap_content"-->
             <!--                android:layout_height="wrap_content"-->
-            <!--                android:padding="12sp">-->
-
-            <!--                <ImageView-->
-            <!--                    android:src="@drawable/icon_cog_solid"-->
-            <!--                    android:contentDescription="@string/ctxmenu_open_settings"-->
-            <!--                    style="@style/Icon24" />-->
-            <!--            </FrameLayout>-->
-
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

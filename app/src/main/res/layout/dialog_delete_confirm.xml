@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16sp"
     android:background="@color/bg_1"
-    style="@style/VerticalListDivided">
+    style="@style/VerticalListDivided"
+    tools:ignore="ButtonOrder">
 
     <TextView
         android:id="@+id/delete_title"
@@ -15,12 +17,12 @@
         style="@style/Text" />
 
     <Button
-        android:id="@+id/yes_button"
-        android:text="@string/btn_delete_confirm"
-        style="@style/BTN_danger" />
-
-    <Button
         android:id="@+id/no_button"
         android:text="@string/btn_cancel"
         style="@style/BTN1" />
+
+    <Button
+        android:id="@+id/yes_button"
+        android:text="@string/btn_delete_confirm"
+        style="@style/BTN_danger" />
 </LinearLayout>

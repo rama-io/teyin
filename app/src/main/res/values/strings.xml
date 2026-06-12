@@ -36,6 +36,7 @@
     <string name="btn_theme_apply_custom">Apply Custom Theme</string>
     <string name="btn_font_custom_pick">Choose Font file</string>
     <!-- ColorPicker -->
+    <string name="hint_hex_color" translatable="false">#RRGGBB</string>
     <string name="colorpicker_theme_foreground">Foreground</string>
     <string name="colorpicker_theme_collapsible_header">Collapsible Header</string>
     <string name="colorpicker_theme_h1">H1</string>
@@ -69,7 +70,6 @@
 
     <!-- ContextMenu -->
     <string name="ctxmenu_rename">Rename</string>
-    <string name="ctxmenu_open_settings">App settings...</string>
 
     <!-- InputLabel -->
     <string name="label_zoom">Zoom</string>
@@ -166,4 +166,5 @@
     <string name="toast_folder_create_failed">Could not create folder</string>
     <string name="dialog_delete_title">Delete</string>
     <string name="btn_delete_confirm">Delete</string>
+    <string name="name_version" translatable="false">%1$s %2$d</string>
 </resources>
