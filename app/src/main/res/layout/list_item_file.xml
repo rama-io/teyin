@@ -30,7 +30,7 @@
         <ImageView
             android:id="@+id/file_icon"
             android:src="@drawable/icon_disk"
-            android:contentDescription="File"
+            android:contentDescription="@string/altdescr_file"
             style="@style/Icon24" />
     </FrameLayout>
 

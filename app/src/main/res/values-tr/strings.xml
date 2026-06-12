@@ -75,6 +75,40 @@
 
     <!-- Toasts -->
     <string name="toast_invalid_color">Geçersiz renk</string>
+    <string name="toast_storage_not_available">Depolama alanı mevcut değil</string>
+    <string name="toast_folder_no_longer_exists">Klasör artık mevcut değil</string>
+    <string name="toast_storage_no_longer_available">Depolama alanı artık mevcut değil</string>
+    <string name="toast_select_one_to_rename">Yeniden adlandırmak için tam olarak bir öğe seç</string>
+    <string name="toast_navigate_and_paste">Hedefe git ve yapıştır</string>
+    <string name="toast_no_app_to_open">Bu dosyayı açabilecek uygulama yok</string>
+    <string name="toast_storage_permission_required">Depolama izni gerekli</string>
+    <string name="dir_label_root">Kök</string>
+    <string name="dir_label_storage">Depolama</string>
+    <string name="dir_label_usb">USB</string>
+    <string name="dir_label_sd_card">SD Kart</string>
+    <string name="dir_label_usb_with_name">USB – %s</string>
+    <string name="dir_label_sd_card_with_name">SD Kart – %s</string>
+    <string name="dir_label_dcim">DCIM</string>
+    <string name="dir_label_pictures">Resimler</string>
+    <string name="dir_label_music">Müzik</string>
+    <string name="dir_label_movies">Filmler</string>
+    <string name="dir_label_download">İndirilenler</string>
+    <string name="format_size_bytes">%d B</string>
+    <string name="format_size_kb">%.1f KB</string>
+    <string name="format_size_mb">%.1f MB</string>
+    <string name="format_size_gb">%.1f GB</string>
+    <string name="current_folder_name_placeholder">Geçerli Klasör Adı</string>
+    <string name="btn_add_current_folder">Geçerli Klasörü Ekle</string>
+    <string name="altdescr_folder_indicator">Klasör göstergesi</string>
+    <string name="altdescr_directories">Dizinler</string>
+    <string name="altdescr_add_folder">Klasör Ekle</string>
+    <string name="altdescr_paste">Yapıştır</string>
+    <string name="altdescr_copy">Kopyala</string>
+    <string name="altdescr_move_to_folder">Klasöre taşı</string>
+    <string name="altdescr_remove_selection">Seçimi kaldır</string>
+    <string name="altdescr_file">Dosya</string>
+    <string name="altdescr_favorite_folder">Favori klasör</string>
+    <string name="altdescr_remove_favorite">Favoriyi kaldır</string>
 
     <!-- AltDescription -->
     <string name="altdescr_search_icon">Aramayı aç/kapat</string>

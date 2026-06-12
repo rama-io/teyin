@@ -96,7 +96,7 @@ class DirectoryListAdapter(
                 v.findViewById<ImageView>(R.id.dir_icon)
                     .setImageResource(R.drawable.icon_folder_solid)
                 v.findViewById<TextView>(R.id.dir_name).text =
-                    file.name.ifEmpty { "Storage" }
+                    file.name.ifEmpty { context.getString(R.string.dir_label_storage) }
                 v.findViewById<TextView>(R.id.dir_path).text = entry.path
                 val removeBtn = v.findViewById<FrameLayout>(R.id.remove_favorite_btn)
                 removeBtn.visibility = View.VISIBLE

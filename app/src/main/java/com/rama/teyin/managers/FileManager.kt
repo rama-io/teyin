@@ -1,7 +1,9 @@
 package com.rama.teyin.managers
 
+import android.content.res.Resources
 import android.os.Environment
 import android.os.StatFs
+import com.rama.teyin.R
 import java.io.File
 
 data class FsEntry(
@@ -85,11 +87,11 @@ class FileManager {
 
     companion object {
 
-        fun formatSize(bytes: Long): String = when {
-            bytes < 1_024L -> "$bytes B"
-            bytes < 1_048_576L -> "%.1f KB".format(bytes / 1_024f)
-            bytes < 1_073_741_824L -> "%.1f MB".format(bytes / 1_048_576f)
-            else -> "%.1f GB".format(bytes / 1_073_741_824f)
+        fun formatSize(res: Resources, bytes: Long): String = when {
+            bytes < 1_024L -> res.getString(R.string.format_size_bytes, bytes)
+            bytes < 1_048_576L -> res.getString(R.string.format_size_kb, bytes / 1_024f)
+            bytes < 1_073_741_824L -> res.getString(R.string.format_size_mb, bytes / 1_048_576f)
+            else -> res.getString(R.string.format_size_gb, bytes / 1_073_741_824f)
         }
 
         /**

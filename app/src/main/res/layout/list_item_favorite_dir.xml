@@ -14,7 +14,7 @@
             android:id="@+id/dir_icon"
             android:src="@drawable/icon_folder_solid"
             android:tint="@color/accent_3"
-            android:contentDescription="Favorite folder"
+            android:contentDescription="@string/altdescr_favorite_folder"
             style="@style/Icon24" />
     </FrameLayout>
 
@@ -53,7 +53,7 @@
 
         <ImageView
             android:src="@drawable/icon_close"
-            android:contentDescription="Remove favorite"
+            android:contentDescription="@string/altdescr_remove_favorite"
             style="@style/Icon24" />
     </FrameLayout>
 

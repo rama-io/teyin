@@ -75,6 +75,40 @@
 
     <!-- Toasts -->
     <string name="toast_invalid_color">Ungültige Farbe</string>
+    <string name="toast_storage_not_available">Speicher nicht verfügbar</string>
+    <string name="toast_folder_no_longer_exists">Ordner existiert nicht mehr</string>
+    <string name="toast_storage_no_longer_available">Speicher ist nicht mehr verfügbar</string>
+    <string name="toast_select_one_to_rename">Wähle genau ein Element zum Umbenennen</string>
+    <string name="toast_navigate_and_paste">Navigiere zum Ziel und füge ein</string>
+    <string name="toast_no_app_to_open">Keine App kann diese Datei öffnen</string>
+    <string name="toast_storage_permission_required">Speicherberechtigung erforderlich</string>
+    <string name="dir_label_root">Root</string>
+    <string name="dir_label_storage">Speicher</string>
+    <string name="dir_label_usb">USB</string>
+    <string name="dir_label_sd_card">SD-Karte</string>
+    <string name="dir_label_usb_with_name">USB – %s</string>
+    <string name="dir_label_sd_card_with_name">SD-Karte – %s</string>
+    <string name="dir_label_dcim">DCIM</string>
+    <string name="dir_label_pictures">Bilder</string>
+    <string name="dir_label_music">Musik</string>
+    <string name="dir_label_movies">Filme</string>
+    <string name="dir_label_download">Downloads</string>
+    <string name="format_size_bytes">%d B</string>
+    <string name="format_size_kb">%.1f KB</string>
+    <string name="format_size_mb">%.1f MB</string>
+    <string name="format_size_gb">%.1f GB</string>
+    <string name="current_folder_name_placeholder">Aktueller Ordnername</string>
+    <string name="btn_add_current_folder">Aktuellen Ordner hinzufügen</string>
+    <string name="altdescr_folder_indicator">Ordnerindikator</string>
+    <string name="altdescr_directories">Verzeichnisse</string>
+    <string name="altdescr_add_folder">Ordner hinzufügen</string>
+    <string name="altdescr_paste">Einfügen</string>
+    <string name="altdescr_copy">Kopieren</string>
+    <string name="altdescr_move_to_folder">In Ordner verschieben</string>
+    <string name="altdescr_remove_selection">Auswahl entfernen</string>
+    <string name="altdescr_file">Datei</string>
+    <string name="altdescr_favorite_folder">Favoritenordner</string>
+    <string name="altdescr_remove_favorite">Favorit entfernen</string>
 
     <!-- AltDescription -->
     <string name="altdescr_search_icon">Suche umschalten</string>

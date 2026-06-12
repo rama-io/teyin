@@ -75,6 +75,41 @@
 
     <!-- Toasts -->
     <string name="toast_invalid_color">Invalid color</string>
+    <string name="toast_storage_not_available">Storage is not available</string>
+    <string name="toast_folder_no_longer_exists">Folder no longer exists</string>
+    <string name="toast_storage_no_longer_available">Storage is no longer available</string>
+    <string name="toast_select_one_to_rename">Select exactly one item to rename</string>
+    <string name="toast_navigate_and_paste">Navigate to destination and paste</string>
+    <string name="toast_no_app_to_open">No app can open this file</string>
+    <string name="toast_storage_permission_required">Storage permission required</string>
+    <string name="dir_label_root">Root</string>
+    <string name="dir_label_storage">Storage</string>
+    <string name="dir_label_usb">USB</string>
+    <string name="dir_label_sd_card">SD Card</string>
+    <string name="dir_label_usb_with_name">USB – %s</string>
+    <string name="dir_label_sd_card_with_name">SD Card – %s</string>
+    <string name="dir_label_dcim">DCIM</string>
+    <string name="dir_label_pictures">Pictures</string>
+    <string name="dir_label_music">Music</string>
+    <string name="dir_label_movies">Movies</string>
+    <string name="dir_label_download">Download</string>
+    <string name="format_size_bytes">%d B</string>
+    <string name="format_size_kb">%.1f KB</string>
+    <string name="format_size_mb">%.1f MB</string>
+    <string name="format_size_gb">%.1f GB</string>
+    <string name="current_folder_name_placeholder">Current Folder Name</string>
+    <string name="btn_add_current_folder">Add Current Folder</string>
+    <string name="dir_up_indicator" translatable="false">..</string>
+    <string name="altdescr_folder_indicator">Folder indicator</string>
+    <string name="altdescr_directories">Directories</string>
+    <string name="altdescr_add_folder">Add Folder</string>
+    <string name="altdescr_paste">Paste</string>
+    <string name="altdescr_copy">Copy</string>
+    <string name="altdescr_move_to_folder">Move to folder</string>
+    <string name="altdescr_remove_selection">Remove selection</string>
+    <string name="altdescr_file">File</string>
+    <string name="altdescr_favorite_folder">Favorite folder</string>
+    <string name="altdescr_remove_favorite">Remove favorite</string>
 
     <!-- AltDescription -->
     <string name="altdescr_search_icon">Toggle search</string>

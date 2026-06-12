@@ -24,13 +24,13 @@
                     android:layout_gravity="center"
                     android:src="@drawable/icon_folder_open_solid"
                     android:tint="@color/h1"
-                    android:contentDescription="Folder indicator"
+                    android:contentDescription="@string/altdescr_folder_indicator"
                     style="@style/Icon24" />
             </FrameLayout>
 
             <TextView
                 android:id="@+id/current_folder_name"
-                android:text="Current Folder Name"
+                android:text="@string/current_folder_name_placeholder"
                 android:textColor="@color/h1"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -90,7 +90,7 @@
             <ImageView
                 android:layout_gravity="center"
                 android:src="@drawable/icon_sitemap_solid"
-                android:contentDescription="Directories"
+                android:contentDescription="@string/altdescr_directories"
                 style="@style/Icon24" />
         </FrameLayout>
 
@@ -103,7 +103,7 @@
             <ImageView
                 android:layout_gravity="center"
                 android:src="@drawable/icon_folder_plus_solid"
-                android:contentDescription="Add Folder"
+                android:contentDescription="@string/altdescr_add_folder"
                 style="@style/Icon24" />
         </FrameLayout>
 
@@ -139,7 +139,7 @@
 
         <Button
             android:id="@+id/add_to_favorites_button"
-            android:text="Add Current Folder"
+            android:text="@string/btn_add_current_folder"
             style="@style/BTN2" />
     </LinearLayout>
 
@@ -193,7 +193,7 @@
 
                 <ImageView
                     android:src="@drawable/icon_clipboard_solid"
-                    android:contentDescription="Paste"
+                    android:contentDescription="@string/altdescr_paste"
                     style="@style/Icon24" />
             </FrameLayout>
 
@@ -205,7 +205,7 @@
 
                 <ImageView
                     android:src="@drawable/icon_copy_solid"
-                    android:contentDescription="Copy"
+                    android:contentDescription="@string/altdescr_copy"
                     style="@style/Icon24" />
             </FrameLayout>
 
@@ -217,7 +217,7 @@
 
                 <ImageView
                     android:src="@drawable/icon_folder_enter_solid"
-                    android:contentDescription="Move to folder"
+                    android:contentDescription="@string/altdescr_move_to_folder"
                     style="@style/Icon24" />
             </FrameLayout>
 
@@ -241,7 +241,7 @@
 
                 <ImageView
                     android:src="@drawable/icon_trash_alt_solid"
-                    android:contentDescription="Remove selection"
+                    android:contentDescription="@string/altdescr_remove_selection"
                     style="@style/Icon24" />
             </FrameLayout>
 

@@ -305,11 +305,11 @@ class MainActivity : CsActivity() {
                 val entry = dirAdapter.getItem(position)
                 if (entry is DirEntry.Fixed) {
                     // Volume was unplugged — just refresh so it disappears from the list
-                    Toast.makeText(this, "Storage is not available", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.toast_storage_not_available), Toast.LENGTH_SHORT).show()
                     refreshFavorites()
                 } else {
                     // Stale user bookmark — remove it
-                    Toast.makeText(this, "Folder no longer exists", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.toast_folder_no_longer_exists), Toast.LENGTH_SHORT).show()
                     PrefsManager.getInstance(this).removeFavoriteDir(path)
                     refreshFavorites()
                 }
@@ -339,7 +339,7 @@ class MainActivity : CsActivity() {
         val rootDir = File("/")
         if (rootDir.canRead()) {
             list += DirEntry.Fixed(
-                label = "Root",
+                label = getString(R.string.dir_label_root),
                 path = "/",
                 iconRes = R.drawable.icon_android,
             )
@@ -370,7 +370,7 @@ class MainActivity : CsActivity() {
                             !path.contains("sd", ignoreCase = true) &&
                             !path.matches(Regex(".*/[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}(/.*)?"))
                     val label = vol.getDescription(this)
-                        ?: if (isUsb) "USB" else "SD Card"
+                        ?: if (isUsb) getString(R.string.dir_label_usb) else getString(R.string.dir_label_sd_card)
                     list += DirEntry.Fixed(
                         label = label,
                         path = dir.canonicalPath,
@@ -398,9 +398,10 @@ class MainActivity : CsActivity() {
                     ?.forEach { vol ->
                         val uuidPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
                         val isUsb = !uuidPattern.matches(vol.parentFile?.name ?: "")
+                        val volumeId = vol.parentFile?.name ?: vol.name
                         list += DirEntry.Fixed(
-                            label = if (isUsb) "USB – ${vol.parentFile?.name ?: vol.name}"
-                            else "SD Card – ${vol.parentFile?.name ?: vol.name}",
+                            label = if (isUsb) getString(R.string.dir_label_usb_with_name, volumeId)
+                            else getString(R.string.dir_label_sd_card_with_name, volumeId),
                             path = vol.canonicalPath,
                             iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
                             else R.drawable.icon_disk,
@@ -414,7 +415,7 @@ class MainActivity : CsActivity() {
         val storageRoot = Environment.getExternalStorageDirectory()
         if (storageRoot.isDirectory) {
             list += DirEntry.Fixed(
-                label = "Storage",
+                label = getString(R.string.dir_label_storage),
                 path = storageRoot.absolutePath,
                 iconRes = R.drawable.icon_android,
             )
@@ -422,12 +423,12 @@ class MainActivity : CsActivity() {
 
         // Fixed: standard folders (only if they exist)
         val standardDirs = listOf(
-            "DCIM" to Environment.DIRECTORY_DCIM,
-            "Pictures" to Environment.DIRECTORY_PICTURES,
-            "Music" to Environment.DIRECTORY_MUSIC,
-            "Movies" to Environment.DIRECTORY_MOVIES,
-//            "Documents" to Environment.DIRECTORY_DOCUMENTS,
-            "Download" to Environment.DIRECTORY_DOWNLOADS,
+            getString(R.string.dir_label_dcim) to Environment.DIRECTORY_DCIM,
+            getString(R.string.dir_label_pictures) to Environment.DIRECTORY_PICTURES,
+            getString(R.string.dir_label_music) to Environment.DIRECTORY_MUSIC,
+            getString(R.string.dir_label_movies) to Environment.DIRECTORY_MOVIES,
+//            getString(R.string.dir_label_documents) to Environment.DIRECTORY_DOCUMENTS,
+            getString(R.string.dir_label_download) to Environment.DIRECTORY_DOWNLOADS,
         )
         for ((name, envDir) in standardDirs) {
             val dir = Environment.getExternalStoragePublicDirectory(envDir)
@@ -521,7 +522,7 @@ class MainActivity : CsActivity() {
         // If current directory no longer exists (e.g. SD card unplugged mid-browse),
         // fall back to primary storage gracefully
         if (!fileManager.currentDir.isDirectory) {
-            Toast.makeText(this, "Storage is no longer available", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_storage_no_longer_available), Toast.LENGTH_SHORT).show()
             fileManager.init()
         }
 
@@ -533,8 +534,8 @@ class MainActivity : CsActivity() {
 
         val dirName = fileManager.currentDir.let { dir ->
             when {
-                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> "Storage"
-                dir.name.isEmpty() -> "/"
+                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> getString(R.string.dir_label_storage)
+                dir.name.isEmpty() -> getString(R.string.dir_label_root)
                 else -> dir.name
             }
         }
@@ -662,7 +663,7 @@ class MainActivity : CsActivity() {
     private fun showRenameDialog() {
         val entries = adapter.selectedEntries
         if (entries.size != 1) {
-            Toast.makeText(this, "Select exactly one item to rename", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_select_one_to_rename), Toast.LENGTH_SHORT).show()
             return
         }
         val target = entries[0].file
@@ -826,7 +827,7 @@ class MainActivity : CsActivity() {
         if (paths.isEmpty()) return
         clipboard = paths
         clipboardMode = ClipboardMode.MOVE
-        Toast.makeText(this, "Navigate to destination and paste", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.toast_navigate_and_paste), Toast.LENGTH_SHORT).show()
         exitSelectionMode()
     }
 
@@ -896,7 +897,7 @@ class MainActivity : CsActivity() {
         try {
             startActivity(intent)
         } catch (_: Exception) {
-            Toast.makeText(this, "No app can open this file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_no_app_to_open), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -923,7 +924,7 @@ class MainActivity : CsActivity() {
     }
 
     private fun showPermissionDenied() {
-        Toast.makeText(this, "Storage permission required", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, getString(R.string.toast_storage_permission_required), Toast.LENGTH_LONG).show()
     }
 
     private fun initSearchbar() {
