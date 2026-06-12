@@ -95,6 +95,19 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/create_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12sp">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/icon_folder_plus_solid"
+                android:contentDescription="Add Folder"
+                style="@style/Icon24" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/settings_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
