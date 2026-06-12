@@ -48,6 +48,7 @@ class PrefsManager private constructor(context: Context) {
         const val APP_THEME_ICON = "app:theme:icon"
 
         const val FAVORITE_DIRS = "file:favorite_dirs"
+        const val SHOW_HIDDEN_FILES = "file:show_hidden"
 
         const val SETTINGS_SECTION_FONTS = "settings:section:fonts"
         const val SETTINGS_SECTION_SYSTEM = "settings:section:system"

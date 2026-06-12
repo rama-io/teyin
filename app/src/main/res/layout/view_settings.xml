@@ -40,6 +40,11 @@
                     android:text="@string/checkbox_prevent_home_screen_rotation"
                     style="@style/Checkbox" />
 
+                <com.rama.teyin.widgets.WdCheckbox
+                    android:id="@+id/show_hidden_files"
+                    android:text="@string/checkbox_show_hidden_files"
+                    style="@style/Checkbox" />
+
                 <LinearLayout style="@style/VerticalListDivided_BG2">
 
                     <TextView

@@ -20,6 +20,7 @@ class SettingsCheckboxController(private val activity: SettingsActivity) {
                 activity.applyRotationLock(isChecked)
             }
         )
+        bindWdCheckbox(R.id.show_hidden_files, PrefKeys.SHOW_HIDDEN_FILES, false)
     }
 
     private fun bindWdCheckbox(

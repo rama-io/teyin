@@ -65,6 +65,7 @@
     <!-- Checkbox -->
     <string name="checkbox_show_system_bar">Sistem çubuğunu göster</string>
     <string name="checkbox_prevent_home_screen_rotation">Ekran döndürmeyi kilitle</string>
+    <string name="checkbox_show_hidden_files">Gizli dosyaları göster</string>
 
     <!-- ContextMenu -->
     <string name="ctxmenu_rename">Yeniden Adlandır</string>

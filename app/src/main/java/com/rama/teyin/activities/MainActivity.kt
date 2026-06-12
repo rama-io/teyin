@@ -541,7 +541,8 @@ class MainActivity : CsActivity() {
             fileManager.init()
         }
 
-        val entries = fileManager.listCurrent(currentSearchQuery)
+        val showHidden = prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+        val entries = fileManager.listCurrent(currentSearchQuery, showHidden)
         val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
         val hasParent = !fileManager.isAtRoot ||
                 fileManager.currentDir.absolutePath != primaryRoot

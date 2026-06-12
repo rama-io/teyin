@@ -65,6 +65,7 @@
     <!-- Checkbox -->
     <string name="checkbox_show_system_bar">Show system bar</string>
     <string name="checkbox_prevent_home_screen_rotation">Lock screen rotation</string>
+    <string name="checkbox_show_hidden_files">Show hidden files</string>
 
     <!-- ContextMenu -->
     <string name="ctxmenu_rename">Rename</string>

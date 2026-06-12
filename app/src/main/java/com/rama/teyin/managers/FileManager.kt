@@ -66,12 +66,13 @@ class FileManager {
      * List the current directory contents:
      * - directories first, then files
      * - each group sorted alphabetically (case-insensitive)
-     * - hidden entries (dot-files) excluded
+     * - hidden entries (dot-files) filtered unless showHidden is true
      */
-    fun listCurrent(query: String = ""): List<FsEntry> {
+    fun listCurrent(query: String = "", showHidden: Boolean = false): List<FsEntry> {
         val files = currentDir.listFiles() ?: return emptyList()
         val q = query.trim().lowercase()
         return files
+            .filter { showHidden || !it.name.startsWith(".") }
             .filter { q.isEmpty() || it.name.lowercase().contains(q) }
             .sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
             .map { f ->
