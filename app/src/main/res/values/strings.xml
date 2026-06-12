@@ -60,7 +60,7 @@
     <string name="radio_language_turkish" translatable="false">Türkçe</string>
     <string name="radio_font_custom">Custom font</string>
     <string name="radio_theme_rama">Rama</string>
-    <string name="radio_theme_mako">Mako</string>
+    <string name="radio_theme_teyin">Teyin</string>
     <string name="radio_theme_custom">Custom</string>
 
     <!-- Checkbox -->

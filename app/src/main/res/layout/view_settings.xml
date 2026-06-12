@@ -73,7 +73,7 @@
 
                     <RadioButton
                         android:id="@+id/theme_teyin"
-                        android:text="@string/radio_theme_mako"
+                        android:text="@string/radio_theme_teyin"
                         style="@style/Radio" />
 
                     <RadioButton
