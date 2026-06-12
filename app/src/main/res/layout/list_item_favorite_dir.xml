@@ -30,7 +30,7 @@
             android:id="@+id/dir_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/accent_3"
+            android:textColor="@color/foreground"
             android:maxLines="1"
             android:ellipsize="end"
             style="@style/Text" />
