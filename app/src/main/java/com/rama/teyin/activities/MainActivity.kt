@@ -21,6 +21,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
+import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -33,7 +34,9 @@ import com.rama.teyin.adapters.DirEntry
 import com.rama.teyin.adapters.DirectoryListAdapter
 import com.rama.teyin.adapters.FileListAdapter
 import com.rama.teyin.managers.FileManager
+import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
+import com.rama.teyin.managers.ThemeManager
 import java.io.File
 
 class MainActivity : CsActivity() {
@@ -58,6 +61,7 @@ class MainActivity : CsActivity() {
     private lateinit var pasteBtn: FrameLayout
     private lateinit var appSettingsBtn: FrameLayout
     private lateinit var createFolderBtn: FrameLayout
+    private lateinit var removeBtn: FrameLayout
 
     // Directory list (favorites)
     private lateinit var directoryList: ListView
@@ -139,6 +143,7 @@ class MainActivity : CsActivity() {
         pasteBtn = findViewById(R.id.paste_btn)
 //        appSettingsBtn = findViewById(R.id.app_settings)
         createFolderBtn = findViewById(R.id.create_folder)
+        removeBtn = findViewById(R.id.remove_btn)
 
         directoryList = findViewById(R.id.directory_list)
         addToFavoritesBtn = findViewById(R.id.add_to_favorites_button)
@@ -171,6 +176,7 @@ class MainActivity : CsActivity() {
 //            Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
 //        }
         createFolderBtn.setOnClickListener { showCreateFolderDialog() }
+        removeBtn.setOnClickListener { showDeleteConfirmationDialog() }
 
         initDirectoryList()
         initSearchbar()
@@ -658,6 +664,8 @@ class MainActivity : CsActivity() {
         }
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_rename_file, null)
+        ThemeManager.applyTheme(this, dialogView)
+
         val editText = dialogView.findViewById<EditText>(R.id.edit_text)
         editText.setText(target.name)
         editText.selectAll()
@@ -667,7 +675,7 @@ class MainActivity : CsActivity() {
             .create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<FrameLayout>(R.id.yes_button).setOnClickListener {
+        dialogView.findViewById<Button>(R.id.yes_button).setOnClickListener {
             val newName = editText.text.toString().trim()
             if (newName.isNotEmpty() && newName != target.name) {
                 // If a file/folder with that name already exists, use a unique name
@@ -704,6 +712,8 @@ class MainActivity : CsActivity() {
         if (!fileSystemReady) return
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_rename_file, null)
+        ThemeManager.applyTheme(this, dialogView)
+
         val title = dialogView.findViewById<TextView>(R.id.rename_title)
         val editText = dialogView.findViewById<EditText>(R.id.edit_text)
         title.setText(R.string.dialog_create_folder)
@@ -715,7 +725,7 @@ class MainActivity : CsActivity() {
             .create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<FrameLayout>(R.id.yes_button).setOnClickListener {
+        dialogView.findViewById<Button>(R.id.yes_button).setOnClickListener {
             val name = editText.text.toString().trim()
             if (name.isNotEmpty()) {
                 val destDir = fileManager.currentDir
@@ -748,6 +758,55 @@ class MainActivity : CsActivity() {
         editText.requestFocus()
         (getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
             .showSoftInput(editText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val entries = adapter.selectedEntries
+        if (entries.isEmpty()) return
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_delete_confirm, null)
+        ThemeManager.applyTheme(this, dialogView)
+
+        val countLabel = dialogView.findViewById<TextView>(R.id.delete_count_label)
+        val count = entries.size
+        countLabel.text = resources.getQuantityString(R.plurals.delete_count, count, count)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<Button>(R.id.yes_button).setOnClickListener {
+            val volume = entries.map { it.file.absolutePath }
+                .firstNotNullOfOrNull { removableVolumeRootFor(it) }
+            if (volume != null && !hasSafAccess(volume)) {
+                dialog.dismiss()
+                pendingSafCallback = { showDeleteConfirmationDialog() }
+                requestSafAccess(volume)
+                return@setOnClickListener
+            }
+
+            var failed = 0
+            for (entry in entries) {
+                val ok = if (entry.file.isDirectory) entry.file.deleteRecursively()
+                else entry.file.delete()
+                if (!ok) failed++
+            }
+
+            Toast.makeText(
+                this,
+                if (failed == 0) getString(R.string.toast_delete_success)
+                else getString(R.string.toast_delete_failed),
+                Toast.LENGTH_SHORT
+            ).show()
+            exitSelectionMode()
+            refreshList()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.no_button).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
     }
 
     private fun moveSelected() {

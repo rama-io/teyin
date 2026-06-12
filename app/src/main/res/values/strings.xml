@@ -264,4 +264,6 @@
     <string name="hint_folder_name">Folder name</string>
     <string name="toast_folder_created">Folder created</string>
     <string name="toast_folder_create_failed">Could not create folder</string>
+    <string name="dialog_delete_title">Delete</string>
+    <string name="btn_delete_confirm">Delete</string>
 </resources>

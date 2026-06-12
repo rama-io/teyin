@@ -4,4 +4,9 @@
         <item quantity="one">%d selected</item>
         <item quantity="other">%d selected</item>
     </plurals>
+
+    <plurals name="delete_count">
+        <item quantity="one">%d item will be permanently deleted.</item>
+        <item quantity="other">%d items will be permanently deleted.</item>
+    </plurals>
 </resources>
