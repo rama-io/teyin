@@ -59,7 +59,8 @@ class MainActivity : CsActivity() {
     private lateinit var moveToFolderBtn: FrameLayout
     private lateinit var copyBtn: FrameLayout
     private lateinit var pasteBtn: FrameLayout
-    private lateinit var appSettingsBtn: FrameLayout
+
+    //    private lateinit var appSettingsBtn: FrameLayout
     private lateinit var createFolderBtn: FrameLayout
     private lateinit var removeBtn: FrameLayout
 
@@ -78,6 +79,7 @@ class MainActivity : CsActivity() {
     private var resumeRefreshRunnable: Runnable? = null
     private var fileSystemReady = false
     private var showDirs = false
+    private var lastKnownUiScale: Float = -1f
 
     private enum class ClipboardMode { COPY, MOVE }
 
@@ -116,6 +118,8 @@ class MainActivity : CsActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lastKnownUiScale = prefs.getUiScale()
+
         PrefsManager.getInstance(this).initPrefs()
         setContentView(R.layout.view_home)
 
@@ -188,8 +192,16 @@ class MainActivity : CsActivity() {
 
     override fun onResume() {
         super.onResume()
-        applyCurrentTheme(rootView)
 
+        val currentUiScale = prefs.getUiScale()
+        if (currentUiScale != lastKnownUiScale) {
+            lastKnownUiScale = currentUiScale
+            recreate()
+            return
+        }
+
+        applyCurrentTheme(rootView)
+        
         if (fileSystemReady) {
             schedulePostResumeRefresh()
             collapseSearch()
