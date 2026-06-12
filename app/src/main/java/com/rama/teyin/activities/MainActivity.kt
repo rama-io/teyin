@@ -18,6 +18,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
+import android.window.OnBackInvokedDispatcher
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
@@ -96,14 +97,22 @@ class MainActivity : CsActivity() {
     /** Pending SAF callback invoked after the user grants access. */
     private var pendingSafCallback: (() -> Unit)? = null
 
+    private fun handleBackPress() {
+        when {
+            adapter.isSelectionMode -> exitSelectionMode()
+            isSearchExpanded -> collapseSearch()
+            !fileManager.isAtRoot -> navigateUp()
+            else -> finish()
+        }
+    }
+
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun onBackPressed() = handleBackPress()
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_BACK -> {
-                when {
-                    adapter.isSelectionMode -> exitSelectionMode()
-                    isSearchExpanded -> collapseSearch()
-                    !fileManager.isAtRoot -> navigateUp()
-                }
+                handleBackPress()
                 true
             }
 
@@ -186,6 +195,12 @@ class MainActivity : CsActivity() {
         initSearchbar()
         initFileList()
         requestStoragePermission()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(
+                OnBackInvokedDispatcher.PRIORITY_DEFAULT
+            ) { handleBackPress() }
+        }
     }
 
     override fun shouldRecreateOnSettingsChange(): Boolean = false
