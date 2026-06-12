@@ -77,6 +77,11 @@
                         style="@style/Radio" />
 
                     <RadioButton
+                        android:id="@+id/theme_mako"
+                        android:text="@string/radio_theme_mako"
+                        style="@style/Radio" />
+
+                    <RadioButton
                         android:id="@+id/theme_rama"
                         android:text="@string/radio_theme_rama"
                         style="@style/Radio" />

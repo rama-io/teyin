@@ -121,6 +121,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
             if (prefs.getTheme() == PrefsManager.Theme.CUSTOM) View.VISIBLE else View.GONE
 
         when (prefs.getTheme()) {
+            PrefsManager.Theme.MAKO -> group.check(R.id.theme_mako)
             PrefsManager.Theme.RAMA -> group.check(R.id.theme_rama)
             PrefsManager.Theme.TEYIN -> group.check(R.id.theme_teyin)
             PrefsManager.Theme.CATPPUCCIN_MOCHA -> group.check(R.id.theme_catppuccin_mocha)
@@ -134,6 +135,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
 
         group.setOnCheckedChangeListener { _, id ->
             val theme = when (id) {
+                R.id.theme_mako -> PrefsManager.Theme.MAKO
                 R.id.theme_rama -> PrefsManager.Theme.RAMA
                 R.id.theme_teyin -> PrefsManager.Theme.TEYIN
                 R.id.theme_catppuccin_mocha -> PrefsManager.Theme.CATPPUCCIN_MOCHA
