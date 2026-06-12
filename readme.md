@@ -3,50 +3,48 @@
 
 # Teyin
 
-**Teyin** is a **minimal, privacy-first File manager** designed for speed, and
+**Teyin** is a **lightweigh, minimal, privacy-first File manager** designed for speed, and
 simplicity.
 
 Built entirely in **native Kotlin**, Teyin runs fully **on-device** and avoids tracking.
 
 ---
 
-<!-- ## Screenshots -->
+## Screenshots
 
-<!-- | Home | Settings | About | -->
-<!-- | - | - | - | -->
-<!-- | ![Home](./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Settings](./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![About](./fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | -->
+| Home | Settings | About |
+| - | - | - |
+| ![Home](./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Settings](./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![About](./fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |
 
-<!-- --- -->
+---
 
-<!-- ## Permissions -->
+## Permissions
 
-<!-- Teyin requires **only essential permissions**: -->
+Teyin requires only the permissions necessary to manage your files:
 
-<!-- - **Set as Home App** – to function as a launcher -->
-<!-- - **Query Installed Apps** – to list and launch applications -->
+| Permission | Required on | Why |
+| --- | --- | --- |
+| `READ_EXTERNAL_STORAGE` | API ≤ 29 | Read files and directories on internal storage and SD card |
+| `WRITE_EXTERNAL_STORAGE` | API ≤ 29 | Write, move, rename, and delete files on internal storage and SD card |
+| `MANAGE_EXTERNAL_STORAGE` | API 30+ | Broad storage access on Android 11+, where the legacy read/write permissions no longer apply (required to browse and manage all files outside of app-specific directories) |
 
-<!-- No network access is required. -->
+No network access is required.
 
-<!-- --- -->
+---
 
-<!-- ## Features -->
+## Features
 
-<!-- - **App grouping & quick actions**: Long press any app to assign it to a group, rename it, or access -->
-<!--   additional actions. Grouped apps help you stay organized and find what you need faster. -->
-<!-- - **Battery monitoring**: Monitor battery status, temperature and performance. -->
-<!-- - **Day of the year**: Track the current day of the year at a glance for productivity or personal -->
-<!--   tracking. -->
+| Feature | Description |
+| --- | --- |
+| **Browse & navigate** | Navigate your internal storage and SD card with a clean, fast file browser |
+| **SD card write access** | Full read/write support for external storage via Storage Access Framework (Android 6+) |
+| **File operations** | Copy, cut, paste, rename, move, and delete files and folders |
+| **Multi-select** | Select multiple files at once for batch operations |
+| **Bookmarks** | Save and quickly jump to your favourite directories from the side panel |
+| **Themes** | Light and dark theme support |
+| **Privacy-first** | Fully on-device. no network access, no telemetry, no tracking |
 
-<!-- --- -->
-
-<!-- ## Usage -->
-
-<!-- - Long-press in an empty area of the **App List** to open **Settings**. -->
-<!-- - Watch the **[Teyin Demo / Walkthrough](https://www.youtube.com/watch?v=cfble2DRqyM)** for a quick -->
-<!--   overview. -->
-<!-- - Join the **[Discord Community](https://discord.gg/zFFupY8PFE)** for support and updates. -->
-
-<!-- --- -->
+---
 
 ## Installation
 

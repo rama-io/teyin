@@ -193,7 +193,7 @@
     <!-- APP -->
     <string name="app_name" translatable="false">Teyin</string>
     <string name="app_creator" translatable="false">Pombo</string>
-    <string name="app_desc">A lightweight, distraction-free Android launcher that’s privacy-first and entirely on-device, designed for focus and simplicity.</string>
+    <string name="app_desc">A lightweigh, minimal, privacy-first File manager designed for speed, and simplicity.</string>
     <string name="app_background_tasks_desc">No Background Tasks</string>
     <string name="app_ads_desc">No Ads</string>
     <string name="app_trackers_desc">No Trackers</string>

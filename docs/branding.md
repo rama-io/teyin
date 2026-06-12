@@ -6,7 +6,7 @@ This document defines the official visual assets and usage guidelines for Teyin.
 
 ## Header
 
-![Teyin Header](./img/teyin_header_1280x630.svg)
+![Teyin Header](./img/teyin_header_1200x630.svg)
 
 Standard header image for social previews and repository sharing.
 
@@ -14,13 +14,13 @@ Standard header image for social previews and repository sharing.
 
 ## Header (TV)
 
-![Teyin Header TV](./img/teyin_tvBanner_1280x720.svg)
+![Teyin Header TV](./img/png/tvBanner.png)
 
 Optimized for TV and wide-screen displays.
 
 ## Feature Graphic
 
-![Teyin Header TV](./img/teyin_featureGraphic_1024x500.svg)
+![Teyin Header TV](./img/png/featureGraphic.png)
 
 Feature graphic on f-droid.
 
@@ -56,7 +56,7 @@ Outline variant for minimal or subtle UI contexts.
 
 ## Icon Background
 
-`#305F4A`
+`#544880`
 
 Primary background color used behind the icon when needed.
 
