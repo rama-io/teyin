@@ -234,16 +234,28 @@
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/app_settings"
+                android:id="@+id/remove_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_cog_solid"
-                    android:contentDescription="@string/ctxmenu_open_settings"
+                    android:src="@drawable/icon_trash_alt_solid"
+                    android:contentDescription="Remove selection"
                     style="@style/Icon24" />
             </FrameLayout>
+
+            <!--            <FrameLayout-->
+            <!--                android:id="@+id/app_settings"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:padding="12sp">-->
+
+            <!--                <ImageView-->
+            <!--                    android:src="@drawable/icon_cog_solid"-->
+            <!--                    android:contentDescription="@string/ctxmenu_open_settings"-->
+            <!--                    style="@style/Icon24" />-->
+            <!--            </FrameLayout>-->
 
         </LinearLayout>
     </LinearLayout>

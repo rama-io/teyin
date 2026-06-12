@@ -259,4 +259,9 @@
     <string name="multi_select_count">%d selected</string>
     <string name="multi_select_move_to_group">Move to group</string>
     <string name="multi_select_cancel">Cancel</string>
+
+    <string name="dialog_create_folder">New Folder</string>
+    <string name="hint_folder_name">Folder name</string>
+    <string name="toast_folder_created">Folder created</string>
+    <string name="toast_folder_create_failed">Could not create folder</string>
 </resources>

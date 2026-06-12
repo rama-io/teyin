@@ -57,6 +57,7 @@ class MainActivity : CsActivity() {
     private lateinit var copyBtn: FrameLayout
     private lateinit var pasteBtn: FrameLayout
     private lateinit var appSettingsBtn: FrameLayout
+    private lateinit var createFolderBtn: FrameLayout
 
     // Directory list (favorites)
     private lateinit var directoryList: ListView
@@ -136,7 +137,8 @@ class MainActivity : CsActivity() {
         moveToFolderBtn = findViewById(R.id.move_to_folder_button)
         copyBtn = findViewById(R.id.copy_btn)
         pasteBtn = findViewById(R.id.paste_btn)
-        appSettingsBtn = findViewById(R.id.app_settings)
+//        appSettingsBtn = findViewById(R.id.app_settings)
+        createFolderBtn = findViewById(R.id.create_folder)
 
         directoryList = findViewById(R.id.directory_list)
         addToFavoritesBtn = findViewById(R.id.add_to_favorites_button)
@@ -165,9 +167,10 @@ class MainActivity : CsActivity() {
         pasteBtn.setOnClickListener { pasteClipboard() }
         renameBtn.setOnClickListener { showRenameDialog() }
         moveToFolderBtn.setOnClickListener { moveSelected() }
-        appSettingsBtn.setOnClickListener {
-            Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
-        }
+//        appSettingsBtn.setOnClickListener {
+//            Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
+//        }
+        createFolderBtn.setOnClickListener { showCreateFolderDialog() }
 
         initDirectoryList()
         initSearchbar()
@@ -207,7 +210,7 @@ class MainActivity : CsActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQ_STORAGE) {
             val allGranted = grantResults.isNotEmpty() &&
-                grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+                    grantResults.all { it == PackageManager.PERMISSION_GRANTED }
             if (allGranted) initFileSystem() else showPermissionDenied()
         }
     }
@@ -220,6 +223,7 @@ class MainActivity : CsActivity() {
                     initFileSystem()
                 else showPermissionDenied()
             }
+
             REQ_SAF -> {
                 val treeUri = data?.data
                 if (resultCode == RESULT_OK && treeUri != null) {
@@ -241,14 +245,17 @@ class MainActivity : CsActivity() {
                                 val volRoot = try {
                                     File(volumeDir, "0").takeIf { it.isDirectory }?.canonicalPath
                                         ?: volumeDir.canonicalPath
-                                } catch (_: Exception) { volumeDir.absolutePath }
+                                } catch (_: Exception) {
+                                    volumeDir.absolutePath
+                                }
                                 safUriCache[volRoot] = treeUri
                             }
                         }
                     // Retry the pending operation
                     pendingSafCallback?.invoke()
                 } else {
-                    Toast.makeText(this, getString(R.string.toast_saf_denied), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.toast_saf_denied), Toast.LENGTH_SHORT)
+                        .show()
                 }
                 pendingSafCallback = null
             }
@@ -324,7 +331,9 @@ class MainActivity : CsActivity() {
         val sm = getSystemService(STORAGE_SERVICE) as android.os.storage.StorageManager
         val primaryCanonical = try {
             Environment.getExternalStorageDirectory().canonicalPath
-        } catch (_: Exception) { "" }
+        } catch (_: Exception) {
+            ""
+        }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             // API 24+: use StorageVolume list
@@ -334,19 +343,21 @@ class MainActivity : CsActivity() {
                     val path = try {
                         val m = vol.javaClass.getMethod("getPath")
                         m.invoke(vol) as? String
-                    } catch (_: Exception) { null } ?: return@forEach
+                    } catch (_: Exception) {
+                        null
+                    } ?: return@forEach
                     val dir = File(path)
                     if (!dir.canRead()) return@forEach
                     val isUsb = vol.isRemovable &&
-                        !path.contains("sd", ignoreCase = true) &&
-                        !path.matches(Regex(".*/[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}(/.*)?"))
+                            !path.contains("sd", ignoreCase = true) &&
+                            !path.matches(Regex(".*/[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}(/.*)?"))
                     val label = vol.getDescription(this)
                         ?: if (isUsb) "USB" else "SD Card"
                     list += DirEntry.Fixed(
                         label = label,
                         path = dir.canonicalPath,
                         iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
-                                  else R.drawable.icon_disk,
+                        else R.drawable.icon_disk,
                         removable = true,
                     )
                 }
@@ -362,17 +373,19 @@ class MainActivity : CsActivity() {
                         try {
                             if (candidate.canRead() && candidate.canonicalPath != primaryCanonical)
                                 candidate else null
-                        } catch (_: Exception) { null }
+                        } catch (_: Exception) {
+                            null
+                        }
                     }
                     ?.forEach { vol ->
                         val uuidPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
                         val isUsb = !uuidPattern.matches(vol.parentFile?.name ?: "")
                         list += DirEntry.Fixed(
                             label = if (isUsb) "USB – ${vol.parentFile?.name ?: vol.name}"
-                                    else "SD Card – ${vol.parentFile?.name ?: vol.name}",
+                            else "SD Card – ${vol.parentFile?.name ?: vol.name}",
                             path = vol.canonicalPath,
                             iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
-                                      else R.drawable.icon_disk,
+                            else R.drawable.icon_disk,
                             removable = true,
                         )
                     }
@@ -497,7 +510,7 @@ class MainActivity : CsActivity() {
         val entries = fileManager.listCurrent(currentSearchQuery)
         val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
         val hasParent = !fileManager.isAtRoot ||
-            fileManager.currentDir.absolutePath != primaryRoot
+                fileManager.currentDir.absolutePath != primaryRoot
         adapter.update(entries, hasParent = hasParent)
 
         val dirName = fileManager.currentDir.let { dir ->
@@ -567,7 +580,8 @@ class MainActivity : CsActivity() {
         // ── 1. Space check ──────────────────────────────────────────────────
         val requiredBytes = sources.sumOf { FileManager.totalSize(File(it)) }
         if (!FileManager.hasEnoughSpace(destDir, requiredBytes)) {
-            Toast.makeText(this, getString(R.string.toast_not_enough_space), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.toast_not_enough_space), Toast.LENGTH_LONG)
+                .show()
             return
         }
 
@@ -593,11 +607,15 @@ class MainActivity : CsActivity() {
                     val srcSize = src.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
                     val destSize = dest.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
                     if (destSize == srcSize) successfullySources.add(src)
-                    else { dest.deleteRecursively(); failed++ }
+                    else {
+                        dest.deleteRecursively(); failed++
+                    }
                 } else {
                     src.copyTo(dest, overwrite = false)
                     if (dest.length() == src.length()) successfullySources.add(src)
-                    else { dest.delete(); failed++ }
+                    else {
+                        dest.delete(); failed++
+                    }
                 }
             } catch (_: Exception) {
                 failed++
@@ -677,6 +695,56 @@ class MainActivity : CsActivity() {
         dialog.show()
 
         // Show keyboard
+        editText.requestFocus()
+        (getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
+            .showSoftInput(editText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun showCreateFolderDialog() {
+        if (!fileSystemReady) return
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_rename_file, null)
+        val title = dialogView.findViewById<TextView>(R.id.rename_title)
+        val editText = dialogView.findViewById<EditText>(R.id.edit_text)
+        title.setText(R.string.dialog_create_folder)
+        editText.hint = getString(R.string.hint_folder_name)
+        editText.text.clear()
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<FrameLayout>(R.id.yes_button).setOnClickListener {
+            val name = editText.text.toString().trim()
+            if (name.isNotEmpty()) {
+                val destDir = fileManager.currentDir
+
+                // SAF check for removable storage
+                val volume = removableVolumeRootFor(destDir.absolutePath)
+                if (volume != null && !hasSafAccess(volume)) {
+                    dialog.dismiss()
+                    pendingSafCallback = { showCreateFolderDialog() }
+                    requestSafAccess(volume)
+                    return@setOnClickListener
+                }
+
+                val newFolder = FileManager.resolveNonConflictingName(destDir, name)
+                val ok = newFolder.mkdir()
+                Toast.makeText(
+                    this,
+                    if (ok) getString(R.string.toast_folder_created)
+                    else getString(R.string.toast_folder_create_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
+                if (ok) refreshList()
+            }
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.no_button).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
         editText.requestFocus()
         (getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
             .showSoftInput(editText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
@@ -902,7 +970,11 @@ class MainActivity : CsActivity() {
          * else under /storage or /mnt as removable.
          */
         fun removableVolumeRootFor(path: String): String? {
-            val canonicalPath = try { File(path).canonicalPath } catch (_: Exception) { path }
+            val canonicalPath = try {
+                File(path).canonicalPath
+            } catch (_: Exception) {
+                path
+            }
 
             // Collect all primary-storage aliases
             val primaryAliases = mutableSetOf<String>()
@@ -910,7 +982,8 @@ class MainActivity : CsActivity() {
                 val ext = Environment.getExternalStorageDirectory()
                 primaryAliases += ext.absolutePath
                 primaryAliases += ext.canonicalPath
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+            }
             // /storage/emulated/0 and /storage/self/primary are always primary
             primaryAliases += "/storage/emulated/0"
             primaryAliases += "/storage/self/primary"
@@ -925,11 +998,14 @@ class MainActivity : CsActivity() {
                 val deep = File("/storage/$vol/0")
                 return try {
                     if (deep.isDirectory) deep.canonicalPath else File("/storage/$vol").canonicalPath
-                } catch (_: Exception) { "/storage/$vol" }
+                } catch (_: Exception) {
+                    "/storage/$vol"
+                }
             }
 
             // Check /mnt/media_rw/<UUID> (Android 6 raw mount) or /mnt/sdcard etc.
-            val mntMatch = Regex("^/mnt/(?:media_rw|sdcard|extSdCard|external_sd)/([^/]*)").find(canonicalPath)
+            val mntMatch =
+                Regex("^/mnt/(?:media_rw|sdcard|extSdCard|external_sd)/([^/]*)").find(canonicalPath)
             if (mntMatch != null) {
                 // Try to find the /storage equivalent
                 val vol = mntMatch.groupValues[1].ifEmpty { null }
@@ -938,10 +1014,14 @@ class MainActivity : CsActivity() {
                     return try {
                         if (storageEquiv.isDirectory) storageEquiv.canonicalPath
                         else {
-                            val end = canonicalPath.indexOf('/', mntMatch.value.length).takeIf { it > 0 } ?: canonicalPath.length
+                            val end =
+                                canonicalPath.indexOf('/', mntMatch.value.length).takeIf { it > 0 }
+                                    ?: canonicalPath.length
                             canonicalPath.substring(0, end)
                         }
-                    } catch (_: Exception) { storageEquiv.absolutePath }
+                    } catch (_: Exception) {
+                        storageEquiv.absolutePath
+                    }
                 }
                 return canonicalPath.split("/").take(4).joinToString("/")
             }
