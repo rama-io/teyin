@@ -25,6 +25,7 @@ keystore.properties
 *.aab
 *.apks
 *.xapk
+*.dm
 
 # Gradle output metadata
 **/output-metadata.json
