@@ -19,6 +19,7 @@ import android.provider.Settings
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
@@ -41,7 +42,6 @@ import com.rama.teyin.managers.FileManager
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
 import com.rama.teyin.managers.ThemeManager
-import com.rama.teyin.widgets.WdCheckbox
 import java.io.File
 
 class MainActivity : CsActivity() {
@@ -190,8 +190,8 @@ class MainActivity : CsActivity() {
                 it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 hiddenCheckbox.isChecked = !hiddenCheckbox.isChecked
                 prefs.setBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, hiddenCheckbox.isChecked)
-                refreshList()
                 popup.dismiss()
+                refreshList()
             }
 
             popupView.findViewById<View>(R.id.popup_settings).setOnClickListener {
@@ -200,7 +200,7 @@ class MainActivity : CsActivity() {
                 startActivity(Intent(this, SettingsActivity::class.java))
             }
 
-            popup.showAsDropDown(view)
+            popup.showAsDropDown(view, 0, 0, Gravity.TOP)
         }
 
         cancelSelectionBtn.setOnClickListener { exitSelectionMode() }
