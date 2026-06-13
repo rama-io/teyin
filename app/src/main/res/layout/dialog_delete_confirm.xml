@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/delete_count_label"
         android:gravity="center"
-        style="@style/Text" />
+        style="@style/Disclaimer" />
 
     <Button
         android:id="@+id/no_button"

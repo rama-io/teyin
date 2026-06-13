@@ -56,6 +56,15 @@
         <item name="android:divider">@drawable/list_divider</item>
     </style>
 
+    <style name="H1" parent="BlockFlow">
+        <item name="android:textColor">@color/h1</item>
+        <item name="android:textSize">@dimen/h1</item>
+    </style>
+
+    <style name="H1_center" parent="H1">
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="H2" parent="BlockFlow">
         <item name="android:textColor">@color/foreground</item>
         <item name="android:textSize">@dimen/h2</item>
@@ -68,6 +77,12 @@
     <style name="H3" parent="BlockFlow">
         <item name="android:textColor">@color/foreground</item>
         <item name="android:textSize">@dimen/h3</item>
+    </style>
+
+    <style name="Disclaimer" parent="BlockFlow">
+        <item name="android:textColor">@color/foreground</item>
+        <item name="android:textSize">@dimen/h3</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Text" parent="BlockFlow">
@@ -89,6 +104,11 @@
 
     <style name="BTN2" parent="BTN">
         <item name="android:background">@color/button_2</item>
+    </style>
+
+    <style name="BTN3" parent="BTN">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@color/bg_3</item>
     </style>
 
     <style name="BTN_danger" parent="BTN">
@@ -126,6 +146,12 @@
         <item name="android:paddingEnd">8sp</item>
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="Icon18">
+        <item name="android:layout_width">18sp</item>
+        <item name="android:layout_height">18sp</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="Icon24">
