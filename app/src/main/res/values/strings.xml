@@ -19,6 +19,7 @@
     <string name="toast_delete_success">Deleted</string>
     <string name="toast_delete_failed">Delete failed</string>
     <!-- H3 -->
+    <string name="h3_contributors">Contributors</string>
     <string name="h3_icons">Icons</string>
     <string name="h3_fonts">Fonts</string>
     <string name="h3_themes">Themes</string>
@@ -166,6 +167,10 @@
     <string name="license_ofl_1_1" translatable="false">OFL 1.1</string>
     <string name="license_cc_4" translatable="false">CC 4.0</string>
     <string name="license_mit" translatable="false">MIT</string>
+
+    <!-- Contributors -->
+    <string name="contributor_isotjs" translatable="false">isotjs</string>
+    <string name="contributor_isotjs_url" translatable="false">github.com/isotjs</string>
 
     <!-- Custom Blocks -->
     <!-- Groups -->

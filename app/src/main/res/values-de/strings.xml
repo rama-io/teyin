@@ -19,6 +19,7 @@
     <string name="toast_delete_success">Gelöscht</string>
     <string name="toast_delete_failed">Löschen fehlgeschlagen</string>
     <!-- H3 -->
+    <string name="h3_contributors">Beitragende</string>
     <string name="h3_icons">Symbole</string>
     <string name="h3_fonts">Schriftarten</string>
     <string name="h3_themes">Designs</string>

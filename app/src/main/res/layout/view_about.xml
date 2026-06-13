@@ -94,7 +94,23 @@
                 android:layout_height="wrap_content"
                 android:icon="@drawable/icon_octagon_check_solid"
                 android:text="@string/license_gpl3" />
-            
+
+            <TextView
+                android:text="@string/h3_contributors"
+                style="@style/H3" />
+
+            <com.rama.teyin.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/icon_user"
+                android:text="@string/contributor_isotjs" />
+
+            <com.rama.teyin.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/icon_github"
+                android:text="@string/contributor_isotjs_url" />
+
             <TextView
                 android:text="@string/h3_icons"
                 style="@style/H3" />

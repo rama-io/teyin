@@ -19,6 +19,7 @@
     <string name="toast_delete_success">Silindi</string>
     <string name="toast_delete_failed">Silme başarısız</string>
     <!-- H3 -->
+    <string name="h3_contributors">Katkıda Bulunanlar</string>
     <string name="h3_icons">Simgeler</string>
     <string name="h3_fonts">Yazı Tipleri</string>
     <string name="h3_themes">Temalar</string>
