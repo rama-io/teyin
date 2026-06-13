@@ -16,7 +16,8 @@
             <ImageView
                 android:id="@+id/icon_image"
                 android:layout_width="24sp"
-                android:layout_height="24sp" />
+                android:layout_height="24sp"
+                android:contentDescription="@null" />
         </FrameLayout>
 
         <TextView

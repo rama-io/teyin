@@ -32,6 +32,6 @@ class AboutActivity : CsActivity() {
 
         val version = packageManager.getPackageInfo(packageName, 0).versionCode
         val nameView = findViewById<TextView>(R.id.name_version)
-        nameView.text = getString(R.string.app_name) + ' ' + version
+        nameView.text = getString(R.string.name_version, getString(R.string.app_name), version)
     }
 }

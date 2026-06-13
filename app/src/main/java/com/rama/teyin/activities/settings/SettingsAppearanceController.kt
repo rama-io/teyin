@@ -121,8 +121,9 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
             if (prefs.getTheme() == PrefsManager.Theme.CUSTOM) View.VISIBLE else View.GONE
 
         when (prefs.getTheme()) {
+            PrefsManager.Theme.MAKO -> group.check(R.id.theme_mako)
             PrefsManager.Theme.RAMA -> group.check(R.id.theme_rama)
-            PrefsManager.Theme.MAKO -> group.check(R.id.theme_teyin)
+            PrefsManager.Theme.TEYIN -> group.check(R.id.theme_teyin)
             PrefsManager.Theme.CATPPUCCIN_MOCHA -> group.check(R.id.theme_catppuccin_mocha)
             PrefsManager.Theme.CATPPUCCIN_LATTE -> group.check(R.id.theme_catppuccin_latte)
             PrefsManager.Theme.DRACULA -> group.check(R.id.theme_dracula)
@@ -134,15 +135,16 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
 
         group.setOnCheckedChangeListener { _, id ->
             val theme = when (id) {
+                R.id.theme_mako -> PrefsManager.Theme.MAKO
                 R.id.theme_rama -> PrefsManager.Theme.RAMA
-                R.id.theme_teyin -> PrefsManager.Theme.MAKO
+                R.id.theme_teyin -> PrefsManager.Theme.TEYIN
                 R.id.theme_catppuccin_mocha -> PrefsManager.Theme.CATPPUCCIN_MOCHA
                 R.id.theme_catppuccin_latte -> PrefsManager.Theme.CATPPUCCIN_LATTE
                 R.id.theme_dracula -> PrefsManager.Theme.DRACULA
                 R.id.theme_melange -> PrefsManager.Theme.MELANGE
                 R.id.theme_tokyo_night -> PrefsManager.Theme.TOKYO_NIGHT
                 R.id.theme_custom -> PrefsManager.Theme.CUSTOM
-                else -> PrefsManager.Theme.MAKO
+                else -> PrefsManager.Theme.TEYIN
             }
 
             // Show/hide the custom form
@@ -154,7 +156,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
                 activity.recreate()
             } else {
                 // For custom: save selection immediately so it persists navigation,
-                // then populate fields with current custom palette (or MAKO defaults)
+                // then populate fields with current custom palette (or TEYIN defaults)
                 val previousTheme = prefs.getTheme()
                 prefs.setTheme(PrefsManager.Theme.CUSTOM)
                 populateCustomFields(ThemeManager.paletteFor(previousTheme, activity))

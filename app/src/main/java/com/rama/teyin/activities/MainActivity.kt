@@ -19,15 +19,20 @@ import android.provider.Settings
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import com.rama.teyin.CsActivity
 import com.rama.teyin.R
 import com.rama.teyin.adapters.DirEntry
@@ -38,6 +43,9 @@ import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
 import com.rama.teyin.managers.ThemeManager
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : CsActivity() {
     private lateinit var rootView: View
@@ -61,8 +69,8 @@ class MainActivity : CsActivity() {
     private lateinit var pasteBtn: FrameLayout
 
     //    private lateinit var appSettingsBtn: FrameLayout
-    private lateinit var createFolderBtn: FrameLayout
     private lateinit var removeBtn: FrameLayout
+    private lateinit var infoBtn: FrameLayout
 
     // Directory list (favorites)
     private lateinit var directoryList: ListView
@@ -96,17 +104,17 @@ class MainActivity : CsActivity() {
     /** Pending SAF callback invoked after the user grants access. */
     private var pendingSafCallback: (() -> Unit)? = null
 
+    private fun handleBackPress() {
+        when {
+            adapter.isSelectionMode -> exitSelectionMode()
+            isSearchExpanded -> collapseSearch()
+            !fileManager.isAtRoot -> navigateUp()
+            else -> finish()
+        }
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
-            KeyEvent.KEYCODE_BACK -> {
-                when {
-                    adapter.isSelectionMode -> exitSelectionMode()
-                    isSearchExpanded -> collapseSearch()
-                    !fileManager.isAtRoot -> navigateUp()
-                }
-                true
-            }
-
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_F10 -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
@@ -146,8 +154,8 @@ class MainActivity : CsActivity() {
         copyBtn = findViewById(R.id.copy_btn)
         pasteBtn = findViewById(R.id.paste_btn)
 //        appSettingsBtn = findViewById(R.id.app_settings)
-        createFolderBtn = findViewById(R.id.create_folder)
         removeBtn = findViewById(R.id.remove_btn)
+        infoBtn = findViewById(R.id.info_btn)
 
         directoryList = findViewById(R.id.directory_list)
         addToFavoritesBtn = findViewById(R.id.add_to_favorites_button)
@@ -166,8 +174,38 @@ class MainActivity : CsActivity() {
             }
         }
 
-        settingsBtn.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        settingsBtn.setOnClickListener { view ->
+            val popupView = layoutInflater.inflate(R.layout.popup_topbar, null)
+            ThemeManager.applyTheme(this, popupView)
+
+            val hiddenCheckbox = popupView.findViewById<CheckBox>(R.id.popup_hidden_checkbox)
+            hiddenCheckbox.isChecked = prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+
+            val popup = PopupWindow(popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, true)
+
+            popupView.findViewById<View>(R.id.popup_add_folder).setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                popup.dismiss()
+                showCreateFolderDialog()
+            }
+
+            popupView.findViewById<View>(R.id.popup_toggle_hidden).setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                hiddenCheckbox.isChecked = !hiddenCheckbox.isChecked
+                prefs.setBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, hiddenCheckbox.isChecked)
+                popup.dismiss()
+                refreshList()
+            }
+
+            popupView.findViewById<View>(R.id.popup_settings).setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                popup.dismiss()
+                startActivity(Intent(this, SettingsActivity::class.java))
+            }
+
+            popup.showAsDropDown(view, 0, 0, Gravity.TOP)
         }
 
         cancelSelectionBtn.setOnClickListener { exitSelectionMode() }
@@ -179,13 +217,15 @@ class MainActivity : CsActivity() {
 //        appSettingsBtn.setOnClickListener {
 //            Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
 //        }
-        createFolderBtn.setOnClickListener { showCreateFolderDialog() }
         removeBtn.setOnClickListener { showDeleteConfirmationDialog() }
+        infoBtn.setOnClickListener { showFileInfoDialog() }
 
         initDirectoryList()
         initSearchbar()
         initFileList()
         requestStoragePermission()
+
+        onBackPressedDispatcher.addCallback(this) { handleBackPress() }
     }
 
     override fun shouldRecreateOnSettingsChange(): Boolean = false
@@ -223,7 +263,7 @@ class MainActivity : CsActivity() {
         super.dispatchTouchEvent(ev)
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQ_STORAGE) {
@@ -305,11 +345,11 @@ class MainActivity : CsActivity() {
                 val entry = dirAdapter.getItem(position)
                 if (entry is DirEntry.Fixed) {
                     // Volume was unplugged — just refresh so it disappears from the list
-                    Toast.makeText(this, "Storage is not available", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.toast_storage_not_available), Toast.LENGTH_SHORT).show()
                     refreshFavorites()
                 } else {
                     // Stale user bookmark — remove it
-                    Toast.makeText(this, "Folder no longer exists", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.toast_folder_no_longer_exists), Toast.LENGTH_SHORT).show()
                     PrefsManager.getInstance(this).removeFavoriteDir(path)
                     refreshFavorites()
                 }
@@ -339,7 +379,7 @@ class MainActivity : CsActivity() {
         val rootDir = File("/")
         if (rootDir.canRead()) {
             list += DirEntry.Fixed(
-                label = "Root",
+                label = getString(R.string.dir_label_root),
                 path = "/",
                 iconRes = R.drawable.icon_android,
             )
@@ -370,7 +410,7 @@ class MainActivity : CsActivity() {
                             !path.contains("sd", ignoreCase = true) &&
                             !path.matches(Regex(".*/[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}(/.*)?"))
                     val label = vol.getDescription(this)
-                        ?: if (isUsb) "USB" else "SD Card"
+                        ?: if (isUsb) getString(R.string.dir_label_usb) else getString(R.string.dir_label_sd_card)
                     list += DirEntry.Fixed(
                         label = label,
                         path = dir.canonicalPath,
@@ -398,9 +438,10 @@ class MainActivity : CsActivity() {
                     ?.forEach { vol ->
                         val uuidPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
                         val isUsb = !uuidPattern.matches(vol.parentFile?.name ?: "")
+                        val volumeId = vol.parentFile?.name ?: vol.name
                         list += DirEntry.Fixed(
-                            label = if (isUsb) "USB – ${vol.parentFile?.name ?: vol.name}"
-                            else "SD Card – ${vol.parentFile?.name ?: vol.name}",
+                            label = if (isUsb) getString(R.string.dir_label_usb_with_name, volumeId)
+                            else getString(R.string.dir_label_sd_card_with_name, volumeId),
                             path = vol.canonicalPath,
                             iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
                             else R.drawable.icon_disk,
@@ -414,7 +455,7 @@ class MainActivity : CsActivity() {
         val storageRoot = Environment.getExternalStorageDirectory()
         if (storageRoot.isDirectory) {
             list += DirEntry.Fixed(
-                label = "Storage",
+                label = getString(R.string.dir_label_storage),
                 path = storageRoot.absolutePath,
                 iconRes = R.drawable.icon_android,
             )
@@ -422,12 +463,12 @@ class MainActivity : CsActivity() {
 
         // Fixed: standard folders (only if they exist)
         val standardDirs = listOf(
-            "DCIM" to Environment.DIRECTORY_DCIM,
-            "Pictures" to Environment.DIRECTORY_PICTURES,
-            "Music" to Environment.DIRECTORY_MUSIC,
-            "Movies" to Environment.DIRECTORY_MOVIES,
-//            "Documents" to Environment.DIRECTORY_DOCUMENTS,
-            "Download" to Environment.DIRECTORY_DOWNLOADS,
+            getString(R.string.dir_label_dcim) to Environment.DIRECTORY_DCIM,
+            getString(R.string.dir_label_pictures) to Environment.DIRECTORY_PICTURES,
+            getString(R.string.dir_label_music) to Environment.DIRECTORY_MUSIC,
+            getString(R.string.dir_label_movies) to Environment.DIRECTORY_MOVIES,
+//            getString(R.string.dir_label_documents) to Environment.DIRECTORY_DOCUMENTS,
+            getString(R.string.dir_label_download) to Environment.DIRECTORY_DOWNLOADS,
         )
         for ((name, envDir) in standardDirs) {
             val dir = Environment.getExternalStoragePublicDirectory(envDir)
@@ -521,11 +562,12 @@ class MainActivity : CsActivity() {
         // If current directory no longer exists (e.g. SD card unplugged mid-browse),
         // fall back to primary storage gracefully
         if (!fileManager.currentDir.isDirectory) {
-            Toast.makeText(this, "Storage is no longer available", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_storage_no_longer_available), Toast.LENGTH_SHORT).show()
             fileManager.init()
         }
 
-        val entries = fileManager.listCurrent(currentSearchQuery)
+        val showHidden = prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+        val entries = fileManager.listCurrent(currentSearchQuery, showHidden)
         val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
         val hasParent = !fileManager.isAtRoot ||
                 fileManager.currentDir.absolutePath != primaryRoot
@@ -533,8 +575,8 @@ class MainActivity : CsActivity() {
 
         val dirName = fileManager.currentDir.let { dir ->
             when {
-                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> "Storage"
-                dir.name.isEmpty() -> "/"
+                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> getString(R.string.dir_label_storage)
+                dir.name.isEmpty() -> getString(R.string.dir_label_root)
                 else -> dir.name
             }
         }
@@ -565,16 +607,15 @@ class MainActivity : CsActivity() {
         val count = adapter.selectedCount
         selectedCount.text = resources.getQuantityString(R.plurals.selected_count, count, count)
         if (count == 0) exitSelectionMode()
-        // Show paste button only when clipboard is non-empty and nothing is selected
-        // (paste is context-aware, not dependent on selection count)
         pasteBtn.visibility = if (clipboard != null) View.VISIBLE else View.GONE
+        infoBtn.visibility = if (count > 0) View.VISIBLE else View.GONE
     }
 
     private fun exitSelectionMode() {
         adapter.exitSelectionMode()
         menuBar.visibility = if (clipboard != null) View.VISIBLE else View.GONE
+        infoBtn.visibility = View.GONE
         if (clipboard != null) {
-            // Keep bar visible for paste, reset count label
             selectedCount.text = ""
             pasteBtn.visibility = View.VISIBLE
         }
@@ -662,7 +703,7 @@ class MainActivity : CsActivity() {
     private fun showRenameDialog() {
         val entries = adapter.selectedEntries
         if (entries.size != 1) {
-            Toast.makeText(this, "Select exactly one item to rename", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_select_one_to_rename), Toast.LENGTH_SHORT).show()
             return
         }
         val target = entries[0].file
@@ -821,12 +862,61 @@ class MainActivity : CsActivity() {
         dialog.show()
     }
 
+    private fun showFileInfoDialog() {
+        val entries = adapter.selectedEntries
+        if (entries.isEmpty()) return
+        val entry = entries[0]
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_file_info, null)
+        ThemeManager.applyTheme(this, dialogView)
+
+        dialogView.findViewById<TextView>(R.id.info_name_value).text = entry.name
+
+        val type = if (entry.isDirectory) getString(R.string.info_type_folder)
+        else "${getString(R.string.info_type_file)} (${entry.extension.uppercase()})"
+        dialogView.findViewById<TextView>(R.id.info_type_value).text = type
+
+        val size = if (entry.isDirectory) {
+            FileManager.formatSize(resources, FileManager.totalSize(entry.file))
+        } else {
+            FileManager.formatSize(resources, entry.size)
+        }
+        dialogView.findViewById<TextView>(R.id.info_size_value).text = size
+
+        dialogView.findViewById<TextView>(R.id.info_location_value).text = entry.file.parent
+
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        dialogView.findViewById<TextView>(R.id.info_modified_value).text =
+            sdf.format(Date(entry.lastModified))
+
+        dialogView.findViewById<TextView>(R.id.info_permissions_value).text =
+            buildPermissionsString(entry.file)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.close_button).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+    }
+
+    private fun buildPermissionsString(file: File): String {
+        val sb = StringBuilder()
+        sb.append(if (file.isDirectory) 'd' else '-')
+        sb.append(if (file.canRead()) 'r' else '-')
+        sb.append(if (file.canWrite()) 'w' else '-')
+        sb.append(if (file.canExecute()) 'x' else '-')
+        return sb.toString()
+    }
+
     private fun moveSelected() {
         val paths = adapter.selectedEntries.map { it.file.absolutePath }
         if (paths.isEmpty()) return
         clipboard = paths
         clipboardMode = ClipboardMode.MOVE
-        Toast.makeText(this, "Navigate to destination and paste", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.toast_navigate_and_paste), Toast.LENGTH_SHORT).show()
         exitSelectionMode()
     }
 
@@ -896,7 +986,7 @@ class MainActivity : CsActivity() {
         try {
             startActivity(intent)
         } catch (_: Exception) {
-            Toast.makeText(this, "No app can open this file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_no_app_to_open), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -923,7 +1013,7 @@ class MainActivity : CsActivity() {
     }
 
     private fun showPermissionDenied() {
-        Toast.makeText(this, "Storage permission required", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, getString(R.string.toast_storage_permission_required), Toast.LENGTH_LONG).show()
     }
 
     private fun initSearchbar() {

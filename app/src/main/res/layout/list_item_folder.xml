@@ -28,7 +28,7 @@
         <ImageView
             android:src="@drawable/icon_folder_solid"
             android:tint="@color/accent_3"
-            android:contentDescription="Folder indicator"
+            android:contentDescription="@string/altdescr_folder_indicator"
             style="@style/Icon24" />
     </FrameLayout>
 

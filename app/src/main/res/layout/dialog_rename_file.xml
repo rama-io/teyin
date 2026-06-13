@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16sp"
     android:background="@color/bg_1"
     android:focusableInTouchMode="true"
-    style="@style/VerticalListDivided">
+    style="@style/VerticalListDivided"
+    tools:ignore="ButtonOrder">
 
     <TextView
         android:id="@+id/rename_title"
@@ -17,7 +19,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:inputType="text"
+            android:hint="@string/dialog_rename_file"
             android:focusableInTouchMode="true"
+            android:autofillHints=""
             style="@style/EditText" />
 
         <FrameLayout

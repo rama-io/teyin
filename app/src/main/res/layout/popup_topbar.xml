@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/bg_1"
+    style="@style/VerticalListDivided">
+
+    <LinearLayout
+        android:id="@+id/popup_add_folder"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/icon_folder_plus_solid"
+            android:contentDescription="@string/altdescr_add_folder"
+            style="@style/Icon24" />
+
+        <TextView
+            android:text="@string/altdescr_add_folder"
+            android:layout_marginStart="12dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/text"
+            android:textColor="@color/foreground" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/popup_toggle_hidden"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/icon_eye"
+            android:contentDescription="@string/checkbox_show_hidden_files"
+            style="@style/Icon24" />
+
+        <TextView
+            android:text="@string/checkbox_show_hidden_files"
+            android:layout_marginStart="12dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/text"
+            android:textColor="@color/foreground" />
+
+        <CheckBox
+            android:id="@+id/popup_hidden_checkbox"
+            android:clickable="false"
+            android:focusable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/accent_1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/popup_settings"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/icon_cog_solid"
+            android:contentDescription="@string/activity_settings_label"
+            style="@style/Icon24" />
+
+        <TextView
+            android:text="@string/activity_settings_label"
+            android:layout_marginStart="12dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/text"
+            android:textColor="@color/foreground" />
+    </LinearLayout>
+</LinearLayout>
