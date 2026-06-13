@@ -10,3 +10,4 @@
 - Fixed back gesture overall the app.
 - Added an toggle to turn on and off the hidden folders.
 - Added new theme inspired from Turkish roots.
+- Add file info button

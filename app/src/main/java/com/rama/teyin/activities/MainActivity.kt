@@ -43,6 +43,9 @@ import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
 import com.rama.teyin.managers.ThemeManager
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : CsActivity() {
     private lateinit var rootView: View
@@ -67,6 +70,7 @@ class MainActivity : CsActivity() {
 
     //    private lateinit var appSettingsBtn: FrameLayout
     private lateinit var removeBtn: FrameLayout
+    private lateinit var infoBtn: FrameLayout
 
     // Directory list (favorites)
     private lateinit var directoryList: ListView
@@ -151,6 +155,7 @@ class MainActivity : CsActivity() {
         pasteBtn = findViewById(R.id.paste_btn)
 //        appSettingsBtn = findViewById(R.id.app_settings)
         removeBtn = findViewById(R.id.remove_btn)
+        infoBtn = findViewById(R.id.info_btn)
 
         directoryList = findViewById(R.id.directory_list)
         addToFavoritesBtn = findViewById(R.id.add_to_favorites_button)
@@ -213,6 +218,7 @@ class MainActivity : CsActivity() {
 //            Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
 //        }
         removeBtn.setOnClickListener { showDeleteConfirmationDialog() }
+        infoBtn.setOnClickListener { showFileInfoDialog() }
 
         initDirectoryList()
         initSearchbar()
@@ -601,16 +607,15 @@ class MainActivity : CsActivity() {
         val count = adapter.selectedCount
         selectedCount.text = resources.getQuantityString(R.plurals.selected_count, count, count)
         if (count == 0) exitSelectionMode()
-        // Show paste button only when clipboard is non-empty and nothing is selected
-        // (paste is context-aware, not dependent on selection count)
         pasteBtn.visibility = if (clipboard != null) View.VISIBLE else View.GONE
+        infoBtn.visibility = if (count > 0) View.VISIBLE else View.GONE
     }
 
     private fun exitSelectionMode() {
         adapter.exitSelectionMode()
         menuBar.visibility = if (clipboard != null) View.VISIBLE else View.GONE
+        infoBtn.visibility = View.GONE
         if (clipboard != null) {
-            // Keep bar visible for paste, reset count label
             selectedCount.text = ""
             pasteBtn.visibility = View.VISIBLE
         }
@@ -855,6 +860,55 @@ class MainActivity : CsActivity() {
         dialogView.findViewById<View>(R.id.no_button).setOnClickListener { dialog.dismiss() }
 
         dialog.show()
+    }
+
+    private fun showFileInfoDialog() {
+        val entries = adapter.selectedEntries
+        if (entries.isEmpty()) return
+        val entry = entries[0]
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_file_info, null)
+        ThemeManager.applyTheme(this, dialogView)
+
+        dialogView.findViewById<TextView>(R.id.info_name_value).text = entry.name
+
+        val type = if (entry.isDirectory) getString(R.string.info_type_folder)
+        else "${getString(R.string.info_type_file)} (${entry.extension.uppercase()})"
+        dialogView.findViewById<TextView>(R.id.info_type_value).text = type
+
+        val size = if (entry.isDirectory) {
+            FileManager.formatSize(resources, FileManager.totalSize(entry.file))
+        } else {
+            FileManager.formatSize(resources, entry.size)
+        }
+        dialogView.findViewById<TextView>(R.id.info_size_value).text = size
+
+        dialogView.findViewById<TextView>(R.id.info_location_value).text = entry.file.parent
+
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        dialogView.findViewById<TextView>(R.id.info_modified_value).text =
+            sdf.format(Date(entry.lastModified))
+
+        dialogView.findViewById<TextView>(R.id.info_permissions_value).text =
+            buildPermissionsString(entry.file)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.close_button).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+    }
+
+    private fun buildPermissionsString(file: File): String {
+        val sb = StringBuilder()
+        sb.append(if (file.isDirectory) 'd' else '-')
+        sb.append(if (file.canRead()) 'r' else '-')
+        sb.append(if (file.canWrite()) 'w' else '-')
+        sb.append(if (file.canExecute()) 'x' else '-')
+        return sb.toString()
     }
 
     private fun moveSelected() {

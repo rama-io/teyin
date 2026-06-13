@@ -232,6 +232,18 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/info_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
+
+                <ImageView
+                    android:src="@drawable/icon_info"
+                    android:contentDescription="@string/altdescr_info"
+                    style="@style/Icon24" />
+            </FrameLayout>
+
+            <FrameLayout
                 android:id="@+id/remove_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

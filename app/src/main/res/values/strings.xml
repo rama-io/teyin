@@ -71,6 +71,17 @@
 
     <!-- ContextMenu -->
     <string name="ctxmenu_rename">Rename</string>
+    <string name="altdescr_info">Info</string>
+    <string name="dialog_info_title">Info</string>
+    <string name="btn_close">Close</string>
+    <string name="info_name">Name</string>
+    <string name="info_type">Type</string>
+    <string name="info_type_file">File</string>
+    <string name="info_type_folder">Folder</string>
+    <string name="info_size">Size</string>
+    <string name="info_location">Location</string>
+    <string name="info_modified">Modified</string>
+    <string name="info_permissions">Permissions</string>
 
     <!-- InputLabel -->
     <string name="label_zoom">Zoom</string>

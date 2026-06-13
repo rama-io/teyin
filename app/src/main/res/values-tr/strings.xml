@@ -67,6 +67,17 @@
 
     <!-- ContextMenu -->
     <string name="ctxmenu_rename">Yeniden Adlandır</string>
+    <string name="altdescr_info">Bilgi</string>
+    <string name="dialog_info_title">Bilgi</string>
+    <string name="btn_close">Kapat</string>
+    <string name="info_name">Ad</string>
+    <string name="info_type">Tür</string>
+    <string name="info_type_file">Dosya</string>
+    <string name="info_type_folder">Klasör</string>
+    <string name="info_size">Boyut</string>
+    <string name="info_location">Konum</string>
+    <string name="info_modified">Değiştirilme</string>
+    <string name="info_permissions">İzinler</string>
 
     <!-- InputLabel -->
     <string name="label_zoom">Yakınlaştırma</string>
