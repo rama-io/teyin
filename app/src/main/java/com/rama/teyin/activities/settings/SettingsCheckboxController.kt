@@ -11,7 +11,7 @@ class SettingsCheckboxController(private val activity: SettingsActivity) {
     private val prefs get() = activity.prefs
 
     fun setup() {
-        bindWdCheckbox(R.id.show_system_bar, PrefKeys.SYSTEM_BAR_VISIBLE, false)
+        bindWdCheckbox(R.id.show_system_bar, PrefKeys.SYSTEM_BAR_VISIBLE, true)
         bindWdCheckbox(
             R.id.prevent_home_screen_rotation,
             PrefKeys.SYSTEM_PREVENT_ROTATION,

@@ -102,19 +102,6 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/create_folder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12sp">
-
-            <ImageView
-                android:layout_gravity="center"
-                android:src="@drawable/icon_folder_plus_solid"
-                android:contentDescription="@string/altdescr_add_folder"
-                style="@style/Icon24" />
-        </FrameLayout>
-
-        <FrameLayout
             android:id="@+id/settings_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,7 +109,7 @@
 
             <ImageView
                 android:layout_gravity="center"
-                android:src="@drawable/icon_cog_solid"
+                android:src="@drawable/icon_context_menu"
                 android:contentDescription="@string/altdescr_open_settings"
                 style="@style/Icon24" />
         </FrameLayout>

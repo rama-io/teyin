@@ -90,9 +90,9 @@ class PrefsManager private constructor(context: Context) {
                 .putString(PrefKeys.APP_LANGUAGE, Language.SYSTEM)
                 .putFloat(PrefKeys.APP_UI_SCALE, 1f)
                 .putBoolean(PrefKeys.APPS_ICONS, false)
-                .putBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, false)
+                .putBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, true)
                 .putBoolean(PrefKeys.SYSTEM_PREVENT_ROTATION, false)
-                .putString(PrefKeys.APP_THEME_NAME, Theme.DRACULA)
+                .putString(PrefKeys.APP_THEME_NAME, Theme.TEYIN)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_FONTS, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_SYSTEM, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_LANGUAGE, true)
@@ -103,7 +103,7 @@ class PrefsManager private constructor(context: Context) {
     }
 
     fun isSystemBarVisible(): Boolean =
-        prefs.getBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, false)
+        prefs.getBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, true)
 
     fun getFontStyle(): String =
         prefs.getString(PrefKeys.FONT_STYLE, "") ?: ""

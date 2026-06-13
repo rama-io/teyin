@@ -20,12 +20,15 @@ import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -38,6 +41,7 @@ import com.rama.teyin.managers.FileManager
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
 import com.rama.teyin.managers.ThemeManager
+import com.rama.teyin.widgets.WdCheckbox
 import java.io.File
 
 class MainActivity : CsActivity() {
@@ -62,7 +66,6 @@ class MainActivity : CsActivity() {
     private lateinit var pasteBtn: FrameLayout
 
     //    private lateinit var appSettingsBtn: FrameLayout
-    private lateinit var createFolderBtn: FrameLayout
     private lateinit var removeBtn: FrameLayout
 
     // Directory list (favorites)
@@ -147,7 +150,6 @@ class MainActivity : CsActivity() {
         copyBtn = findViewById(R.id.copy_btn)
         pasteBtn = findViewById(R.id.paste_btn)
 //        appSettingsBtn = findViewById(R.id.app_settings)
-        createFolderBtn = findViewById(R.id.create_folder)
         removeBtn = findViewById(R.id.remove_btn)
 
         directoryList = findViewById(R.id.directory_list)
@@ -167,8 +169,38 @@ class MainActivity : CsActivity() {
             }
         }
 
-        settingsBtn.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        settingsBtn.setOnClickListener { view ->
+            val popupView = layoutInflater.inflate(R.layout.popup_topbar, null)
+            ThemeManager.applyTheme(this, popupView)
+
+            val hiddenCheckbox = popupView.findViewById<CheckBox>(R.id.popup_hidden_checkbox)
+            hiddenCheckbox.isChecked = prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+
+            val popup = PopupWindow(popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, true)
+
+            popupView.findViewById<View>(R.id.popup_add_folder).setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                popup.dismiss()
+                showCreateFolderDialog()
+            }
+
+            popupView.findViewById<View>(R.id.popup_toggle_hidden).setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                hiddenCheckbox.isChecked = !hiddenCheckbox.isChecked
+                prefs.setBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, hiddenCheckbox.isChecked)
+                refreshList()
+                popup.dismiss()
+            }
+
+            popupView.findViewById<View>(R.id.popup_settings).setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                popup.dismiss()
+                startActivity(Intent(this, SettingsActivity::class.java))
+            }
+
+            popup.showAsDropDown(view)
         }
 
         cancelSelectionBtn.setOnClickListener { exitSelectionMode() }
@@ -180,7 +212,6 @@ class MainActivity : CsActivity() {
 //        appSettingsBtn.setOnClickListener {
 //            Toast.makeText(this, "Settings for selection", Toast.LENGTH_SHORT).show()
 //        }
-        createFolderBtn.setOnClickListener { showCreateFolderDialog() }
         removeBtn.setOnClickListener { showDeleteConfirmationDialog() }
 
         initDirectoryList()
