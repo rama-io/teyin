@@ -8,11 +8,15 @@
     <string-array name="supported_language_codes">
         <item>system</item>
         <item>en</item>
+        <item>de</item>
+        <item>tr</item>
     </string-array>
 
     <string-array name="supported_language_labels">
         <item>@string/radio_language_system_default</item>
         <item>@string/radio_language_english</item>
+        <item>@string/radio_language_german</item>
+        <item>@string/radio_language_turkish</item>
     </string-array>
 
     <string-array name="ui_scale_steps">
@@ -25,18 +29,5 @@
         <item>1.3</item>
         <item>1.4</item>
         <item>1.5</item>
-    </string-array>
-
-    <string-array name="wallpaper_screen_opacity_strength">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
     </string-array>
 </resources>

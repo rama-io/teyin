@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16sp"
+    android:background="@color/bg_1"
+    style="@style/VerticalListDivided">
+
+    <TextView
+        android:text="@string/dialog_info_title"
+        style="@style/H2_center" />
+
+    <View style="@style/Separator" />
+
+    <LinearLayout style="@style/VerticalList">
+
+        <TextView
+            android:text="@string/info_name"
+            android:textColor="@color/h1"
+            style="@style/Small" />
+
+        <TextView
+            android:id="@+id/info_name_value"
+            style="@style/Text" />
+    </LinearLayout>
+
+    <View style="@style/Separator" />
+
+    <LinearLayout style="@style/VerticalList">
+
+        <TextView
+            android:text="@string/info_type"
+            android:textColor="@color/h1"
+            style="@style/Small" />
+
+        <TextView
+            android:id="@+id/info_type_value"
+            style="@style/Text" />
+    </LinearLayout>
+
+    <View style="@style/Separator" />
+
+    <LinearLayout style="@style/VerticalList">
+
+        <TextView
+            android:text="@string/info_size"
+            android:textColor="@color/h1"
+            style="@style/Small" />
+
+        <TextView
+            android:id="@+id/info_size_value"
+            style="@style/Text" />
+    </LinearLayout>
+
+    <View style="@style/Separator" />
+
+    <LinearLayout style="@style/VerticalList">
+
+        <TextView
+            android:text="@string/info_location"
+            android:textColor="@color/h1"
+            style="@style/Small" />
+
+        <TextView
+            android:id="@+id/info_location_value"
+            style="@style/Text" />
+    </LinearLayout>
+
+    <View style="@style/Separator" />
+
+    <LinearLayout style="@style/VerticalList">
+
+        <TextView
+            android:text="@string/info_modified"
+            android:textColor="@color/h1"
+            style="@style/Small" />
+
+        <TextView
+            android:id="@+id/info_modified_value"
+            style="@style/Text" />
+    </LinearLayout>
+
+    <View style="@style/Separator" />
+
+    <LinearLayout style="@style/VerticalList">
+
+        <TextView
+            android:text="@string/info_permissions"
+            android:textColor="@color/h1"
+            style="@style/Small" />
+
+        <TextView
+            android:id="@+id/info_permissions_value"
+            style="@style/Text" />
+    </LinearLayout>
+
+    <View style="@style/Separator" />
+
+    <Button
+        android:id="@+id/close_button"
+        android:text="@string/btn_close"
+        style="@style/BTN1" />
+</LinearLayout>

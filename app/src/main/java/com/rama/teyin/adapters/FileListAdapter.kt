@@ -99,7 +99,7 @@ class FileListAdapter(
         } else {
             val v = convertView ?: inflater.inflate(R.layout.list_item_file, parent, false)
             v.findViewById<TextView>(R.id.file_name).text = entry.name
-            v.findViewById<TextView>(R.id.file_size).text = FileManager.formatSize(entry.size)
+            v.findViewById<TextView>(R.id.file_size).text = FileManager.formatSize(context.resources, entry.size)
             v.findViewById<ImageView>(R.id.file_icon)
                 .setImageResource(iconForExtension(entry.extension))
             bindSelectionCheck(v, isSelected)

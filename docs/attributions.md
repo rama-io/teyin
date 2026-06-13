@@ -17,6 +17,7 @@ minimum by emphasizing clarity and intentional interaction.
 ## Contributors
 
 - [Pombo](https://github.com/pomboverso)
+- [isotjs](https://github.com/isotjs)
 
 ---
 

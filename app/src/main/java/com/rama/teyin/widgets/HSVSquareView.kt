@@ -85,8 +85,16 @@ class HSVSquareView @JvmOverloads constructor(
                 onSaturationValueChanged?.invoke(s, v)
                 return true
             }
+            MotionEvent.ACTION_UP -> {
+                performClick()
+                return true
+            }
         }
         return super.onTouchEvent(event)
+    }
+
+    override fun performClick(): Boolean {
+        return super.performClick()
     }
 
     fun setHue(h: Float) {

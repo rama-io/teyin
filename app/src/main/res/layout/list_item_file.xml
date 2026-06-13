@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/file_row"
+    android:baselineAligned="false"
     android:descendantFocusability="blocksDescendants"
     android:background="@color/bg_2"
     android:padding="8sp"
@@ -30,7 +31,7 @@
         <ImageView
             android:id="@+id/file_icon"
             android:src="@drawable/icon_disk"
-            android:contentDescription="File"
+            android:contentDescription="@string/altdescr_file"
             style="@style/Icon24" />
     </FrameLayout>
 
@@ -46,7 +47,7 @@
             android:id="@+id/file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:singleLine="true"
             android:ellipsize="middle"
             android:textColor="@color/foreground"
             android:textSize="@dimen/text" />

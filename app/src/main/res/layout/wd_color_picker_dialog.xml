@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/bg_1"
     android:padding="16sp"
-    style="@style/VerticalListDivided">
+    style="@style/VerticalListDivided"
+    tools:ignore="ButtonOrder">
 
     <TextView
         android:text="@string/h2_color_picker"
@@ -30,7 +32,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="text"
+                android:hint="@string/hint_hex_color"
                 android:focusableInTouchMode="true"
+                android:autofillHints=""
                 style="@style/EditText" />
 
             <FrameLayout
@@ -51,12 +56,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/apply_button"
-        android:text="@string/btn_apply"
-        style="@style/BTN2" />
-
-    <Button
         android:id="@+id/close_button"
         android:text="@string/btn_cancel"
         style="@style/BTN1" />
+
+    <Button
+        android:id="@+id/apply_button"
+        android:text="@string/btn_apply"
+        style="@style/BTN2" />
 </LinearLayout>

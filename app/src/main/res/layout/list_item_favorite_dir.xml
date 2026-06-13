@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:baselineAligned="false"
     android:descendantFocusability="blocksDescendants"
     android:background="@color/bg_2"
     android:padding="8sp"
@@ -14,7 +15,7 @@
             android:id="@+id/dir_icon"
             android:src="@drawable/icon_folder_solid"
             android:tint="@color/accent_3"
-            android:contentDescription="Favorite folder"
+            android:contentDescription="@string/altdescr_favorite_folder"
             style="@style/Icon24" />
     </FrameLayout>
 
@@ -40,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/disabled"
-            android:maxLines="1"
+            android:singleLine="true"
             android:ellipsize="start"
             android:textSize="11sp" />
     </LinearLayout>
@@ -53,7 +54,7 @@
 
         <ImageView
             android:src="@drawable/icon_close"
-            android:contentDescription="Remove favorite"
+            android:contentDescription="@string/altdescr_remove_favorite"
             style="@style/Icon24" />
     </FrameLayout>
 

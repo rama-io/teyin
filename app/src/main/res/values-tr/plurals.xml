@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="selected_count">
+        <item quantity="one">%d seçildi</item>
+        <item quantity="other">%d seçildi</item>
+    </plurals>
+
+    <plurals name="delete_count">
+        <item quantity="one">%d öğe kalıcı olarak silinecek.</item>
+        <item quantity="other">%d öğe kalıcı olarak silinecek.</item>
+    </plurals>
+</resources>

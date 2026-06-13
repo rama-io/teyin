@@ -1,7 +1,9 @@
 package com.rama.teyin.managers
 
+import android.content.res.Resources
 import android.os.Environment
 import android.os.StatFs
+import com.rama.teyin.R
 import java.io.File
 
 data class FsEntry(
@@ -64,12 +66,13 @@ class FileManager {
      * List the current directory contents:
      * - directories first, then files
      * - each group sorted alphabetically (case-insensitive)
-     * - hidden entries (dot-files) excluded
+     * - hidden entries (dot-files) filtered unless showHidden is true
      */
-    fun listCurrent(query: String = ""): List<FsEntry> {
+    fun listCurrent(query: String = "", showHidden: Boolean = false): List<FsEntry> {
         val files = currentDir.listFiles() ?: return emptyList()
         val q = query.trim().lowercase()
         return files
+            .filter { showHidden || !it.name.startsWith(".") }
             .filter { q.isEmpty() || it.name.lowercase().contains(q) }
             .sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
             .map { f ->
@@ -85,11 +88,11 @@ class FileManager {
 
     companion object {
 
-        fun formatSize(bytes: Long): String = when {
-            bytes < 1_024L -> "$bytes B"
-            bytes < 1_048_576L -> "%.1f KB".format(bytes / 1_024f)
-            bytes < 1_073_741_824L -> "%.1f MB".format(bytes / 1_048_576f)
-            else -> "%.1f GB".format(bytes / 1_073_741_824f)
+        fun formatSize(res: Resources, bytes: Long): String = when {
+            bytes < 1_024L -> res.getString(R.string.format_size_bytes, bytes)
+            bytes < 1_048_576L -> res.getString(R.string.format_size_kb, bytes / 1_024f)
+            bytes < 1_073_741_824L -> res.getString(R.string.format_size_mb, bytes / 1_048_576f)
+            else -> res.getString(R.string.format_size_gb, bytes / 1_073_741_824f)
         }
 
         /**

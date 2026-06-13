@@ -48,6 +48,7 @@ class PrefsManager private constructor(context: Context) {
         const val APP_THEME_ICON = "app:theme:icon"
 
         const val FAVORITE_DIRS = "file:favorite_dirs"
+        const val SHOW_HIDDEN_FILES = "file:show_hidden"
 
         const val SETTINGS_SECTION_FONTS = "settings:section:fonts"
         const val SETTINGS_SECTION_SYSTEM = "settings:section:system"
@@ -69,8 +70,9 @@ class PrefsManager private constructor(context: Context) {
     }
 
     object Theme {
-        const val RAMA = "rama"
         const val MAKO = "mako"
+        const val RAMA = "rama"
+        const val TEYIN = "teyin"
         const val CATPPUCCIN_MOCHA = "catppuccin_mocha"
         const val CATPPUCCIN_LATTE = "catppuccin_latte"
         const val DRACULA = "dracula"
@@ -88,9 +90,10 @@ class PrefsManager private constructor(context: Context) {
                 .putString(PrefKeys.APP_LANGUAGE, Language.SYSTEM)
                 .putFloat(PrefKeys.APP_UI_SCALE, 1f)
                 .putBoolean(PrefKeys.APPS_ICONS, false)
-                .putBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, false)
+                .putBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, true)
                 .putBoolean(PrefKeys.SYSTEM_PREVENT_ROTATION, false)
-                .putString(PrefKeys.APP_THEME_NAME, Theme.DRACULA)
+                .putString(PrefKeys.APP_THEME_NAME, Theme.TEYIN)
+                .putBoolean(PrefKeys.SHOW_HIDDEN_FILES, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_FONTS, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_SYSTEM, true)
                 .putBoolean(PrefKeys.SETTINGS_SECTION_LANGUAGE, true)
@@ -101,7 +104,7 @@ class PrefsManager private constructor(context: Context) {
     }
 
     fun isSystemBarVisible(): Boolean =
-        prefs.getBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, false)
+        prefs.getBoolean(PrefKeys.SYSTEM_BAR_VISIBLE, true)
 
     fun getFontStyle(): String =
         prefs.getString(PrefKeys.FONT_STYLE, "") ?: ""

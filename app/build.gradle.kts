@@ -15,7 +15,7 @@ android {
         applicationId = "com.rama.teyin"
         minSdk = 21
         targetSdk = 36
-        versionCode = 1
+        versionCode = 2
         versionName = "$currentYear.$versionCode"
     }
 
@@ -27,6 +27,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        create("beta") {
+            applicationIdSuffix = ".beta"
+            versionNameSuffix = "-beta"
+
+            isMinifyEnabled = false
+
             signingConfig = signingConfigs.getByName("debug")
         }
         debug {
@@ -70,4 +78,5 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.ktx)
 }
