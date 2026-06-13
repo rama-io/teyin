@@ -29,6 +29,14 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
+        create("beta") {
+            applicationIdSuffix = ".beta"
+            versionNameSuffix = "-beta"
+
+            isMinifyEnabled = false
+
+            signingConfig = signingConfigs.getByName("debug")
+        }
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-dev"
