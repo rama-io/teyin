@@ -35,7 +35,7 @@
                 android:id="@+id/current_folder_name"
                 android:text="@string/current_folder_name_placeholder"
                 android:textColor="@color/h1"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:ellipsize="end"
                 style="@style/H2" />
         </LinearLayout>
@@ -183,6 +183,18 @@
                 android:textColor="@color/foreground" />
 
             <FrameLayout
+                android:id="@+id/remove_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12sp">
+
+                <ImageView
+                    android:src="@drawable/icon_trash_alt_solid"
+                    android:contentDescription="@string/altdescr_remove_selection"
+                    style="@style/Icon24" />
+            </FrameLayout>
+
+            <FrameLayout
                 android:id="@+id/paste_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -242,23 +254,6 @@
                     android:contentDescription="@string/altdescr_info"
                     style="@style/Icon24" />
             </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/remove_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="12sp">
-
-                <ImageView
-                    android:src="@drawable/icon_trash_alt_solid"
-                    android:contentDescription="@string/altdescr_remove_selection"
-                    style="@style/Icon24" />
-            </FrameLayout>
-
-            <!--            <FrameLayout-->
-            <!--                android:id="@+id/app_settings"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

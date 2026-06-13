@@ -51,6 +51,11 @@
         <item name="android:divider">@drawable/list_divider</item>
     </style>
 
+    <style name="VerticalListDividedSmall" parent="VerticalListDivided">
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@drawable/list_divider_small</item>
+    </style>
+
     <style name="VerticalListDivided_BG2" parent="VerticalList_BG2">
         <item name="android:showDividers">middle</item>
         <item name="android:divider">@drawable/list_divider</item>
@@ -82,13 +87,16 @@
     <style name="Disclaimer" parent="BlockFlow">
         <item name="android:textColor">@color/foreground</item>
         <item name="android:textSize">@dimen/h3</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Text" parent="BlockFlow">
         <item name="android:textColor">@color/foreground</item>
         <item name="android:textSize">@dimen/text</item>
-        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Small" parent="BlockFlow">
+        <item name="android:textColor">@color/foreground</item>
+        <item name="android:textSize">@dimen/small</item>
     </style>
 
     <style name="BTN" parent="BlockFlow">

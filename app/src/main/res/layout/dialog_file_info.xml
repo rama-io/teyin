@@ -2,149 +2,100 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="16sp"
     android:background="@color/bg_1"
-    android:orientation="vertical">
+    style="@style/VerticalListDivided">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="@string/dialog_info_title"
         style="@style/H2_center" />
 
     <View style="@style/Separator" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="6sp">
+    <LinearLayout style="@style/VerticalList">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/info_name"
             android:textColor="@color/h1"
-            android:textSize="@dimen/small" />
+            style="@style/Small" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/info_name_value"
             style="@style/Text" />
     </LinearLayout>
 
     <View style="@style/Separator" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="6sp">
+    <LinearLayout style="@style/VerticalList">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/info_type"
             android:textColor="@color/h1"
-            android:textSize="@dimen/small" />
+            style="@style/Small" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/info_type_value"
             style="@style/Text" />
     </LinearLayout>
 
     <View style="@style/Separator" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="6sp">
+    <LinearLayout style="@style/VerticalList">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/info_size"
             android:textColor="@color/h1"
-            android:textSize="@dimen/small" />
+            style="@style/Small" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/info_size_value"
             style="@style/Text" />
     </LinearLayout>
 
     <View style="@style/Separator" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="6sp">
+    <LinearLayout style="@style/VerticalList">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/info_location"
             android:textColor="@color/h1"
-            android:textSize="@dimen/small" />
+            style="@style/Small" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/info_location_value"
             style="@style/Text" />
     </LinearLayout>
 
     <View style="@style/Separator" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="6sp">
+    <LinearLayout style="@style/VerticalList">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/info_modified"
             android:textColor="@color/h1"
-            android:textSize="@dimen/small" />
+            style="@style/Small" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/info_modified_value"
             style="@style/Text" />
     </LinearLayout>
 
     <View style="@style/Separator" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="6sp">
+    <LinearLayout style="@style/VerticalList">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/info_permissions"
             android:textColor="@color/h1"
-            android:textSize="@dimen/small" />
+            style="@style/Small" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/info_permissions_value"
             style="@style/Text" />
     </LinearLayout>
 
+    <View style="@style/Separator" />
+
     <Button
         android:id="@+id/close_button"
         android:text="@string/btn_close"
-        android:layout_marginTop="16sp"
         style="@style/BTN1" />
 </LinearLayout>
