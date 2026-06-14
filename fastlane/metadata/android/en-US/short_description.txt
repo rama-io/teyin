@@ -1,1 +1,1 @@
-Privacy-first Android launcher designed for focus, speed, and simplicity.
+Lightweigh, minimal, privacy-first File manager designed for speed, and simplicity.

@@ -1,1 +1,1 @@
-Lightweigh, minimal, privacy-first File manager designed for speed, and simplicity.
+Built entirely in native Kotlin, Teyin runs fully on-device and avoids tracking.
