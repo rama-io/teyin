@@ -2,7 +2,7 @@
 
 ## Project
 
-Privacy-first Android launcher designed for focus, speed, and simplicity.
+Privacy-first File manager designed for speed, and simplicity.
 
 Built entirely in native Kotlin, runs fully on-device, avoids tracking, and keeps distractions to a
 minimum by emphasizing clarity and intentional interaction.
