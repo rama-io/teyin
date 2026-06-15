@@ -13,11 +13,13 @@ import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.ThemeManager
 import com.rama.bohio.util.Dimens.dpToPx
 import com.rama.teyin.managers.PrefsManager
+import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.utils.LocaleHelper
 
 abstract class CsActivity : ComponentActivity() {
 
     val prefs by lazy { PrefsManager.getInstance(this) }
+
     private var lastKnownAppLanguage: String? = null
     private var lastKnownTheme: String? = null
     private var lastKnownUiScale: Float = -1f
@@ -96,7 +98,12 @@ abstract class CsActivity : ComponentActivity() {
             }
         }
 
-        applyRotationLock(prefs.getBoolean(PrefsManager.PrefKeys.SYSTEM_PREVENT_ROTATION, false))
+        applyRotationLock(
+            prefs.getBoolean(
+                BohioPrefsManager.PrefKeys.SYSTEM_PREVENT_ROTATION,
+                false
+            )
+        )
 
         val root = findViewById<View>(android.R.id.content)
         ThemeManager.applyTheme(this, root)

@@ -14,6 +14,7 @@ import com.rama.teyin.managers.FileManager
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.FsEntry
 import com.rama.teyin.managers.PrefsManager
+import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.managers.ThemeManager
 
 class FileListAdapter(
@@ -116,7 +117,7 @@ class FileListAdapter(
         ThemeManager.applyTheme(context, view)
         val typeface = FontManager.getTypeface(
             context,
-            PrefsManager.getInstance(context).getFontStyle() ?: PrefsManager.FontStyle.DEFAULT
+            PrefsManager.getInstance(context).getFontStyle() ?: BohioPrefsManager.FontStyle.DEFAULT
         )
         FontManager.applyTypefaceToView(view, typeface)
     }

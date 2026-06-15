@@ -41,7 +41,7 @@ import com.rama.teyin.adapters.DirectoryListAdapter
 import com.rama.teyin.adapters.FileListAdapter
 import com.rama.teyin.managers.FileManager
 import com.rama.teyin.managers.FontManager
-import com.rama.teyin.managers.PrefsManager
+import com.rama.teyin.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.managers.ThemeManager
 import java.io.File
 import java.text.SimpleDateFormat
@@ -129,7 +129,7 @@ class MainActivity : CsActivity() {
         super.onCreate(savedInstanceState)
         lastKnownUiScale = prefs.getUiScale()
 
-        PrefsManager.getInstance(this).initPrefs()
+        BohioPrefsManager.getInstance(this).initPrefs()
         setContentView(R.layout.view_home)
 
         rootView = findViewById(R.id.root)
@@ -181,7 +181,7 @@ class MainActivity : CsActivity() {
 
             val hiddenCheckbox = popupView.findViewById<CheckBox>(R.id.popup_hidden_checkbox)
             hiddenCheckbox.isChecked =
-                prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+                prefs.getBoolean(BohioPrefsManager.FileKeys.SHOW_HIDDEN_FILES, false)
 
             val popup = PopupWindow(
                 popupView,
@@ -198,7 +198,10 @@ class MainActivity : CsActivity() {
             popupView.findViewById<View>(R.id.popup_toggle_hidden).setOnClickListener {
                 it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 hiddenCheckbox.isChecked = !hiddenCheckbox.isChecked
-                prefs.setBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, hiddenCheckbox.isChecked)
+                prefs.setBoolean(
+                    BohioPrefsManager.FileKeys.SHOW_HIDDEN_FILES,
+                    hiddenCheckbox.isChecked
+                )
                 popup.dismiss()
                 refreshList()
             }
@@ -328,7 +331,7 @@ class MainActivity : CsActivity() {
         dirAdapter = DirectoryListAdapter(this) { path ->
             // For user bookmarks, remove from prefs. For USB Fixed entries (removable=true),
             // just refresh — the volume will no longer appear once dismissed.
-            PrefsManager.getInstance(this).removeFavoriteDir(path)
+            BohioPrefsManager.getInstance(this).removeFavoriteDir(path)
             refreshFavorites()
         }
         directoryList.adapter = dirAdapter
@@ -362,7 +365,7 @@ class MainActivity : CsActivity() {
                         getString(R.string.toast_folder_no_longer_exists),
                         Toast.LENGTH_SHORT
                     ).show()
-                    PrefsManager.getInstance(this).removeFavoriteDir(path)
+                    BohioPrefsManager.getInstance(this).removeFavoriteDir(path)
                     refreshFavorites()
                 }
             }
@@ -370,7 +373,7 @@ class MainActivity : CsActivity() {
 
         addToFavoritesBtn.setOnClickListener {
             if (!fileSystemReady) return@setOnClickListener
-            val prefs = PrefsManager.getInstance(this)
+            val prefs = BohioPrefsManager.getInstance(this)
             val path = fileManager.currentDir.absolutePath
             val existing = prefs.getFavoriteDirs()
             if (path in existing) {
@@ -494,7 +497,7 @@ class MainActivity : CsActivity() {
         }
 
         // Divider + user bookmarks
-        val userDirs = PrefsManager.getInstance(this).getFavoriteDirs()
+        val userDirs = BohioPrefsManager.getInstance(this).getFavoriteDirs()
         if (userDirs.isNotEmpty()) {
             list += DirEntry.Divider
             userDirs.forEach { list += DirEntry.UserAdded(it) }
@@ -582,7 +585,7 @@ class MainActivity : CsActivity() {
             fileManager.init()
         }
 
-        val showHidden = prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+        val showHidden = prefs.getBoolean(BohioPrefsManager.FileKeys.SHOW_HIDDEN_FILES, false)
         val entries = fileManager.listCurrent(currentSearchQuery, showHidden)
         val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
         val hasParent = !fileManager.isAtRoot ||

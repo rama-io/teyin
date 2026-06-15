@@ -12,6 +12,7 @@ import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
+import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.managers.ThemeManager
 
 sealed class DirEntry {
@@ -111,7 +112,7 @@ class DirectoryListAdapter(
             val typeface = FontManager.getTypeface(
                 context,
                 PrefsManager.getInstance(context).getFontStyle()
-                    ?: PrefsManager.FontStyle.DEFAULT
+                    ?: BohioPrefsManager.FontStyle.DEFAULT
             )
             FontManager.applyTypefaceToView(view, typeface)
         }

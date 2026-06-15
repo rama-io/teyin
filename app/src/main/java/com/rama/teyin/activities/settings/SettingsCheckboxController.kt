@@ -3,7 +3,7 @@ package com.rama.teyin.activities.settings
 import android.view.View
 import com.rama.teyin.R
 import com.rama.teyin.activities.SettingsActivity
-import com.rama.teyin.managers.PrefsManager.PrefKeys
+import com.rama.bohio.managers.PrefsManager.PrefKeys
 import com.rama.bohio.widgets.WdCheckbox
 
 class SettingsCheckboxController(private val activity: SettingsActivity) {

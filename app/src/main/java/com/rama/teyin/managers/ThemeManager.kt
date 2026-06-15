@@ -9,6 +9,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
+import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 
 object ThemeManager {
 
@@ -188,14 +189,14 @@ object ThemeManager {
 
     fun paletteFor(theme: String, context: android.content.Context? = null): Palette =
         when (theme) {
-            PrefsManager.Theme.MAKO -> MAKO
-            PrefsManager.Theme.RAMA -> RAMA
-            PrefsManager.Theme.CATPPUCCIN_MOCHA -> CATPPUCCIN_MOCHA
-            PrefsManager.Theme.CATPPUCCIN_LATTE -> CATPPUCCIN_LATTE
-            PrefsManager.Theme.DRACULA -> DRACULA
-            PrefsManager.Theme.MELANGE -> MELANGE
-            PrefsManager.Theme.TOKYO_NIGHT -> TOKYO_NIGHT
-            PrefsManager.Theme.CUSTOM -> if (context != null) buildCustomPalette(context) else TEYIN
+            BohioPrefsManager.Theme.MAKO -> MAKO
+            BohioPrefsManager.Theme.RAMA -> RAMA
+            BohioPrefsManager.Theme.CATPPUCCIN_MOCHA -> CATPPUCCIN_MOCHA
+            BohioPrefsManager.Theme.CATPPUCCIN_LATTE -> CATPPUCCIN_LATTE
+            BohioPrefsManager.Theme.DRACULA -> DRACULA
+            BohioPrefsManager.Theme.MELANGE -> MELANGE
+            BohioPrefsManager.Theme.TOKYO_NIGHT -> TOKYO_NIGHT
+            BohioPrefsManager.Theme.CUSTOM -> if (context != null) buildCustomPalette(context) else TEYIN
             else -> TEYIN
         }
 
@@ -204,24 +205,24 @@ object ThemeManager {
         val base = TEYIN
         fun get(key: String, fallback: Int) = prefs.getCustomThemeColor(key, fallback)
         return Palette(
-            foreground = get(PrefsManager.PrefKeys.APP_THEME_FOREGROUND, base.foreground),
-            bg_1 = get(PrefsManager.PrefKeys.APP_THEME_BG_1, base.bg_1),
-            bg_2 = get(PrefsManager.PrefKeys.APP_THEME_BG_2, base.bg_2),
-            bg_3 = get(PrefsManager.PrefKeys.APP_THEME_BG_3, base.bg_3),
-            accent_1 = get(PrefsManager.PrefKeys.APP_THEME_ACCENT_1, base.accent_1),
-            accent_2 = get(PrefsManager.PrefKeys.APP_THEME_ACCENT_2, base.accent_2),
-            accent_3 = get(PrefsManager.PrefKeys.APP_THEME_ACCENT_3, base.accent_3),
-            disabled = get(PrefsManager.PrefKeys.APP_THEME_DISABLED, base.disabled),
-            input = get(PrefsManager.PrefKeys.APP_THEME_INPUT, base.input),
-            button_1 = get(PrefsManager.PrefKeys.APP_THEME_BUTTON_1, base.button_1),
-            button_2 = get(PrefsManager.PrefKeys.APP_THEME_BUTTON_2, base.button_2),
-            danger = get(PrefsManager.PrefKeys.APP_THEME_DANGER, base.danger),
+            foreground = get(BohioPrefsManager.PrefKeys.APP_THEME_FOREGROUND, base.foreground),
+            bg_1 = get(BohioPrefsManager.PrefKeys.APP_THEME_BG_1, base.bg_1),
+            bg_2 = get(BohioPrefsManager.PrefKeys.APP_THEME_BG_2, base.bg_2),
+            bg_3 = get(BohioPrefsManager.PrefKeys.APP_THEME_BG_3, base.bg_3),
+            accent_1 = get(BohioPrefsManager.PrefKeys.APP_THEME_ACCENT_1, base.accent_1),
+            accent_2 = get(BohioPrefsManager.PrefKeys.APP_THEME_ACCENT_2, base.accent_2),
+            accent_3 = get(BohioPrefsManager.PrefKeys.APP_THEME_ACCENT_3, base.accent_3),
+            disabled = get(BohioPrefsManager.PrefKeys.APP_THEME_DISABLED, base.disabled),
+            input = get(BohioPrefsManager.PrefKeys.APP_THEME_INPUT, base.input),
+            button_1 = get(BohioPrefsManager.PrefKeys.APP_THEME_BUTTON_1, base.button_1),
+            button_2 = get(BohioPrefsManager.PrefKeys.APP_THEME_BUTTON_2, base.button_2),
+            danger = get(BohioPrefsManager.PrefKeys.APP_THEME_DANGER, base.danger),
             collapsible_header = get(
-                PrefsManager.PrefKeys.APP_THEME_COLLAPSIBLE_HEADER,
+                BohioPrefsManager.PrefKeys.APP_THEME_COLLAPSIBLE_HEADER,
                 base.collapsible_header
             ),
-            icon = get(PrefsManager.PrefKeys.APP_THEME_ICON, base.icon),
-            h1 = get(PrefsManager.PrefKeys.APP_THEME_H1, base.h1),
+            icon = get(BohioPrefsManager.PrefKeys.APP_THEME_ICON, base.icon),
+            h1 = get(BohioPrefsManager.PrefKeys.APP_THEME_H1, base.h1),
         )
     }
 

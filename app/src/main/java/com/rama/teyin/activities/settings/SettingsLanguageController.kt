@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
-import com.rama.teyin.managers.PrefsManager
+import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 
 class SettingsLanguageController(private val activity: SettingsActivity) {
 
@@ -52,7 +52,7 @@ class SettingsLanguageController(private val activity: SettingsActivity) {
         group.setOnCheckedChangeListener { _, checkedId ->
             val language = codeToId.entries
                 .firstOrNull { it.value == checkedId }?.key
-                ?: PrefsManager.Language.SYSTEM
+                ?: BohioPrefsManager.Language.SYSTEM
 
             if (language == prefs.getAppLanguage()) {
                 return@setOnCheckedChangeListener

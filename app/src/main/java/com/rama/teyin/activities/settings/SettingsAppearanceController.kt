@@ -10,7 +10,7 @@ import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
 import com.rama.teyin.managers.FontManager
-import com.rama.teyin.managers.PrefsManager
+import com.rama.bohio.managers.PrefsManager
 import com.rama.teyin.managers.ThemeManager
 import java.io.File
 import java.io.FileOutputStream
@@ -121,8 +121,8 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
             if (prefs.getTheme() == PrefsManager.Theme.CUSTOM) View.VISIBLE else View.GONE
 
         when (prefs.getTheme()) {
-            PrefsManager.Theme.MAKO -> group.check(R.id.theme_mako)
             PrefsManager.Theme.RAMA -> group.check(R.id.theme_rama)
+            PrefsManager.Theme.MAKO -> group.check(R.id.theme_mako)
             PrefsManager.Theme.TEYIN -> group.check(R.id.theme_teyin)
             PrefsManager.Theme.CATPPUCCIN_MOCHA -> group.check(R.id.theme_catppuccin_mocha)
             PrefsManager.Theme.CATPPUCCIN_LATTE -> group.check(R.id.theme_catppuccin_latte)
