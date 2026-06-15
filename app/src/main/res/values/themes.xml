@@ -1,12 +1,8 @@
 <resources>
     <!-- Base theme -->
     <style name="Theme.Teyin" parent="Theme.Rama.Base">
+        <item name="ramaWindowBg">@color/bg_1</item>
+        <item name="ramaTextColor">@color/foreground</item>
         <item name="bgColor">@color/bg_1</item>
-        <item name="foregroundColor">@color/foreground</item>
-
-        <item name="android:windowBackground">?attr/bgColor</item>
-        <item name="android:textColor">?attr/foregroundColor</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowFullscreen">false</item>
     </style>
 </resources>
