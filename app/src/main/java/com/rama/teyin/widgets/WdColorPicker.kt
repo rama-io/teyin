@@ -33,11 +33,11 @@ class WdColorPicker @JvmOverloads constructor(
         orientation = HORIZONTAL
 
         LayoutInflater.from(context)
-            .inflate(R.layout.wd_color_picker, this, true)
+            .inflate(BohioR.layout.wd_color_picker, this, true)
 
-        title = findViewById(R.id.title)
-        hexValue = findViewById(R.id.hexValue)
-        colorPreview = findViewById(R.id.colorPreview)
+        title = findViewById(BohioR.id.title)
+        hexValue = findViewById(BohioR.id.hexValue)
+        colorPreview = findViewById(BohioR.id.colorPreview)
 
         attrs?.let {
             val ta = context.obtainStyledAttributes(

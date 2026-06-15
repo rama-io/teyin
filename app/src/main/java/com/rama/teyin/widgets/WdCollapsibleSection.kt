@@ -30,12 +30,12 @@ class WdCollapsibleSection @JvmOverloads constructor(
         orientation = VERTICAL
 
         LayoutInflater.from(context)
-            .inflate(R.layout.wd_collapsible_section, this, true)
+            .inflate(BohioR.layout.wd_collapsible_section, this, true)
 
-        header = findViewById(R.id.section_header)
-        indicator = findViewById(R.id.section_indicator)
-        labelView = findViewById(R.id.section_label)
-        content = findViewById(R.id.section_content)
+        header = findViewById(BohioR.id.section_header)
+        indicator = findViewById(BohioR.id.section_indicator)
+        labelView = findViewById(BohioR.id.section_label)
+        content = findViewById(BohioR.id.section_content)
 
         // Read XML attrs
         attrs?.let {
@@ -105,7 +105,7 @@ class WdCollapsibleSection @JvmOverloads constructor(
 
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            if (child.id != R.id.section_root) {
+            if (child.id != BohioR.id.section_root) {
                 children.add(child)
             }
         }

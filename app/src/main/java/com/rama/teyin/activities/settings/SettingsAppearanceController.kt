@@ -6,8 +6,8 @@ import android.net.Uri
 import android.view.View
 import android.widget.RadioGroup
 import android.widget.TextView
-import com.rama.teyin.widgets.WdCheckbox
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
@@ -15,7 +15,7 @@ import com.rama.teyin.managers.ThemeManager
 import java.io.File
 import java.io.FileOutputStream
 import com.rama.teyin.widgets.WdColorPicker
-import com.rama.teyin.widgets.WdRange
+import com.rama.bohio.widgets.WdRange
 
 class SettingsAppearanceController(private val activity: SettingsActivity) {
 
@@ -227,11 +227,11 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
             }
         }
 
-        val steps = activity.resources.getStringArray(R.array.ui_scale_steps).toList()
+        val steps = activity.resources.getStringArray(BohioR.array.ui_scale_steps).toList()
         val matchIndex = steps.indexOfFirst { it.toFloatOrNull() == savedScale }
         if (matchIndex >= 0) {
             range.post {
-                val container = range.findViewById<android.widget.LinearLayout>(R.id.container)
+                val container = range.findViewById<android.widget.LinearLayout>(BohioR.id.container)
                 (container?.getChildAt(matchIndex) as? android.widget.Button)?.performClick()
             }
         }

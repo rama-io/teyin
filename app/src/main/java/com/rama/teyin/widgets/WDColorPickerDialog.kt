@@ -10,6 +10,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.R
 import com.rama.teyin.managers.ThemeManager
 import com.rama.teyin.widgets.color.HSVSquareView
@@ -26,7 +27,7 @@ object ColorPickerDialog {
         val dialog = Dialog(activity)
 
         val view = LayoutInflater.from(activity)
-            .inflate(R.layout.wd_color_picker_dialog, null)
+            .inflate(BohioR.layout.wd_color_picker_dialog, null)
 
         dialog.setContentView(view)
         dialog.window?.setLayout(
@@ -37,13 +38,13 @@ object ColorPickerDialog {
         ThemeManager.applyTheme(activity, view)
 
         // Views
-        val preview = view.findViewById<View>(R.id.preview)
-        val hexInput = view.findViewById<EditText>(R.id.hex_input)
-        val applyButton = view.findViewById<Button>(R.id.apply_button)
-        val closeButton = view.findViewById<Button>(R.id.close_button)
+        val preview = view.findViewById<View>(BohioR.id.preview)
+        val hexInput = view.findViewById<EditText>(BohioR.id.hex_input)
+        val applyButton = view.findViewById<Button>(BohioR.id.apply_button)
+        val closeButton = view.findViewById<Button>(BohioR.id.close_button)
 
-        val hsvSquare = view.findViewById<HSVSquareView>(R.id.hsv_square)
-        val hueSlider = view.findViewById<HueStripView>(R.id.hue_slider)
+        val hsvSquare = view.findViewById<HSVSquareView>(BohioR.id.hsv_square)
+        val hueSlider = view.findViewById<HueStripView>(BohioR.id.hue_slider)
 
         // HSV state (single source of truth)
         val hsv = floatArrayOf(0f, 0f, 0f)
