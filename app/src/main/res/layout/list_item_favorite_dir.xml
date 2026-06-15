@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/dir_icon"
-            android:src="@drawable/icon_folder_solid"
+            android:src="@drawable/px_folder"
             android:tint="@color/accent_3"
             android:contentDescription="@string/altdescr_favorite_folder"
             style="@style/Icon24" />
@@ -53,7 +53,7 @@
         android:padding="12sp">
 
         <ImageView
-            android:src="@drawable/icon_close"
+            android:src="@drawable/px_times"
             android:contentDescription="@string/altdescr_remove_favorite"
             style="@style/Icon24" />
     </FrameLayout>

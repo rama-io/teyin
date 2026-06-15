@@ -14,7 +14,7 @@
         android:padding="12sp">
 
         <ImageView
-            android:src="@drawable/icon_octagon_check_solid"
+            android:src="@drawable/px_octagon_check"
             android:contentDescription="@string/altdescr_selection_check"
             android:tint="@color/accent_1"
             style="@style/Icon24" />
@@ -26,7 +26,7 @@
         android:padding="12sp">
 
         <ImageView
-            android:src="@drawable/icon_folder_solid"
+            android:src="@drawable/px_folder"
             android:tint="@color/accent_3"
             android:contentDescription="@string/altdescr_folder_indicator"
             style="@style/Icon24" />

@@ -35,17 +35,17 @@ class WdRange @JvmOverloads constructor(
         container = findViewById(R.id.container)
 
         attrs?.let {
-            context.withStyledAttributes(it, R.styleable.WdRange) {
+            context.withStyledAttributes(it, BohioR.styleable.WdRange) {
 
                 val values: List<String> = when {
-                    hasValue(R.styleable.WdRange_valuesArray) -> {
-                        val arrayRes = getResourceId(R.styleable.WdRange_valuesArray, 0)
+                    hasValue(BohioR.styleable.WdRange_valuesArray) -> {
+                        val arrayRes = getResourceId(BohioR.styleable.WdRange_valuesArray, 0)
                         if (arrayRes != 0) context.resources.getStringArray(arrayRes).toList()
                         else emptyList()
                     }
 
-                    hasValue(R.styleable.WdRange_values) -> {
-                        getString(R.styleable.WdRange_values)
+                    hasValue(BohioR.styleable.WdRange_values) -> {
+                        getString(BohioR.styleable.WdRange_values)
                             ?.split(",")
                             ?.map { it.trim() }
                             ?.filter { it.isNotEmpty() }

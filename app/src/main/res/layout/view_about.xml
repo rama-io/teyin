@@ -50,49 +50,49 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/app_creator" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_seedlings"
+                android:icon="@drawable/px_seedlings"
                 android:text="@string/app_name" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/product_teyin_url" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/app_ads_desc" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/app_background_tasks_desc" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/app_trackers_desc" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/app_offline_desc" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/license_gpl3" />
 
             <TextView
@@ -102,13 +102,13 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/contributor_isotjs" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/contributor_isotjs_url" />
 
             <TextView
@@ -118,25 +118,25 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/product_hackernoon_creator" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_seedlings"
+                android:icon="@drawable/px_seedlings"
                 android:text="@string/product_hackernoon_name" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/product_hackernoon_url" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/license_cc_4" />
 
             <TextView
@@ -146,25 +146,25 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/product_jersey_creator" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_seedlings"
+                android:icon="@drawable/px_seedlings"
                 android:text="@string/product_jersey_name" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/product_jersey_url" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/license_ofl_1_1" />
 
             <TextView
@@ -174,25 +174,25 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/product_dracula_creator" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_seedlings"
+                android:icon="@drawable/px_seedlings"
                 android:text="@string/product_dracula_name" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/product_dracula_url" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/license_mit" />
 
             <View style="@style/Separator" />
@@ -200,25 +200,25 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/product_catppuccin_creator" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_seedlings"
+                android:icon="@drawable/px_seedlings"
                 android:text="@string/product_catppuccin_name" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/product_catppuccin_url" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/license_mit" />
 
             <View style="@style/Separator" />
@@ -226,25 +226,25 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/product_tokyo_creator" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_seedlings"
+                android:icon="@drawable/px_seedlings"
                 android:text="@string/product_tokyo_name" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/product_tokyo_url" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/license_mit" />
 
             <View style="@style/Separator" />
@@ -252,25 +252,25 @@
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_user"
+                android:icon="@drawable/px_user"
                 android:text="@string/product_melange_creator" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_seedlings"
+                android:icon="@drawable/px_seedlings"
                 android:text="@string/product_melange_name" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_github"
+                android:icon="@drawable/px_github"
                 android:text="@string/product_melange_url" />
 
             <com.rama.teyin.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_octagon_check_solid"
+                android:icon="@drawable/px_octagon_check"
                 android:text="@string/license_mit" />
 
         </LinearLayout>

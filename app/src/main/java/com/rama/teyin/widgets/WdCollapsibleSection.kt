@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.R
 import com.rama.teyin.managers.PrefsManager
 
@@ -38,16 +39,16 @@ class WdCollapsibleSection @JvmOverloads constructor(
 
         // Read XML attrs
         attrs?.let {
-            val ta = context.obtainStyledAttributes(it, R.styleable.WdCollapsibleSection)
+            val ta = context.obtainStyledAttributes(it, BohioR.styleable.WdCollapsibleSection)
 
-            labelView.text = ta.getString(R.styleable.WdCollapsibleSection_header) ?: ""
+            labelView.text = ta.getString(BohioR.styleable.WdCollapsibleSection_header) ?: ""
 
             key = resolveKey(
-                ta.getString(R.styleable.WdCollapsibleSection_key)
+                ta.getString(BohioR.styleable.WdCollapsibleSection_key)
             )
 
             defaultExpanded = ta.getBoolean(
-                R.styleable.WdCollapsibleSection_defaultExpanded,
+                BohioR.styleable.WdCollapsibleSection_defaultExpanded,
                 true
             )
 

@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
 import com.rama.teyin.managers.ThemeManager
@@ -94,7 +95,7 @@ class DirectoryListAdapter(
                     ?: inflater.inflate(R.layout.list_item_favorite_dir, parent, false)
                 val file = java.io.File(entry.path)
                 v.findViewById<ImageView>(R.id.dir_icon)
-                    .setImageResource(R.drawable.icon_folder_solid)
+                    .setImageResource(BohioR.drawable.px_folder)
                 v.findViewById<TextView>(R.id.dir_name).text =
                     file.name.ifEmpty { context.getString(R.string.dir_label_storage) }
                 v.findViewById<TextView>(R.id.dir_path).text = entry.path

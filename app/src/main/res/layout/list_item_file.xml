@@ -16,7 +16,7 @@
         android:padding="12sp">
 
         <ImageView
-            android:src="@drawable/icon_octagon_check_solid"
+            android:src="@drawable/px_octagon_check"
             android:contentDescription="@string/altdescr_selection_check"
             android:tint="@color/accent_1"
             style="@style/Icon24" />
@@ -30,7 +30,7 @@
 
         <ImageView
             android:id="@+id/file_icon"
-            android:src="@drawable/icon_disk"
+            android:src="@drawable/px_disk"
             android:contentDescription="@string/altdescr_file"
             style="@style/Icon24" />
     </FrameLayout>

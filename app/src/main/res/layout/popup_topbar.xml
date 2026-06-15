@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/icon_folder_plus_solid"
+            android:src="@drawable/px_folder_plus"
             android:contentDescription="@string/altdescr_add_folder"
             style="@style/Icon24" />
 
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/icon_eye"
+            android:src="@drawable/px_eye"
             android:contentDescription="@string/checkbox_show_hidden_files"
             style="@style/Icon24" />
 
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/icon_cog_solid"
+            android:src="@drawable/px_cog"
             android:contentDescription="@string/activity_settings_label"
             style="@style/Icon24" />
 

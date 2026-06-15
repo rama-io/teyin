@@ -25,7 +25,7 @@
 
                 <ImageView
                     android:layout_gravity="center"
-                    android:src="@drawable/icon_folder_open_solid"
+                    android:src="@drawable/px_folder_open"
                     android:tint="@color/h1"
                     android:contentDescription="@string/altdescr_folder_indicator"
                     style="@style/Icon24" />
@@ -48,7 +48,7 @@
 
             <ImageView
                 android:layout_gravity="center"
-                android:src="@drawable/icon_search"
+                android:src="@drawable/px_search"
                 android:contentDescription="@string/altdescr_search_icon"
                 style="@style/Icon24" />
         </FrameLayout>
@@ -82,7 +82,7 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:src="@drawable/icon_close"
+                    android:src="@drawable/px_times"
                     android:contentDescription="@string/altdescr_clear_search"
                     style="@style/Icon24" />
             </FrameLayout>
@@ -96,7 +96,7 @@
 
             <ImageView
                 android:layout_gravity="center"
-                android:src="@drawable/icon_sitemap_solid"
+                android:src="@drawable/px_sitemap"
                 android:contentDescription="@string/altdescr_directories"
                 style="@style/Icon24" />
         </FrameLayout>
@@ -109,7 +109,7 @@
 
             <ImageView
                 android:layout_gravity="center"
-                android:src="@drawable/icon_context_menu"
+                android:src="@drawable/px_v_ellipsis"
                 android:contentDescription="@string/altdescr_open_settings"
                 style="@style/Icon24" />
         </FrameLayout>
@@ -169,7 +169,7 @@
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_arrow_left_solid"
+                    android:src="@drawable/px_arrow_left"
                     android:contentDescription="@string/btn_cancel"
                     style="@style/Icon24" />
             </FrameLayout>
@@ -189,7 +189,7 @@
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_trash_alt_solid"
+                    android:src="@drawable/px_trash"
                     android:contentDescription="@string/altdescr_remove_selection"
                     style="@style/Icon24" />
             </FrameLayout>
@@ -202,7 +202,7 @@
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_clipboard_solid"
+                    android:src="@drawable/px_clipboard"
                     android:contentDescription="@string/altdescr_paste"
                     style="@style/Icon24" />
             </FrameLayout>
@@ -214,7 +214,7 @@
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_copy_solid"
+                    android:src="@drawable/px_copy"
                     android:contentDescription="@string/altdescr_copy"
                     style="@style/Icon24" />
             </FrameLayout>
@@ -226,7 +226,7 @@
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_folder_enter_solid"
+                    android:src="@drawable/px_folder_enter"
                     android:contentDescription="@string/altdescr_move_to_folder"
                     style="@style/Icon24" />
             </FrameLayout>
@@ -238,7 +238,7 @@
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_edit_solid"
+                    android:src="@drawable/px_edit"
                     android:contentDescription="@string/ctxmenu_rename"
                     style="@style/Icon24" />
             </FrameLayout>
@@ -250,7 +250,7 @@
                 android:padding="12sp">
 
                 <ImageView
-                    android:src="@drawable/icon_info"
+                    android:src="@drawable/px_info"
                     android:contentDescription="@string/altdescr_info"
                     style="@style/Icon24" />
             </FrameLayout>

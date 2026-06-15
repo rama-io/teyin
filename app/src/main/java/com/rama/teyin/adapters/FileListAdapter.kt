@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.managers.FileManager
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.FsEntry
@@ -99,7 +100,8 @@ class FileListAdapter(
         } else {
             val v = convertView ?: inflater.inflate(R.layout.list_item_file, parent, false)
             v.findViewById<TextView>(R.id.file_name).text = entry.name
-            v.findViewById<TextView>(R.id.file_size).text = FileManager.formatSize(context.resources, entry.size)
+            v.findViewById<TextView>(R.id.file_size).text =
+                FileManager.formatSize(context.resources, entry.size)
             v.findViewById<ImageView>(R.id.file_icon)
                 .setImageResource(iconForExtension(entry.extension))
             bindSelectionCheck(v, isSelected)
@@ -126,12 +128,12 @@ class FileListAdapter(
     }
 
     private fun iconForExtension(ext: String): Int = when (ext) {
-        "jpg", "jpeg", "png", "gif", "webp", "bmp", "svg" -> R.drawable.icon_eye
-        "mp3", "flac", "ogg", "wav", "aac", "m4a" -> R.drawable.icon_seedlings
-        "mp4", "mkv", "avi", "mov", "webm" -> R.drawable.icon_disk
-        "pdf", "doc", "docx", "xls", "xlsx", "txt", "md" -> R.drawable.icon_edit_solid
-        "zip", "tar", "gz", "bz2", "7z", "rar" -> R.drawable.icon_folder_enter_solid
-        else -> R.drawable.icon_disk
+        "jpg", "jpeg", "png", "gif", "webp", "bmp", "svg" -> BohioR.drawable.px_eye
+        "mp3", "flac", "ogg", "wav", "aac", "m4a" -> BohioR.drawable.px_seedlings
+        "mp4", "mkv", "avi", "mov", "webm" -> BohioR.drawable.px_disk
+        "pdf", "doc", "docx", "xls", "xlsx", "txt", "md" -> BohioR.drawable.px_edit
+        "zip", "tar", "gz", "bz2", "7z", "rar" -> BohioR.drawable.px_folder_enter
+        else -> BohioR.drawable.px_disk
     }
 
     companion object {
