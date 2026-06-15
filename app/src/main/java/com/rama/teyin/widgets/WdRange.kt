@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.core.content.withStyledAttributes
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 
 class WdRange @JvmOverloads constructor(
     context: Context,
@@ -70,7 +71,7 @@ class WdRange @JvmOverloads constructor(
                 context,
                 null,
                 0,
-                R.style.BTN_range
+                BohioR.style.BTN_range
             ).apply {
 
                 text = value
