@@ -6,6 +6,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.core.content.ContextCompat
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
 import com.rama.teyin.managers.PrefsManager
 
@@ -29,7 +30,7 @@ class SettingsLanguageController(private val activity: SettingsActivity) {
                 id = View.generateViewId()
                 text = label
                 textSize = 16f
-                setTextColor(ContextCompat.getColor(activity, R.color.foreground))
+                setTextColor(ContextCompat.getColor(activity, BohioR.color.foreground))
                 val params = RadioGroup.LayoutParams(
                     RadioGroup.LayoutParams.MATCH_PARENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT

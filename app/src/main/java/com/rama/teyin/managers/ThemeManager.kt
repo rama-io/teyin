@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 
 object ThemeManager {
 
@@ -306,77 +307,77 @@ object ThemeManager {
             // bg_primary
             MAKO.bg_1, TEYIN.bg_1, RAMA.bg_1, CATPPUCCIN_MOCHA.bg_1, CATPPUCCIN_LATTE.bg_1,
             DRACULA.bg_1, MELANGE.bg_1, TOKYO_NIGHT.bg_1, custom.bg_1,
-            context.resources.getColor(R.color.bg_1) -> palette.bg_1
+            context.resources.getColor(BohioR.color.bg_1) -> palette.bg_1
 
             // bg_secondary
             MAKO.bg_2, TEYIN.bg_2, RAMA.bg_2, CATPPUCCIN_MOCHA.bg_2, CATPPUCCIN_LATTE.bg_2,
             DRACULA.bg_2, MELANGE.bg_2, TOKYO_NIGHT.bg_2, custom.bg_2,
-            context.resources.getColor(R.color.bg_2) -> palette.bg_2
+            context.resources.getColor(BohioR.color.bg_2) -> palette.bg_2
 
             // bg_tertiary
             MAKO.bg_3, TEYIN.bg_3, RAMA.bg_3, CATPPUCCIN_MOCHA.bg_3, CATPPUCCIN_LATTE.bg_3,
             DRACULA.bg_3, MELANGE.bg_3, TOKYO_NIGHT.bg_3, custom.bg_3,
-            context.resources.getColor(R.color.bg_3) -> palette.bg_3
+            context.resources.getColor(BohioR.color.bg_3) -> palette.bg_3
 
             // button_primary
             MAKO.button_1, TEYIN.button_1, RAMA.button_1, CATPPUCCIN_MOCHA.button_1, CATPPUCCIN_LATTE.button_1,
             DRACULA.button_1, MELANGE.button_1, TOKYO_NIGHT.button_1, custom.button_1,
-            context.resources.getColor(R.color.button_1) -> palette.button_1
+            context.resources.getColor(BohioR.color.button_1) -> palette.button_1
 
             // button_secondary
             MAKO.button_2, TEYIN.button_2, RAMA.button_2, CATPPUCCIN_MOCHA.button_2, CATPPUCCIN_LATTE.button_2,
             DRACULA.button_2, MELANGE.button_2, TOKYO_NIGHT.button_2, custom.button_2,
-            context.resources.getColor(R.color.button_2) -> palette.button_2
+            context.resources.getColor(BohioR.color.button_2) -> palette.button_2
 
             // button_danger
             MAKO.danger, TEYIN.danger, RAMA.danger, CATPPUCCIN_MOCHA.danger, CATPPUCCIN_LATTE.danger,
             DRACULA.danger, MELANGE.danger, TOKYO_NIGHT.danger, custom.danger,
-            context.resources.getColor(R.color.danger) -> palette.danger
+            context.resources.getColor(BohioR.color.danger) -> palette.danger
 
             // input
             MAKO.input, TEYIN.input, RAMA.input, CATPPUCCIN_MOCHA.input, CATPPUCCIN_LATTE.input,
             DRACULA.input, MELANGE.input, TOKYO_NIGHT.input, custom.input,
-            context.resources.getColor(R.color.input) -> palette.input
+            context.resources.getColor(BohioR.color.input) -> palette.input
 
             // disabled
             MAKO.disabled, TEYIN.disabled, RAMA.disabled, CATPPUCCIN_MOCHA.disabled, CATPPUCCIN_LATTE.disabled,
             DRACULA.disabled, MELANGE.disabled, TOKYO_NIGHT.disabled, custom.disabled,
-            context.resources.getColor(R.color.disabled) -> palette.disabled
+            context.resources.getColor(BohioR.color.disabled) -> palette.disabled
 
             // accent_1
             MAKO.accent_1, TEYIN.accent_1, RAMA.accent_1, CATPPUCCIN_MOCHA.accent_1, CATPPUCCIN_LATTE.accent_1,
             DRACULA.accent_1, MELANGE.accent_1, TOKYO_NIGHT.accent_1, custom.accent_1,
-            context.resources.getColor(R.color.accent_1) -> palette.accent_1
+            context.resources.getColor(BohioR.color.accent_1) -> palette.accent_1
 
             // accent_2
             MAKO.accent_2, TEYIN.accent_2, RAMA.accent_2, CATPPUCCIN_MOCHA.accent_2, CATPPUCCIN_LATTE.accent_2,
             DRACULA.accent_2, MELANGE.accent_2, TOKYO_NIGHT.accent_2, custom.accent_2,
-            context.resources.getColor(R.color.accent_2) -> palette.accent_2
+            context.resources.getColor(BohioR.color.accent_2) -> palette.accent_2
 
             // accent_3
             MAKO.accent_3, TEYIN.accent_3, RAMA.accent_3, CATPPUCCIN_MOCHA.accent_3, CATPPUCCIN_LATTE.accent_3,
             DRACULA.accent_3, MELANGE.accent_3, TOKYO_NIGHT.accent_3, custom.accent_3,
-            context.resources.getColor(R.color.accent_3) -> palette.accent_3
+            context.resources.getColor(BohioR.color.accent_3) -> palette.accent_3
 
             // collapsible_header
             MAKO.collapsible_header, TEYIN.collapsible_header, RAMA.collapsible_header, CATPPUCCIN_MOCHA.collapsible_header, CATPPUCCIN_LATTE.collapsible_header,
             DRACULA.collapsible_header, MELANGE.collapsible_header, TOKYO_NIGHT.collapsible_header, custom.collapsible_header,
-            context.resources.getColor(R.color.collapsible_header) -> palette.collapsible_header
+            context.resources.getColor(BohioR.color.collapsible_header) -> palette.collapsible_header
 
             // icon
             MAKO.icon, TEYIN.icon, RAMA.icon, CATPPUCCIN_MOCHA.icon, CATPPUCCIN_LATTE.icon,
             DRACULA.icon, MELANGE.icon, TOKYO_NIGHT.icon, custom.icon,
-            context.resources.getColor(R.color.icon) -> palette.icon
+            context.resources.getColor(BohioR.color.icon) -> palette.icon
 
             // h1
             MAKO.h1, TEYIN.h1, RAMA.h1, CATPPUCCIN_MOCHA.h1, CATPPUCCIN_LATTE.h1,
             DRACULA.h1, MELANGE.h1, TOKYO_NIGHT.h1, custom.h1,
-            context.resources.getColor(R.color.h1) -> palette.h1
+            context.resources.getColor(BohioR.color.h1) -> palette.h1
 
             // foreground
             MAKO.foreground, TEYIN.foreground, RAMA.foreground, CATPPUCCIN_MOCHA.foreground, CATPPUCCIN_LATTE.foreground,
             DRACULA.foreground, MELANGE.foreground, TOKYO_NIGHT.foreground, custom.foreground,
-            context.resources.getColor(R.color.foreground) -> palette.foreground
+            context.resources.getColor(BohioR.color.foreground) -> palette.foreground
 
             else -> null
         }

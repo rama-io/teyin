@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.dialogs.ColorPickerDialog
 
 class WdColorPicker @JvmOverloads constructor(
@@ -41,7 +42,7 @@ class WdColorPicker @JvmOverloads constructor(
         attrs?.let {
             val ta = context.obtainStyledAttributes(
                 it,
-                intArrayOf(R.attr.text)
+                intArrayOf(BohioR.attr.text)
             )
 
             title.text = ta.getString(0) ?: ""

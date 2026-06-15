@@ -1,8 +1,6 @@
 <resources>
     <!-- Base theme -->
     <style name="Theme.Teyin" parent="Theme.Rama.Base">
-        <item name="ramaWindowBg">@color/bg_1</item>
-        <item name="ramaTextColor">@color/foreground</item>
         <item name="bgColor">@color/bg_1</item>
     </style>
 </resources>

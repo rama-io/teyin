@@ -164,7 +164,7 @@ class MainActivity : CsActivity() {
         directoriesButton.setOnClickListener {
             showDirs = !showDirs
             if (showDirs) {
-                it.setBackgroundColor(resources.getColor(R.color.button_selected))
+                it.setBackgroundColor(resources.getColor(BohioR.color.button_selected))
                 directoriesFragment.visibility = View.VISIBLE
                 filesFragment.visibility = View.GONE
                 refreshFavorites()
