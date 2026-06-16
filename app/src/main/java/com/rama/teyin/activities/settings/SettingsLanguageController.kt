@@ -5,10 +5,10 @@ import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.core.content.ContextCompat
+import com.rama.bohio.objects.PrefLanguage
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
-import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 
 class SettingsLanguageController(private val activity: SettingsActivity) {
 
@@ -52,7 +52,7 @@ class SettingsLanguageController(private val activity: SettingsActivity) {
         group.setOnCheckedChangeListener { _, checkedId ->
             val language = codeToId.entries
                 .firstOrNull { it.value == checkedId }?.key
-                ?: BohioPrefsManager.Language.SYSTEM
+                ?: PrefLanguage.SYSTEM
 
             if (language == prefs.getAppLanguage()) {
                 return@setOnCheckedChangeListener

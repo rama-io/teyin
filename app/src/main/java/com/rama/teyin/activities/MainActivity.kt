@@ -40,7 +40,6 @@ import com.rama.teyin.adapters.DirEntry
 import com.rama.teyin.adapters.DirectoryListAdapter
 import com.rama.teyin.adapters.FileListAdapter
 import com.rama.teyin.managers.FileManager
-import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.managers.ThemeManager
 import java.io.File

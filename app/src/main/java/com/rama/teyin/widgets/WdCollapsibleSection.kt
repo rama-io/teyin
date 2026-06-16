@@ -8,10 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.rama.bohio.objects.PrefKeys
 import com.rama.bohio.R as BohioR
-import com.rama.teyin.R
 import com.rama.teyin.managers.PrefsManager
-import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 
 class WdCollapsibleSection @JvmOverloads constructor(
     context: Context,
@@ -89,7 +88,7 @@ class WdCollapsibleSection @JvmOverloads constructor(
         if (raw == null) return null
 
         return try {
-            BohioPrefsManager.PrefKeys::class.java
+            PrefKeys::class.java
                 .getDeclaredField(raw)
                 .get(null) as? String
         } catch (e: Exception) {

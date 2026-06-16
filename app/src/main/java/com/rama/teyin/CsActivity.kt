@@ -13,8 +13,8 @@ import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.ThemeManager
 import com.rama.bohio.util.Dimens.dpToPx
 import com.rama.teyin.managers.PrefsManager
-import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.utils.LocaleHelper
+import com.rama.bohio.objects.PrefKeys
 
 abstract class CsActivity : ComponentActivity() {
 
@@ -100,7 +100,7 @@ abstract class CsActivity : ComponentActivity() {
 
         applyRotationLock(
             prefs.getBoolean(
-                BohioPrefsManager.PrefKeys.SYSTEM_PREVENT_ROTATION,
+                PrefKeys.SYSTEM_PREVENT_ROTATION,
                 false
             )
         )

@@ -2,6 +2,7 @@ package com.rama.teyin.managers
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.rama.bohio.objects.PrefTheme
 import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 
 /**
@@ -16,7 +17,7 @@ import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
  */
 class PrefsManager private constructor(context: Context) : BohioPrefsManager(context) {
 
-    override val defaultTheme: String = BohioPrefsManager.Theme.TEYIN
+    override val defaultTheme: String = PrefTheme.TEYIN
 
     /** Teyin-specific (file manager) preference keys. */
     object FileKeys {

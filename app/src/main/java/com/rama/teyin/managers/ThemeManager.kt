@@ -8,20 +8,21 @@ import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import com.rama.bohio.R as BohioR
-import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
-import com.rama.bohio.Themes
+import com.rama.bohio.objects.Themes
+import com.rama.bohio.objects.PrefKeys
+import com.rama.bohio.objects.PrefTheme
 
 object ThemeManager {
     fun paletteFor(theme: String, context: android.content.Context? = null): Themes.Palette =
         when (theme) {
-            BohioPrefsManager.Theme.MAKO -> Themes.MAKO
-            BohioPrefsManager.Theme.RAMA -> Themes.RAMA
-            BohioPrefsManager.Theme.CATPPUCCIN_MOCHA -> Themes.CATPPUCCIN_MOCHA
-            BohioPrefsManager.Theme.CATPPUCCIN_LATTE -> Themes.CATPPUCCIN_LATTE
-            BohioPrefsManager.Theme.DRACULA -> Themes.DRACULA
-            BohioPrefsManager.Theme.MELANGE -> Themes.MELANGE
-            BohioPrefsManager.Theme.TOKYO_NIGHT -> Themes.TOKYO_NIGHT
-            BohioPrefsManager.Theme.CUSTOM -> if (context != null) buildCustomPalette(context) else Themes.TEYIN
+            PrefTheme.MAKO -> Themes.MAKO
+            PrefTheme.RAMA -> Themes.RAMA
+            PrefTheme.CATPPUCCIN_MOCHA -> Themes.CATPPUCCIN_MOCHA
+            PrefTheme.CATPPUCCIN_LATTE -> Themes.CATPPUCCIN_LATTE
+            PrefTheme.DRACULA -> Themes.DRACULA
+            PrefTheme.MELANGE -> Themes.MELANGE
+            PrefTheme.TOKYO_NIGHT -> Themes.TOKYO_NIGHT
+            PrefTheme.CUSTOM -> if (context != null) buildCustomPalette(context) else Themes.TEYIN
             else -> Themes.TEYIN
         }
 
@@ -30,24 +31,24 @@ object ThemeManager {
         val base = Themes.TEYIN
         fun get(key: String, fallback: Int) = prefs.getCustomThemeColor(key, fallback)
         return Themes.Palette(
-            foreground = get(BohioPrefsManager.PrefKeys.APP_THEME_FOREGROUND, base.foreground),
-            bg_1 = get(BohioPrefsManager.PrefKeys.APP_THEME_BG_1, base.bg_1),
-            bg_2 = get(BohioPrefsManager.PrefKeys.APP_THEME_BG_2, base.bg_2),
-            bg_3 = get(BohioPrefsManager.PrefKeys.APP_THEME_BG_3, base.bg_3),
-            accent_1 = get(BohioPrefsManager.PrefKeys.APP_THEME_ACCENT_1, base.accent_1),
-            accent_2 = get(BohioPrefsManager.PrefKeys.APP_THEME_ACCENT_2, base.accent_2),
-            accent_3 = get(BohioPrefsManager.PrefKeys.APP_THEME_ACCENT_3, base.accent_3),
-            disabled = get(BohioPrefsManager.PrefKeys.APP_THEME_DISABLED, base.disabled),
-            input = get(BohioPrefsManager.PrefKeys.APP_THEME_INPUT, base.input),
-            button_1 = get(BohioPrefsManager.PrefKeys.APP_THEME_BUTTON_1, base.button_1),
-            button_2 = get(BohioPrefsManager.PrefKeys.APP_THEME_BUTTON_2, base.button_2),
-            danger = get(BohioPrefsManager.PrefKeys.APP_THEME_DANGER, base.danger),
+            foreground = get(PrefKeys.APP_THEME_FOREGROUND, base.foreground),
+            bg_1 = get(PrefKeys.APP_THEME_BG_1, base.bg_1),
+            bg_2 = get(PrefKeys.APP_THEME_BG_2, base.bg_2),
+            bg_3 = get(PrefKeys.APP_THEME_BG_3, base.bg_3),
+            accent_1 = get(PrefKeys.APP_THEME_ACCENT_1, base.accent_1),
+            accent_2 = get(PrefKeys.APP_THEME_ACCENT_2, base.accent_2),
+            accent_3 = get(PrefKeys.APP_THEME_ACCENT_3, base.accent_3),
+            disabled = get(PrefKeys.APP_THEME_DISABLED, base.disabled),
+            input = get(PrefKeys.APP_THEME_INPUT, base.input),
+            button_1 = get(PrefKeys.APP_THEME_BUTTON_1, base.button_1),
+            button_2 = get(PrefKeys.APP_THEME_BUTTON_2, base.button_2),
+            danger = get(PrefKeys.APP_THEME_DANGER, base.danger),
             collapsible_header = get(
-                BohioPrefsManager.PrefKeys.APP_THEME_COLLAPSIBLE_HEADER,
+                PrefKeys.APP_THEME_COLLAPSIBLE_HEADER,
                 base.collapsible_header
             ),
-            icon = get(BohioPrefsManager.PrefKeys.APP_THEME_ICON, base.icon),
-            h1 = get(BohioPrefsManager.PrefKeys.APP_THEME_H1, base.h1),
+            icon = get(PrefKeys.APP_THEME_ICON, base.icon),
+            h1 = get(PrefKeys.APP_THEME_H1, base.h1),
         )
     }
 
@@ -138,7 +139,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.bg_1,
             Themes.DRACULA.bg_1,
             Themes.MELANGE.bg_1,
-            Themes.TOKYO_NIGHT.bg_1, custom.bg_1,
+            Themes.TOKYO_NIGHT.bg_1,
+            custom.bg_1,
             context.resources.getColor(BohioR.color.bg_1) -> palette.bg_1
 
             // bg_secondary
@@ -149,7 +151,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.bg_2,
             Themes.DRACULA.bg_2,
             Themes.MELANGE.bg_2,
-            Themes.TOKYO_NIGHT.bg_2, custom.bg_2,
+            Themes.TOKYO_NIGHT.bg_2,
+            custom.bg_2,
             context.resources.getColor(BohioR.color.bg_2) -> palette.bg_2
 
             // bg_tertiary
@@ -160,7 +163,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.bg_3,
             Themes.DRACULA.bg_3,
             Themes.MELANGE.bg_3,
-            Themes.TOKYO_NIGHT.bg_3, custom.bg_3,
+            Themes.TOKYO_NIGHT.bg_3,
+            custom.bg_3,
             context.resources.getColor(BohioR.color.bg_3) -> palette.bg_3
 
             // button_primary
@@ -171,7 +175,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.button_1,
             Themes.DRACULA.button_1,
             Themes.MELANGE.button_1,
-            Themes.TOKYO_NIGHT.button_1, custom.button_1,
+            Themes.TOKYO_NIGHT.button_1,
+            custom.button_1,
             context.resources.getColor(BohioR.color.button_1) -> palette.button_1
 
             // button_secondary
@@ -182,7 +187,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.button_2,
             Themes.DRACULA.button_2,
             Themes.MELANGE.button_2,
-            Themes.TOKYO_NIGHT.button_2, custom.button_2,
+            Themes.TOKYO_NIGHT.button_2,
+            custom.button_2,
             context.resources.getColor(BohioR.color.button_2) -> palette.button_2
 
             // button_danger
@@ -193,7 +199,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.danger,
             Themes.DRACULA.danger,
             Themes.MELANGE.danger,
-            Themes.TOKYO_NIGHT.danger, custom.danger,
+            Themes.TOKYO_NIGHT.danger,
+            custom.danger,
             context.resources.getColor(BohioR.color.danger) -> palette.danger
 
             // input
@@ -204,7 +211,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.input,
             Themes.DRACULA.input,
             Themes.MELANGE.input,
-            Themes.TOKYO_NIGHT.input, custom.input,
+            Themes.TOKYO_NIGHT.input,
+            custom.input,
             context.resources.getColor(BohioR.color.input) -> palette.input
 
             // disabled
@@ -215,7 +223,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.disabled,
             Themes.DRACULA.disabled,
             Themes.MELANGE.disabled,
-            Themes.TOKYO_NIGHT.disabled, custom.disabled,
+            Themes.TOKYO_NIGHT.disabled,
+            custom.disabled,
             context.resources.getColor(BohioR.color.disabled) -> palette.disabled
 
             // accent_1
@@ -226,7 +235,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.accent_1,
             Themes.DRACULA.accent_1,
             Themes.MELANGE.accent_1,
-            Themes.TOKYO_NIGHT.accent_1, custom.accent_1,
+            Themes.TOKYO_NIGHT.accent_1,
+            custom.accent_1,
             context.resources.getColor(BohioR.color.accent_1) -> palette.accent_1
 
             // accent_2
@@ -237,7 +247,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.accent_2,
             Themes.DRACULA.accent_2,
             Themes.MELANGE.accent_2,
-            Themes.TOKYO_NIGHT.accent_2, custom.accent_2,
+            Themes.TOKYO_NIGHT.accent_2,
+            custom.accent_2,
             context.resources.getColor(BohioR.color.accent_2) -> palette.accent_2
 
             // accent_3
@@ -248,7 +259,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.accent_3,
             Themes.DRACULA.accent_3,
             Themes.MELANGE.accent_3,
-            Themes.TOKYO_NIGHT.accent_3, custom.accent_3,
+            Themes.TOKYO_NIGHT.accent_3,
+            custom.accent_3,
             context.resources.getColor(BohioR.color.accent_3) -> palette.accent_3
 
             // collapsible_header
@@ -259,7 +271,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.collapsible_header,
             Themes.DRACULA.collapsible_header,
             Themes.MELANGE.collapsible_header,
-            Themes.TOKYO_NIGHT.collapsible_header, custom.collapsible_header,
+            Themes.TOKYO_NIGHT.collapsible_header,
+            custom.collapsible_header,
             context.resources.getColor(BohioR.color.collapsible_header) -> palette.collapsible_header
 
             // icon
@@ -270,7 +283,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.icon,
             Themes.DRACULA.icon,
             Themes.MELANGE.icon,
-            Themes.TOKYO_NIGHT.icon, custom.icon,
+            Themes.TOKYO_NIGHT.icon,
+            custom.icon,
             context.resources.getColor(BohioR.color.icon) -> palette.icon
 
             // h1
@@ -281,7 +295,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.h1,
             Themes.DRACULA.h1,
             Themes.MELANGE.h1,
-            Themes.TOKYO_NIGHT.h1, custom.h1,
+            Themes.TOKYO_NIGHT.h1,
+            custom.h1,
             context.resources.getColor(BohioR.color.h1) -> palette.h1
 
             // foreground
@@ -292,7 +307,8 @@ object ThemeManager {
             Themes.CATPPUCCIN_LATTE.foreground,
             Themes.DRACULA.foreground,
             Themes.MELANGE.foreground,
-            Themes.TOKYO_NIGHT.foreground, custom.foreground,
+            Themes.TOKYO_NIGHT.foreground,
+            custom.foreground,
             context.resources.getColor(BohioR.color.foreground) -> palette.foreground
 
             else -> null

@@ -8,13 +8,13 @@ import android.widget.BaseAdapter
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.rama.bohio.objects.PrefFontStyle
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.managers.FileManager
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.FsEntry
 import com.rama.teyin.managers.PrefsManager
-import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.managers.ThemeManager
 
 class FileListAdapter(
@@ -117,7 +117,7 @@ class FileListAdapter(
         ThemeManager.applyTheme(context, view)
         val typeface = FontManager.getTypeface(
             context,
-            PrefsManager.getInstance(context).getFontStyle() ?: BohioPrefsManager.FontStyle.DEFAULT
+            PrefsManager.getInstance(context).getFontStyle() ?: PrefFontStyle.DEFAULT
         )
         FontManager.applyTypefaceToView(view, typeface)
     }

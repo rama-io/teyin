@@ -10,13 +10,15 @@ import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
 import com.rama.teyin.managers.FontManager
-import com.rama.bohio.managers.PrefsManager
 import com.rama.teyin.managers.ThemeManager
 import java.io.File
 import java.io.FileOutputStream
 import com.rama.teyin.widgets.WdColorPicker
 import com.rama.bohio.widgets.WdRange
-import com.rama.bohio.Themes
+import com.rama.bohio.objects.PrefTheme
+import com.rama.bohio.objects.PrefFontStyle
+import com.rama.bohio.objects.PrefKeys
+import com.rama.bohio.objects.Themes
 
 class SettingsAppearanceController(private val activity: SettingsActivity) {
 
@@ -36,7 +38,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
             if (savedPath != null) {
                 FontManager.clearCustomCache()
                 prefs.setCustomFontPath(savedPath)
-                prefs.setFontStyle(PrefsManager.FontStyle.CUSTOM)
+                prefs.setFontStyle(PrefFontStyle.CUSTOM)
                 updateCustomFontLabel()
                 activity.refreshFont()
             }
@@ -47,25 +49,25 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         val group = activity.findViewById<RadioGroup>(R.id.font_style_group)
 
         when (prefs.getFontStyle()) {
-            PrefsManager.FontStyle.JERSEY_25 -> group.check(R.id.font_jersey)
-            PrefsManager.FontStyle.CUSTOM -> group.check(R.id.font_custom)
+            PrefFontStyle.JERSEY_25 -> group.check(R.id.font_jersey)
+            PrefFontStyle.CUSTOM -> group.check(R.id.font_custom)
             else -> group.check(R.id.font_default)
         }
 
         group.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.font_jersey -> {
-                    prefs.setFontStyle(PrefsManager.FontStyle.JERSEY_25)
+                    prefs.setFontStyle(PrefFontStyle.JERSEY_25)
                     activity.refreshFont()
                 }
 
                 R.id.font_default -> {
-                    prefs.setFontStyle(PrefsManager.FontStyle.DEFAULT)
+                    prefs.setFontStyle(PrefFontStyle.DEFAULT)
                     activity.refreshFont()
                 }
 
                 R.id.font_custom -> {
-                    prefs.setFontStyle(PrefsManager.FontStyle.CUSTOM)
+                    prefs.setFontStyle(PrefFontStyle.CUSTOM)
                     activity.refreshFont()
                 }
             }
@@ -119,39 +121,39 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
 
         // Show form only if custom is already selected
         form.visibility =
-            if (prefs.getTheme() == PrefsManager.Theme.CUSTOM) View.VISIBLE else View.GONE
+            if (prefs.getTheme() == PrefTheme.CUSTOM) View.VISIBLE else View.GONE
 
         when (prefs.getTheme()) {
-            PrefsManager.Theme.RAMA -> group.check(R.id.theme_rama)
-            PrefsManager.Theme.MAKO -> group.check(R.id.theme_mako)
-            PrefsManager.Theme.TEYIN -> group.check(R.id.theme_teyin)
-            PrefsManager.Theme.CATPPUCCIN_MOCHA -> group.check(R.id.theme_catppuccin_mocha)
-            PrefsManager.Theme.CATPPUCCIN_LATTE -> group.check(R.id.theme_catppuccin_latte)
-            PrefsManager.Theme.DRACULA -> group.check(R.id.theme_dracula)
-            PrefsManager.Theme.MELANGE -> group.check(R.id.theme_melange)
-            PrefsManager.Theme.TOKYO_NIGHT -> group.check(R.id.theme_tokyo_night)
-            PrefsManager.Theme.CUSTOM -> group.check(R.id.theme_custom)
+            PrefTheme.RAMA -> group.check(R.id.theme_rama)
+            PrefTheme.MAKO -> group.check(R.id.theme_mako)
+            PrefTheme.TEYIN -> group.check(R.id.theme_teyin)
+            PrefTheme.CATPPUCCIN_MOCHA -> group.check(R.id.theme_catppuccin_mocha)
+            PrefTheme.CATPPUCCIN_LATTE -> group.check(R.id.theme_catppuccin_latte)
+            PrefTheme.DRACULA -> group.check(R.id.theme_dracula)
+            PrefTheme.MELANGE -> group.check(R.id.theme_melange)
+            PrefTheme.TOKYO_NIGHT -> group.check(R.id.theme_tokyo_night)
+            PrefTheme.CUSTOM -> group.check(R.id.theme_custom)
             else -> group.check(R.id.theme_teyin)
         }
 
         group.setOnCheckedChangeListener { _, id ->
             val theme = when (id) {
-                R.id.theme_mako -> PrefsManager.Theme.MAKO
-                R.id.theme_rama -> PrefsManager.Theme.RAMA
-                R.id.theme_teyin -> PrefsManager.Theme.TEYIN
-                R.id.theme_catppuccin_mocha -> PrefsManager.Theme.CATPPUCCIN_MOCHA
-                R.id.theme_catppuccin_latte -> PrefsManager.Theme.CATPPUCCIN_LATTE
-                R.id.theme_dracula -> PrefsManager.Theme.DRACULA
-                R.id.theme_melange -> PrefsManager.Theme.MELANGE
-                R.id.theme_tokyo_night -> PrefsManager.Theme.TOKYO_NIGHT
-                R.id.theme_custom -> PrefsManager.Theme.CUSTOM
-                else -> PrefsManager.Theme.TEYIN
+                R.id.theme_mako -> PrefTheme.MAKO
+                R.id.theme_rama -> PrefTheme.RAMA
+                R.id.theme_teyin -> PrefTheme.TEYIN
+                R.id.theme_catppuccin_mocha -> PrefTheme.CATPPUCCIN_MOCHA
+                R.id.theme_catppuccin_latte -> PrefTheme.CATPPUCCIN_LATTE
+                R.id.theme_dracula -> PrefTheme.DRACULA
+                R.id.theme_melange -> PrefTheme.MELANGE
+                R.id.theme_tokyo_night -> PrefTheme.TOKYO_NIGHT
+                R.id.theme_custom -> PrefTheme.CUSTOM
+                else -> PrefTheme.TEYIN
             }
 
             // Show/hide the custom form
-            form.visibility = if (theme == PrefsManager.Theme.CUSTOM) View.VISIBLE else View.GONE
+            form.visibility = if (theme == PrefTheme.CUSTOM) View.VISIBLE else View.GONE
 
-            if (theme != PrefsManager.Theme.CUSTOM) {
+            if (theme != PrefTheme.CUSTOM) {
                 // For built-in themes: save and apply immediately
                 prefs.setTheme(theme)
                 activity.recreate()
@@ -159,7 +161,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
                 // For custom: save selection immediately so it persists navigation,
                 // then populate fields with current custom palette (or TEYIN defaults)
                 val previousTheme = prefs.getTheme()
-                prefs.setTheme(PrefsManager.Theme.CUSTOM)
+                prefs.setTheme(PrefTheme.CUSTOM)
                 populateCustomFields(ThemeManager.paletteFor(previousTheme, activity))
             }
         }
@@ -189,27 +191,27 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         val saveButton = activity.findViewById<android.view.View>(R.id.save_custom_theme)
         saveButton.setOnClickListener {
             val fields = mapOf(
-                PrefsManager.PrefKeys.APP_THEME_FOREGROUND to activity.findViewById<WdColorPicker>(R.id.foreground),
-                PrefsManager.PrefKeys.APP_THEME_COLLAPSIBLE_HEADER to activity.findViewById<WdColorPicker>(
+                PrefKeys.APP_THEME_FOREGROUND to activity.findViewById<WdColorPicker>(R.id.foreground),
+                PrefKeys.APP_THEME_COLLAPSIBLE_HEADER to activity.findViewById<WdColorPicker>(
                     R.id.collapsible_header
                 ),
-                PrefsManager.PrefKeys.APP_THEME_H1 to activity.findViewById<WdColorPicker>(R.id.h1),
-                PrefsManager.PrefKeys.APP_THEME_ICON to activity.findViewById<WdColorPicker>(R.id.icons),
-                PrefsManager.PrefKeys.APP_THEME_ACCENT_1 to activity.findViewById<WdColorPicker>(R.id.accent),
-                PrefsManager.PrefKeys.APP_THEME_BG_1 to activity.findViewById<WdColorPicker>(R.id.bg_1),
-                PrefsManager.PrefKeys.APP_THEME_BG_2 to activity.findViewById<WdColorPicker>(R.id.bg_2),
-                PrefsManager.PrefKeys.APP_THEME_BG_3 to activity.findViewById<WdColorPicker>(R.id.bg_3),
-                PrefsManager.PrefKeys.APP_THEME_INPUT to activity.findViewById<WdColorPicker>(R.id.input),
-                PrefsManager.PrefKeys.APP_THEME_BUTTON_1 to activity.findViewById<WdColorPicker>(R.id.btn_1),
-                PrefsManager.PrefKeys.APP_THEME_BUTTON_2 to activity.findViewById<WdColorPicker>(R.id.btn_2),
-                PrefsManager.PrefKeys.APP_THEME_DANGER to activity.findViewById<WdColorPicker>(R.id.danger),
+                PrefKeys.APP_THEME_H1 to activity.findViewById<WdColorPicker>(R.id.h1),
+                PrefKeys.APP_THEME_ICON to activity.findViewById<WdColorPicker>(R.id.icons),
+                PrefKeys.APP_THEME_ACCENT_1 to activity.findViewById<WdColorPicker>(R.id.accent),
+                PrefKeys.APP_THEME_BG_1 to activity.findViewById<WdColorPicker>(R.id.bg_1),
+                PrefKeys.APP_THEME_BG_2 to activity.findViewById<WdColorPicker>(R.id.bg_2),
+                PrefKeys.APP_THEME_BG_3 to activity.findViewById<WdColorPicker>(R.id.bg_3),
+                PrefKeys.APP_THEME_INPUT to activity.findViewById<WdColorPicker>(R.id.input),
+                PrefKeys.APP_THEME_BUTTON_1 to activity.findViewById<WdColorPicker>(R.id.btn_1),
+                PrefKeys.APP_THEME_BUTTON_2 to activity.findViewById<WdColorPicker>(R.id.btn_2),
+                PrefKeys.APP_THEME_DANGER to activity.findViewById<WdColorPicker>(R.id.danger),
             )
 
             fields.forEach { (key, colorPicker) ->
                 val color = colorPicker.getColor()
                 prefs.setCustomThemeColor(key, color)
             }
-            prefs.setTheme(PrefsManager.Theme.CUSTOM)
+            prefs.setTheme(PrefTheme.CUSTOM)
             activity.recreate()
 
         }

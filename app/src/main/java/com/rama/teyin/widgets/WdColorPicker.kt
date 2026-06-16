@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.dialogs.ColorPickerDialog
 
