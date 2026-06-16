@@ -1,1 +1,1 @@
-Lightweigh, minimal, privacy-first File manager designed for speed, and simplicity.
+Lightweight, privacy-first file manager designed for speed and simplicity

@@ -3,7 +3,7 @@
 
 # Teyin
 
-**Teyin** is a **lightweigh, minimal, privacy-first File manager** designed for speed, and
+**Teyin** is a **lightweight, privacy-first File manager** designed for speed, and
 simplicity.
 
 Built entirely in **native Kotlin**, Teyin runs fully **on-device** and avoids tracking.
@@ -38,7 +38,7 @@ No network access is required.
 | --- | --- |
 | **Browse & navigate** | Navigate your internal storage and SD card with a clean, fast file browser |
 | **SD card write access** | Full read/write support for external storage via Storage Access Framework (Android 6+) |
-| **File operations** | Copy, cut, paste, rename, move, and delete files and folders |
+| **File operations** | Copy, move, paste, rename, and delete files and folders |
 | **Multi-select** | Select multiple files at once for batch operations |
 | **Bookmarks** | Save and quickly jump to your favourite directories from the side panel |
 | **Themes** | Light and dark theme support |
