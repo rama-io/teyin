@@ -11,13 +11,15 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import com.rama.teyin.managers.FontManager
 import com.rama.teyin.managers.ThemeManager
-import com.rama.teyin.utils.dp
+import com.rama.bohio.util.Dimens.dpToPx
 import com.rama.teyin.managers.PrefsManager
 import com.rama.teyin.utils.LocaleHelper
+import com.rama.bohio.objects.PrefKeys
 
 abstract class CsActivity : ComponentActivity() {
 
     val prefs by lazy { PrefsManager.getInstance(this) }
+
     private var lastKnownAppLanguage: String? = null
     private var lastKnownTheme: String? = null
     private var lastKnownUiScale: Float = -1f
@@ -75,22 +77,33 @@ abstract class CsActivity : ComponentActivity() {
         val currentLanguage = prefs.getAppLanguage()
         if (currentLanguage != lastKnownAppLanguage) {
             lastKnownAppLanguage = currentLanguage
-            if (shouldRecreateOnSettingsChange()) { recreate(); return }
+            if (shouldRecreateOnSettingsChange()) {
+                recreate(); return
+            }
         }
 
         val currentTheme = prefs.getTheme()
         if (currentTheme != lastKnownTheme) {
             lastKnownTheme = currentTheme
-            if (shouldRecreateOnSettingsChange()) { recreate(); return }
+            if (shouldRecreateOnSettingsChange()) {
+                recreate(); return
+            }
         }
 
         val currentUiScale = prefs.getUiScale()
         if (currentUiScale != lastKnownUiScale) {
             lastKnownUiScale = currentUiScale
-            if (shouldRecreateOnSettingsChange()) { recreate(); return }
+            if (shouldRecreateOnSettingsChange()) {
+                recreate(); return
+            }
         }
 
-        applyRotationLock(prefs.getBoolean(PrefsManager.PrefKeys.SYSTEM_PREVENT_ROTATION, false))
+        applyRotationLock(
+            prefs.getBoolean(
+                PrefKeys.SYSTEM_PREVENT_ROTATION,
+                false
+            )
+        )
 
         val root = findViewById<View>(android.R.id.content)
         ThemeManager.applyTheme(this, root)
@@ -143,8 +156,8 @@ abstract class CsActivity : ComponentActivity() {
     }
 
     protected fun applyEdgeToEdgePadding(root: View) {
-        val paddingInline = dp(16)
-        val paddingBlock = dp(8)
+        val paddingInline = dpToPx(this, 16f)
+        val paddingBlock = dpToPx(this, 8f)
 
         root.setOnApplyWindowInsetsListener { view, insets ->
 

@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.dialogs.ColorPickerDialog
 
 class WdColorPicker @JvmOverloads constructor(
@@ -32,16 +32,16 @@ class WdColorPicker @JvmOverloads constructor(
         orientation = HORIZONTAL
 
         LayoutInflater.from(context)
-            .inflate(R.layout.wd_color_picker, this, true)
+            .inflate(BohioR.layout.wd_color_picker, this, true)
 
-        title = findViewById(R.id.title)
-        hexValue = findViewById(R.id.hexValue)
-        colorPreview = findViewById(R.id.colorPreview)
+        title = findViewById(BohioR.id.title)
+        hexValue = findViewById(BohioR.id.hexValue)
+        colorPreview = findViewById(BohioR.id.colorPreview)
 
         attrs?.let {
             val ta = context.obtainStyledAttributes(
                 it,
-                intArrayOf(R.attr.text)
+                intArrayOf(BohioR.attr.text)
             )
 
             title.text = ta.getString(0) ?: ""

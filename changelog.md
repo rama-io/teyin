@@ -1,5 +1,9 @@
 # Changelog
 
+## 3
+
+- Subtract common assets and functionalities into a submodule / part 1
+
 ## 2
 
 - Added German and Turkish strings.

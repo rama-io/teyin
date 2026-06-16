@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.rama.bohio.objects.PrefFontStyle
 import com.rama.teyin.R
 import java.io.File
 
@@ -17,7 +18,7 @@ object FontManager {
         val fontStyle = prefs.getFontStyle() ?: "system"
 
         root.findViewById<View?>(R.id.custom_font_container)?.visibility =
-            if (fontStyle == PrefsManager.FontStyle.CUSTOM) {
+            if (fontStyle == PrefFontStyle.CUSTOM) {
                 View.VISIBLE
             } else {
                 View.GONE
@@ -30,10 +31,10 @@ object FontManager {
 
     fun getTypeface(context: Context, style: String): Typeface? {
 
-        if (style == PrefsManager.FontStyle.DEFAULT) return null
+        if (style == PrefFontStyle.DEFAULT) return null
 
         // Custom font: always reload from path (don't cache by style key alone)
-        if (style == PrefsManager.FontStyle.CUSTOM) {
+        if (style == PrefFontStyle.CUSTOM) {
             val path = PrefsManager.getInstance(context).getCustomFontPath()
             if (path.isBlank()) return null
             val cacheKey = "custom:$path"
@@ -48,7 +49,7 @@ object FontManager {
         }
 
         val tf = when (style) {
-            PrefsManager.FontStyle.JERSEY_25 ->
+            PrefFontStyle.JERSEY_25 ->
                 Typeface.createFromAsset(context.assets, "fonts/jersey25_regular.otf")
 
             else -> null

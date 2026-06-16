@@ -8,7 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.rama.teyin.R
+import com.rama.bohio.objects.PrefKeys
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.managers.PrefsManager
 
 class WdCollapsibleSection @JvmOverloads constructor(
@@ -29,25 +30,25 @@ class WdCollapsibleSection @JvmOverloads constructor(
         orientation = VERTICAL
 
         LayoutInflater.from(context)
-            .inflate(R.layout.wd_collapsible_section, this, true)
+            .inflate(BohioR.layout.wd_collapsible_section, this, true)
 
-        header = findViewById(R.id.section_header)
-        indicator = findViewById(R.id.section_indicator)
-        labelView = findViewById(R.id.section_label)
-        content = findViewById(R.id.section_content)
+        header = findViewById(BohioR.id.section_header)
+        indicator = findViewById(BohioR.id.section_indicator)
+        labelView = findViewById(BohioR.id.section_label)
+        content = findViewById(BohioR.id.section_content)
 
         // Read XML attrs
         attrs?.let {
-            val ta = context.obtainStyledAttributes(it, R.styleable.WdCollapsibleSection)
+            val ta = context.obtainStyledAttributes(it, BohioR.styleable.WdCollapsibleSection)
 
-            labelView.text = ta.getString(R.styleable.WdCollapsibleSection_header) ?: ""
+            labelView.text = ta.getString(BohioR.styleable.WdCollapsibleSection_header) ?: ""
 
             key = resolveKey(
-                ta.getString(R.styleable.WdCollapsibleSection_key)
+                ta.getString(BohioR.styleable.WdCollapsibleSection_key)
             )
 
             defaultExpanded = ta.getBoolean(
-                R.styleable.WdCollapsibleSection_defaultExpanded,
+                BohioR.styleable.WdCollapsibleSection_defaultExpanded,
                 true
             )
 
@@ -87,7 +88,7 @@ class WdCollapsibleSection @JvmOverloads constructor(
         if (raw == null) return null
 
         return try {
-            PrefsManager.PrefKeys::class.java
+            PrefKeys::class.java
                 .getDeclaredField(raw)
                 .get(null) as? String
         } catch (e: Exception) {
@@ -104,7 +105,7 @@ class WdCollapsibleSection @JvmOverloads constructor(
 
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            if (child.id != R.id.section_root) {
+            if (child.id != BohioR.id.section_root) {
                 children.add(child)
             }
         }
@@ -122,8 +123,8 @@ class WdCollapsibleSection @JvmOverloads constructor(
     private fun applyState(expanded: Boolean) {
         content.visibility = if (expanded) View.VISIBLE else View.GONE
         indicator.text =
-            if (expanded) context.getString(R.string.settings_section_collapse_indicator) else context.getString(
-                R.string.settings_section_expand_indicator
+            if (expanded) context.getString(BohioR.string.settings_section_collapse_indicator) else context.getString(
+                BohioR.string.settings_section_expand_indicator
             )
     }
 

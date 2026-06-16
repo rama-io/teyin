@@ -35,12 +35,12 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import com.rama.teyin.CsActivity
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 import com.rama.teyin.adapters.DirEntry
 import com.rama.teyin.adapters.DirectoryListAdapter
 import com.rama.teyin.adapters.FileListAdapter
 import com.rama.teyin.managers.FileManager
-import com.rama.teyin.managers.FontManager
-import com.rama.teyin.managers.PrefsManager
+import com.rama.teyin.managers.PrefsManager as BohioPrefsManager
 import com.rama.teyin.managers.ThemeManager
 import java.io.File
 import java.text.SimpleDateFormat
@@ -128,7 +128,7 @@ class MainActivity : CsActivity() {
         super.onCreate(savedInstanceState)
         lastKnownUiScale = prefs.getUiScale()
 
-        PrefsManager.getInstance(this).initPrefs()
+        BohioPrefsManager.getInstance(this).initPrefs()
         setContentView(R.layout.view_home)
 
         rootView = findViewById(R.id.root)
@@ -163,7 +163,7 @@ class MainActivity : CsActivity() {
         directoriesButton.setOnClickListener {
             showDirs = !showDirs
             if (showDirs) {
-                it.setBackgroundColor(resources.getColor(R.color.button_selected))
+                it.setBackgroundColor(resources.getColor(BohioR.color.button_selected))
                 directoriesFragment.visibility = View.VISIBLE
                 filesFragment.visibility = View.GONE
                 refreshFavorites()
@@ -179,11 +179,14 @@ class MainActivity : CsActivity() {
             ThemeManager.applyTheme(this, popupView)
 
             val hiddenCheckbox = popupView.findViewById<CheckBox>(R.id.popup_hidden_checkbox)
-            hiddenCheckbox.isChecked = prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+            hiddenCheckbox.isChecked =
+                prefs.getBoolean(BohioPrefsManager.FileKeys.SHOW_HIDDEN_FILES, false)
 
-            val popup = PopupWindow(popupView,
+            val popup = PopupWindow(
+                popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, true)
+                ViewGroup.LayoutParams.WRAP_CONTENT, true
+            )
 
             popupView.findViewById<View>(R.id.popup_add_folder).setOnClickListener {
                 it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -194,7 +197,10 @@ class MainActivity : CsActivity() {
             popupView.findViewById<View>(R.id.popup_toggle_hidden).setOnClickListener {
                 it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 hiddenCheckbox.isChecked = !hiddenCheckbox.isChecked
-                prefs.setBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, hiddenCheckbox.isChecked)
+                prefs.setBoolean(
+                    BohioPrefsManager.FileKeys.SHOW_HIDDEN_FILES,
+                    hiddenCheckbox.isChecked
+                )
                 popup.dismiss()
                 refreshList()
             }
@@ -241,7 +247,7 @@ class MainActivity : CsActivity() {
         }
 
         applyCurrentTheme(rootView)
-        
+
         if (fileSystemReady) {
             schedulePostResumeRefresh()
             collapseSearch()
@@ -324,7 +330,7 @@ class MainActivity : CsActivity() {
         dirAdapter = DirectoryListAdapter(this) { path ->
             // For user bookmarks, remove from prefs. For USB Fixed entries (removable=true),
             // just refresh — the volume will no longer appear once dismissed.
-            PrefsManager.getInstance(this).removeFavoriteDir(path)
+            BohioPrefsManager.getInstance(this).removeFavoriteDir(path)
             refreshFavorites()
         }
         directoryList.adapter = dirAdapter
@@ -345,12 +351,20 @@ class MainActivity : CsActivity() {
                 val entry = dirAdapter.getItem(position)
                 if (entry is DirEntry.Fixed) {
                     // Volume was unplugged — just refresh so it disappears from the list
-                    Toast.makeText(this, getString(R.string.toast_storage_not_available), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.toast_storage_not_available),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     refreshFavorites()
                 } else {
                     // Stale user bookmark — remove it
-                    Toast.makeText(this, getString(R.string.toast_folder_no_longer_exists), Toast.LENGTH_SHORT).show()
-                    PrefsManager.getInstance(this).removeFavoriteDir(path)
+                    Toast.makeText(
+                        this,
+                        getString(R.string.toast_folder_no_longer_exists),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    BohioPrefsManager.getInstance(this).removeFavoriteDir(path)
                     refreshFavorites()
                 }
             }
@@ -358,7 +372,7 @@ class MainActivity : CsActivity() {
 
         addToFavoritesBtn.setOnClickListener {
             if (!fileSystemReady) return@setOnClickListener
-            val prefs = PrefsManager.getInstance(this)
+            val prefs = BohioPrefsManager.getInstance(this)
             val path = fileManager.currentDir.absolutePath
             val existing = prefs.getFavoriteDirs()
             if (path in existing) {
@@ -381,7 +395,7 @@ class MainActivity : CsActivity() {
             list += DirEntry.Fixed(
                 label = getString(R.string.dir_label_root),
                 path = "/",
-                iconRes = R.drawable.icon_android,
+                iconRes = BohioR.drawable.px_android,
             )
         }
 
@@ -414,8 +428,8 @@ class MainActivity : CsActivity() {
                     list += DirEntry.Fixed(
                         label = label,
                         path = dir.canonicalPath,
-                        iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
-                        else R.drawable.icon_disk,
+                        iconRes = if (isUsb) BohioR.drawable.px_cassette_tape
+                        else BohioR.drawable.px_disk,
                         removable = true,
                     )
                 }
@@ -443,8 +457,8 @@ class MainActivity : CsActivity() {
                             label = if (isUsb) getString(R.string.dir_label_usb_with_name, volumeId)
                             else getString(R.string.dir_label_sd_card_with_name, volumeId),
                             path = vol.canonicalPath,
-                            iconRes = if (isUsb) R.drawable.icon_cassette_tape_solid
-                            else R.drawable.icon_disk,
+                            iconRes = if (isUsb) BohioR.drawable.px_cassette_tape
+                            else BohioR.drawable.px_disk,
                             removable = true,
                         )
                     }
@@ -457,7 +471,7 @@ class MainActivity : CsActivity() {
             list += DirEntry.Fixed(
                 label = getString(R.string.dir_label_storage),
                 path = storageRoot.absolutePath,
-                iconRes = R.drawable.icon_android,
+                iconRes = BohioR.drawable.px_android,
             )
         }
 
@@ -476,13 +490,13 @@ class MainActivity : CsActivity() {
                 list += DirEntry.Fixed(
                     label = name,
                     path = dir.absolutePath,
-                    iconRes = R.drawable.icon_folder_solid,
+                    iconRes = BohioR.drawable.px_folder,
                 )
             }
         }
 
         // Divider + user bookmarks
-        val userDirs = PrefsManager.getInstance(this).getFavoriteDirs()
+        val userDirs = BohioPrefsManager.getInstance(this).getFavoriteDirs()
         if (userDirs.isNotEmpty()) {
             list += DirEntry.Divider
             userDirs.forEach { list += DirEntry.UserAdded(it) }
@@ -562,11 +576,15 @@ class MainActivity : CsActivity() {
         // If current directory no longer exists (e.g. SD card unplugged mid-browse),
         // fall back to primary storage gracefully
         if (!fileManager.currentDir.isDirectory) {
-            Toast.makeText(this, getString(R.string.toast_storage_no_longer_available), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                getString(R.string.toast_storage_no_longer_available),
+                Toast.LENGTH_SHORT
+            ).show()
             fileManager.init()
         }
 
-        val showHidden = prefs.getBoolean(PrefsManager.PrefKeys.SHOW_HIDDEN_FILES, false)
+        val showHidden = prefs.getBoolean(BohioPrefsManager.FileKeys.SHOW_HIDDEN_FILES, false)
         val entries = fileManager.listCurrent(currentSearchQuery, showHidden)
         val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
         val hasParent = !fileManager.isAtRoot ||
@@ -575,7 +593,10 @@ class MainActivity : CsActivity() {
 
         val dirName = fileManager.currentDir.let { dir ->
             when {
-                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> getString(R.string.dir_label_storage)
+                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> getString(
+                    R.string.dir_label_storage
+                )
+
                 dir.name.isEmpty() -> getString(R.string.dir_label_root)
                 else -> dir.name
             }
@@ -703,7 +724,8 @@ class MainActivity : CsActivity() {
     private fun showRenameDialog() {
         val entries = adapter.selectedEntries
         if (entries.size != 1) {
-            Toast.makeText(this, getString(R.string.toast_select_one_to_rename), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_select_one_to_rename), Toast.LENGTH_SHORT)
+                .show()
             return
         }
         val target = entries[0].file
@@ -916,7 +938,8 @@ class MainActivity : CsActivity() {
         if (paths.isEmpty()) return
         clipboard = paths
         clipboardMode = ClipboardMode.MOVE
-        Toast.makeText(this, getString(R.string.toast_navigate_and_paste), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.toast_navigate_and_paste), Toast.LENGTH_SHORT)
+            .show()
         exitSelectionMode()
     }
 
@@ -986,7 +1009,8 @@ class MainActivity : CsActivity() {
         try {
             startActivity(intent)
         } catch (_: Exception) {
-            Toast.makeText(this, getString(R.string.toast_no_app_to_open), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_no_app_to_open), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -1013,7 +1037,11 @@ class MainActivity : CsActivity() {
     }
 
     private fun showPermissionDenied() {
-        Toast.makeText(this, getString(R.string.toast_storage_permission_required), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            this,
+            getString(R.string.toast_storage_permission_required),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun initSearchbar() {
