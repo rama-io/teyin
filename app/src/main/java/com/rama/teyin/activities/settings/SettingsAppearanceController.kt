@@ -16,6 +16,7 @@ import java.io.File
 import java.io.FileOutputStream
 import com.rama.teyin.widgets.WdColorPicker
 import com.rama.bohio.widgets.WdRange
+import com.rama.bohio.Themes
 
 class SettingsAppearanceController(private val activity: SettingsActivity) {
 
@@ -164,7 +165,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         }
     }
 
-    private fun populateCustomFields(palette: ThemeManager.Palette) {
+    private fun populateCustomFields(palette: Themes.Palette) {
         activity.findViewById<WdColorPicker>(R.id.foreground).setColor(palette.foreground)
         activity.findViewById<WdColorPicker>(R.id.collapsible_header)
             .setColor(palette.collapsible_header)
