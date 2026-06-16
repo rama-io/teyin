@@ -47,6 +47,10 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
 
     private fun setupFontStyle() {
         val group = activity.findViewById<RadioGroup>(R.id.font_style_group)
+        val customContainer = activity.findViewById<View>(R.id.custom_font_container) // add this
+        
+        customContainer.visibility =
+            if (prefs.getFontStyle() == PrefFontStyle.CUSTOM) View.VISIBLE else View.GONE
 
         when (prefs.getFontStyle()) {
             PrefFontStyle.JERSEY_25 -> group.check(R.id.font_jersey)
@@ -57,23 +61,25 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         group.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.font_jersey -> {
+                    customContainer.visibility = View.GONE  // add
                     prefs.setFontStyle(PrefFontStyle.JERSEY_25)
                     activity.refreshFont()
                 }
 
                 R.id.font_default -> {
+                    customContainer.visibility = View.GONE  // add
                     prefs.setFontStyle(PrefFontStyle.DEFAULT)
                     activity.refreshFont()
                 }
 
                 R.id.font_custom -> {
+                    customContainer.visibility = View.VISIBLE  // add
                     prefs.setFontStyle(PrefFontStyle.CUSTOM)
                     activity.refreshFont()
                 }
             }
         }
 
-        // Button to (re-)pick a font file
         activity.findViewById<View>(R.id.font_custom_pick_btn).setOnClickListener {
             openFontPicker()
         }

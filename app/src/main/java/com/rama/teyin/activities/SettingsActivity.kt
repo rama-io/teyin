@@ -30,11 +30,6 @@ class SettingsActivity : CsActivity() {
         appearanceController = SettingsAppearanceController(this).also { it.setup() }
         SettingsLanguageController(this).setup()
         checkboxController = SettingsCheckboxController(this).also { it.setup() }
-
-        val fontStyle = prefs.getFontStyle().ifBlank { "system" }
-
-        findViewById<View?>(R.id.custom_font_container)?.visibility =
-            if (fontStyle == PrefFontStyle.CUSTOM) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {
