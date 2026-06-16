@@ -3,6 +3,7 @@ package com.rama.teyin.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.rama.bohio.objects.PrefFontStyle
 import com.rama.teyin.CsActivity
 import com.rama.teyin.R
 import com.rama.teyin.activities.settings.SettingsAppearanceController
@@ -29,6 +30,11 @@ class SettingsActivity : CsActivity() {
         appearanceController = SettingsAppearanceController(this).also { it.setup() }
         SettingsLanguageController(this).setup()
         checkboxController = SettingsCheckboxController(this).also { it.setup() }
+
+        val fontStyle = prefs.getFontStyle().ifBlank { "system" }
+
+        findViewById<View?>(R.id.custom_font_container)?.visibility =
+            if (fontStyle == PrefFontStyle.CUSTOM) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {

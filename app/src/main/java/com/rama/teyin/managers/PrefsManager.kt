@@ -6,14 +6,11 @@ import com.rama.bohio.objects.PrefTheme
 import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 
 /**
- * Teyin-specific preferences. Extends bohio's shared PrefsManager with
- * Teyin's own keys (favorite directories, hidden-files toggle) and first-run
- * defaults.
+ * Teyin-specific preferences — extends bohio's shared [BohioPrefsManager] with
+ * file-manager keys (favourite directories, hidden-files toggle) and first-run defaults.
  *
- * Shared things (PrefKeys, FontStyle, Theme, Language, getTheme/setTheme,
- * getFontStyle, export/import/clear, etc.) are inherited from
- * [BohioPrefsManager] and accessible directly as `PrefsManager.PrefKeys`,
- * `PrefsManager.Theme`, etc.
+ * All shared keys, getters, setters, export/import/clear logic, etc. are
+ * inherited from [BohioPrefsManager] and accessible directly.
  */
 class PrefsManager private constructor(context: Context) : BohioPrefsManager(context) {
 
@@ -21,7 +18,7 @@ class PrefsManager private constructor(context: Context) : BohioPrefsManager(con
 
     /** Teyin-specific (file manager) preference keys. */
     object FileKeys {
-        const val FAVORITE_DIRS = "file:favorite_dirs"
+        const val FAVORITE_DIRS     = "file:favorite_dirs"
         const val SHOW_HIDDEN_FILES = "file:show_hidden"
     }
 
@@ -29,7 +26,7 @@ class PrefsManager private constructor(context: Context) : BohioPrefsManager(con
         editor.putBoolean(FileKeys.SHOW_HIDDEN_FILES, true)
     }
 
-    // --------------- Favorite directories ---------------
+    // ── Favourite directories ────────────────────────────────────────────────
 
     fun getFavoriteDirs(): List<String> {
         val raw = prefs.getString(FileKeys.FAVORITE_DIRS, "") ?: ""
@@ -51,12 +48,16 @@ class PrefsManager private constructor(context: Context) : BohioPrefsManager(con
     }
 
     companion object {
-        @Volatile
-        private var INSTANCE: PrefsManager? = null
+        @Volatile private var INSTANCE: PrefsManager? = null
 
         fun getInstance(context: Context): PrefsManager =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: PrefsManager(context.applicationContext).also { INSTANCE = it }
+                INSTANCE ?: PrefsManager(context.applicationContext).also {
+                    INSTANCE = it
+                    // Register with bohio so FontManager / ThemeManager can resolve prefs
+                    // without depending on the app-specific subclass.
+                    BohioPrefsManager.register(it)
+                }
             }
     }
 }

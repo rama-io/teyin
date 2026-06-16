@@ -88,7 +88,6 @@
     <string name="label_zoom">Zoom</string>
 
     <!-- Toasts -->
-    <string name="toast_invalid_color">Invalid color</string>
     <string name="toast_storage_not_available">Storage is not available</string>
     <string name="toast_folder_no_longer_exists">Folder no longer exists</string>
     <string name="toast_storage_no_longer_available">Storage is no longer available</string>

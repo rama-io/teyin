@@ -22,5 +22,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Teyin"
 
-include(":app", ":bohio")
-project(":bohio").projectDir = file("bohio")
+include(":app")
+include(":bohio")
+
+//project(":bohio").projectDir = file("bohio")
+project(":bohio").projectDir = file("../../git_proj/bohio")

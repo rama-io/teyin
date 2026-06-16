@@ -9,11 +9,11 @@ import android.widget.TextView
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
-import com.rama.teyin.managers.FontManager
-import com.rama.teyin.managers.ThemeManager
+import com.rama.bohio.managers.FontManager
+import com.rama.bohio.managers.ThemeManager
 import java.io.File
 import java.io.FileOutputStream
-import com.rama.teyin.widgets.WdColorPicker
+import com.rama.bohio.widgets.WdColorPicker
 import com.rama.bohio.widgets.WdRange
 import com.rama.bohio.objects.PrefTheme
 import com.rama.bohio.objects.PrefFontStyle

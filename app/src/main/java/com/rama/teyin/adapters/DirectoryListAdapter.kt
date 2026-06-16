@@ -11,9 +11,9 @@ import android.widget.TextView
 import com.rama.bohio.objects.PrefFontStyle
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
-import com.rama.teyin.managers.FontManager
+import com.rama.bohio.managers.FontManager
 import com.rama.teyin.managers.PrefsManager
-import com.rama.teyin.managers.ThemeManager
+import com.rama.bohio.managers.ThemeManager
 
 sealed class DirEntry {
     /** Non-deletable system entry (root, storage, standard folder) or removable (USB). */

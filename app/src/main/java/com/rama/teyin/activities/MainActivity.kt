@@ -41,7 +41,7 @@ import com.rama.teyin.adapters.DirectoryListAdapter
 import com.rama.teyin.adapters.FileListAdapter
 import com.rama.teyin.managers.FileManager
 import com.rama.teyin.managers.PrefsManager as BohioPrefsManager
-import com.rama.teyin.managers.ThemeManager
+import com.rama.bohio.managers.ThemeManager
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
