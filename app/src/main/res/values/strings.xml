@@ -37,7 +37,6 @@
     <string name="btn_theme_apply_custom">Apply Custom Theme</string>
     <string name="btn_font_custom_pick">Choose Font file</string>
     <!-- ColorPicker -->
-    <string name="hint_hex_color" translatable="false">#RRGGBB</string>
     <string name="colorpicker_theme_foreground">Foreground</string>
     <string name="colorpicker_theme_collapsible_header">Collapsible Header</string>
     <string name="colorpicker_theme_h1">H1</string>
@@ -60,9 +59,7 @@
     <string name="radio_language_german" translatable="false">Deutsch</string>
     <string name="radio_language_turkish" translatable="false">Türkçe</string>
     <string name="radio_font_custom">Custom font</string>
-    <string name="radio_theme_mako" translatable="false">Mako</string>
-    <string name="radio_theme_rama" translatable="false">Rama</string>
-    <string name="radio_theme_teyin" translatable="false">Teyin</string>
+
     <string name="radio_theme_custom">Custom</string>
 
     <!-- Checkbox -->

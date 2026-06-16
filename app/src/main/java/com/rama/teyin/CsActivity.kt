@@ -21,12 +21,12 @@ abstract class CsActivity : ComponentActivity() {
     val prefs by lazy { PrefsManager.getInstance(this) }
 
     private var lastKnownAppLanguage: String? = null
-    private var lastKnownTheme: String?       = null
-    private var lastKnownUiScale: Float       = -1f
+    private var lastKnownTheme: String? = null
+    private var lastKnownUiScale: Float = -1f
 
     override fun attachBaseContext(newBase: Context) {
         val localeContext = LocaleHelper.wrapContext(newBase)
-        val scale         = PrefsManager.getInstance(localeContext).getUiScale()
+        val scale = PrefsManager.getInstance(localeContext).getUiScale()
         val context = if (scale != 1f) {
             val config = Configuration(localeContext.resources.configuration)
             config.densityDpi = (localeContext.resources.displayMetrics.densityDpi * scale).toInt()
@@ -38,8 +38,8 @@ abstract class CsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lastKnownAppLanguage = prefs.getAppLanguage()
-        lastKnownTheme       = prefs.getTheme()
-        lastKnownUiScale     = prefs.getUiScale()
+        lastKnownTheme = prefs.getTheme()
+        lastKnownUiScale = prefs.getUiScale()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false)
@@ -47,8 +47,8 @@ abstract class CsActivity : ComponentActivity() {
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode =
@@ -68,19 +68,25 @@ abstract class CsActivity : ComponentActivity() {
         val currentLanguage = prefs.getAppLanguage()
         if (currentLanguage != lastKnownAppLanguage) {
             lastKnownAppLanguage = currentLanguage
-            if (shouldRecreateOnSettingsChange()) { recreate(); return }
+            if (shouldRecreateOnSettingsChange()) {
+                recreate(); return
+            }
         }
 
         val currentTheme = prefs.getTheme()
         if (currentTheme != lastKnownTheme) {
             lastKnownTheme = currentTheme
-            if (shouldRecreateOnSettingsChange()) { recreate(); return }
+            if (shouldRecreateOnSettingsChange()) {
+                recreate(); return
+            }
         }
 
         val currentUiScale = prefs.getUiScale()
         if (currentUiScale != lastKnownUiScale) {
             lastKnownUiScale = currentUiScale
-            if (shouldRecreateOnSettingsChange()) { recreate(); return }
+            if (shouldRecreateOnSettingsChange()) {
+                recreate(); return
+            }
         }
 
         applyRotationLock(prefs.getBoolean(PrefKeys.SYSTEM_PREVENT_ROTATION, false))
@@ -109,9 +115,9 @@ abstract class CsActivity : ComponentActivity() {
         } else {
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
         root.requestApplyInsets()
     }
@@ -124,12 +130,12 @@ abstract class CsActivity : ComponentActivity() {
     fun applyRotationLock(lock: Boolean) {
         requestedOrientation =
             if (lock) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            else      ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     protected fun applyEdgeToEdgePadding(root: View) {
         val paddingInline = dpToPx(this, 16f)
-        val paddingBlock  = dpToPx(this, 8f)
+        val paddingBlock = dpToPx(this, 8f)
 
         root.setOnApplyWindowInsetsListener { view, insets ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -140,17 +146,17 @@ abstract class CsActivity : ComponentActivity() {
                 val bottomInset =
                     if (insets.isVisible(WindowInsets.Type.ime())) ime.bottom else sysBars.bottom
                 view.setPadding(
-                    sysBars.left  + paddingInline,
-                    sysBars.top   + paddingBlock,
+                    sysBars.left + paddingInline,
+                    sysBars.top + paddingBlock,
                     sysBars.right + paddingInline,
-                    bottomInset   + paddingBlock
+                    bottomInset + paddingBlock
                 )
             } else {
                 @Suppress("DEPRECATION")
                 view.setPadding(
-                    insets.systemWindowInsetLeft   + paddingInline,
-                    insets.systemWindowInsetTop    + paddingBlock,
-                    insets.systemWindowInsetRight  + paddingInline,
+                    insets.systemWindowInsetLeft + paddingInline,
+                    insets.systemWindowInsetTop + paddingBlock,
+                    insets.systemWindowInsetRight + paddingInline,
                     insets.systemWindowInsetBottom + paddingBlock
                 )
             }
