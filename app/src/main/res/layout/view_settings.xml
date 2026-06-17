@@ -68,17 +68,17 @@
 
                     <RadioButton
                         android:id="@+id/theme_teyin"
-                        android:text="@string/radio_theme_teyin"
+                        android:text="@string/product_teyin"
                         style="@style/Radio" />
 
                     <RadioButton
                         android:id="@+id/theme_mako"
-                        android:text="@string/radio_theme_mako"
+                        android:text="@string/product_mako"
                         style="@style/Radio" />
 
                     <RadioButton
                         android:id="@+id/theme_rama"
-                        android:text="@string/radio_theme_rama"
+                        android:text="@string/product_rama"
                         style="@style/Radio" />
 
                     <RadioButton
@@ -163,6 +163,11 @@
                         <com.rama.bohio.widgets.WdColorPicker
                             android:id="@+id/bg_3"
                             app:text="@string/colorpicker_theme_background_3"
+                            style="@style/ColorPickerBtn" />
+
+                        <com.rama.bohio.widgets.WdColorPicker
+                            android:id="@+id/bg_4"
+                            app:text="@string/colorpicker_theme_background_4"
                             style="@style/ColorPickerBtn" />
 
                         <com.rama.bohio.widgets.WdColorPicker

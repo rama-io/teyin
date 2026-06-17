@@ -56,9 +56,6 @@
     <string name="radio_default_system">Standard (System)</string>
     <string name="radio_language_system_default">Systemstandard (Rückfall auf Englisch)</string>
     <string name="radio_font_custom">Benutzerdefinierte Schriftart</string>
-    <string name="radio_theme_mako">Mako</string>
-    <string name="radio_theme_rama">Rama</string>
-    <string name="radio_theme_teyin">Teyin</string>
     <string name="radio_theme_custom">Benutzerdefiniert</string>
 
     <!-- Checkbox -->

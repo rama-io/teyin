@@ -45,6 +45,7 @@
     <string name="colorpicker_theme_background_1">Background 1</string>
     <string name="colorpicker_theme_background_2">Background 2</string>
     <string name="colorpicker_theme_background_3">Background 3</string>
+    <string name="colorpicker_theme_background_4">Background 4</string>
     <string name="colorpicker_theme_input_background">Input Background</string>
     <string name="colorpicker_theme_button_1_background">Button 1 Background</string>
     <string name="colorpicker_theme_button_2_background">Button 2 Background</string>
@@ -129,7 +130,7 @@
     <string name="altdescr_open_settings">Open settings</string>
 
     <!-- APP -->
-    <string name="app_name" translatable="false">Teyin</string>
+    <string name="app_name" translatable="false">@string/product_teyin</string>
     <string name="app_desc">A Lightweight, privacy-first file manager designed for speed and simplicity.</string>
     <string name="app_background_tasks_desc">No Background Tasks</string>
     <string name="app_ads_desc">No Ads</string>

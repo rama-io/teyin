@@ -48,7 +48,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
     private fun setupFontStyle() {
         val group = activity.findViewById<RadioGroup>(R.id.font_style_group)
         val customContainer = activity.findViewById<View>(R.id.custom_font_container) // add this
-        
+
         customContainer.visibility =
             if (prefs.getFontStyle() == PrefFontStyle.CUSTOM) View.VISIBLE else View.GONE
 
@@ -180,9 +180,10 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         activity.findViewById<WdColorPicker>(R.id.h1).setColor(palette.h1)
         activity.findViewById<WdColorPicker>(R.id.icons).setColor(palette.icon)
         activity.findViewById<WdColorPicker>(R.id.accent).setColor(palette.accent_1)
+        activity.findViewById<WdColorPicker>(R.id.bg_1).setColor(palette.bg_1)
         activity.findViewById<WdColorPicker>(R.id.bg_2).setColor(palette.bg_2)
         activity.findViewById<WdColorPicker>(R.id.bg_3).setColor(palette.bg_3)
-        activity.findViewById<WdColorPicker>(R.id.bg_1).setColor(palette.bg_1)
+        activity.findViewById<WdColorPicker>(R.id.bg_4).setColor(palette.bg_4)
         activity.findViewById<WdColorPicker>(R.id.input).setColor(palette.input)
         activity.findViewById<WdColorPicker>(R.id.btn_1).setColor(palette.button_1)
         activity.findViewById<WdColorPicker>(R.id.btn_2).setColor(palette.button_2)
@@ -207,6 +208,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
                 PrefKeys.APP_THEME_BG_1 to activity.findViewById<WdColorPicker>(R.id.bg_1),
                 PrefKeys.APP_THEME_BG_2 to activity.findViewById<WdColorPicker>(R.id.bg_2),
                 PrefKeys.APP_THEME_BG_3 to activity.findViewById<WdColorPicker>(R.id.bg_3),
+                PrefKeys.APP_THEME_BG_4 to activity.findViewById<WdColorPicker>(R.id.bg_4),
                 PrefKeys.APP_THEME_INPUT to activity.findViewById<WdColorPicker>(R.id.input),
                 PrefKeys.APP_THEME_BUTTON_1 to activity.findViewById<WdColorPicker>(R.id.btn_1),
                 PrefKeys.APP_THEME_BUTTON_2 to activity.findViewById<WdColorPicker>(R.id.btn_2),

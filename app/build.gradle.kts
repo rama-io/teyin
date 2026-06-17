@@ -19,6 +19,18 @@ android {
         versionName = "$currentYear.$versionCode"
     }
 
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
+    applicationVariants.all {
+        outputs.all {
+            this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            outputFileName = "teyin_${versionName}.apk"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -32,27 +44,13 @@ android {
         create("beta") {
             applicationIdSuffix = ".beta"
             versionNameSuffix = "-beta"
-
             isMinifyEnabled = false
-
             signingConfig = signingConfigs.getByName("debug")
         }
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-dev"
             signingConfig = signingConfigs.getByName("debug")
-        }
-    }
-
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
-    applicationVariants.all {
-        outputs.all {
-            this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            outputFileName = "teyin_${versionName}.apk"
         }
     }
 

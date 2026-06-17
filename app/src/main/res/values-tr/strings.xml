@@ -56,9 +56,6 @@
     <string name="radio_default_system">Varsayılan (Sistem)</string>
     <string name="radio_language_system_default">Sistem Varsayılanı (Desteklenmiyorsa İngilizceye Döner)</string>
     <string name="radio_font_custom">Özel yazı tipi</string>
-    <string name="radio_theme_mako">Mako</string>
-    <string name="radio_theme_rama">Rama</string>
-    <string name="radio_theme_teyin">Teyin</string>
     <string name="radio_theme_custom">Özel</string>
 
     <!-- Checkbox -->
