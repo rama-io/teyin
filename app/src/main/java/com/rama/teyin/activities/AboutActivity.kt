@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.TextView
 import com.rama.teyin.CsActivity
 import com.rama.teyin.R
+import com.rama.bohio.R as BohioR
 
 class AboutActivity : CsActivity() {
 
@@ -32,6 +33,6 @@ class AboutActivity : CsActivity() {
 
         val version = packageManager.getPackageInfo(packageName, 0).versionCode
         val nameView = findViewById<TextView>(R.id.name_version)
-        nameView.text = getString(R.string.name_version, getString(R.string.app_name), version)
+        nameView.text = getString(BohioR.string.name_version, getString(R.string.app_name), version)
     }
 }
