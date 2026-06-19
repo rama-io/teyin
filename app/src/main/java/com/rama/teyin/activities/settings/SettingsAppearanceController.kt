@@ -9,11 +9,11 @@ import android.widget.TextView
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.activities.SettingsActivity
-import com.rama.teyin.managers.FontManager
-import com.rama.teyin.managers.ThemeManager
+import com.rama.bohio.managers.FontManager
+import com.rama.bohio.managers.ThemeManager
 import java.io.File
 import java.io.FileOutputStream
-import com.rama.teyin.widgets.WdColorPicker
+import com.rama.bohio.widgets.WdColorPicker
 import com.rama.bohio.widgets.WdRange
 import com.rama.bohio.objects.PrefTheme
 import com.rama.bohio.objects.PrefFontStyle
@@ -47,6 +47,10 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
 
     private fun setupFontStyle() {
         val group = activity.findViewById<RadioGroup>(R.id.font_style_group)
+        val customContainer = activity.findViewById<View>(R.id.custom_font_container) // add this
+
+        customContainer.visibility =
+            if (prefs.getFontStyle() == PrefFontStyle.CUSTOM) View.VISIBLE else View.GONE
 
         when (prefs.getFontStyle()) {
             PrefFontStyle.JERSEY_25 -> group.check(R.id.font_jersey)
@@ -57,23 +61,25 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         group.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.font_jersey -> {
+                    customContainer.visibility = View.GONE  // add
                     prefs.setFontStyle(PrefFontStyle.JERSEY_25)
                     activity.refreshFont()
                 }
 
                 R.id.font_default -> {
+                    customContainer.visibility = View.GONE  // add
                     prefs.setFontStyle(PrefFontStyle.DEFAULT)
                     activity.refreshFont()
                 }
 
                 R.id.font_custom -> {
+                    customContainer.visibility = View.VISIBLE  // add
                     prefs.setFontStyle(PrefFontStyle.CUSTOM)
                     activity.refreshFont()
                 }
             }
         }
 
-        // Button to (re-)pick a font file
         activity.findViewById<View>(R.id.font_custom_pick_btn).setOnClickListener {
             openFontPicker()
         }
@@ -174,9 +180,10 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         activity.findViewById<WdColorPicker>(R.id.h1).setColor(palette.h1)
         activity.findViewById<WdColorPicker>(R.id.icons).setColor(palette.icon)
         activity.findViewById<WdColorPicker>(R.id.accent).setColor(palette.accent_1)
+        activity.findViewById<WdColorPicker>(R.id.bg_1).setColor(palette.bg_1)
         activity.findViewById<WdColorPicker>(R.id.bg_2).setColor(palette.bg_2)
         activity.findViewById<WdColorPicker>(R.id.bg_3).setColor(palette.bg_3)
-        activity.findViewById<WdColorPicker>(R.id.bg_1).setColor(palette.bg_1)
+        activity.findViewById<WdColorPicker>(R.id.bg_4).setColor(palette.bg_4)
         activity.findViewById<WdColorPicker>(R.id.input).setColor(palette.input)
         activity.findViewById<WdColorPicker>(R.id.btn_1).setColor(palette.button_1)
         activity.findViewById<WdColorPicker>(R.id.btn_2).setColor(palette.button_2)
@@ -201,6 +208,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
                 PrefKeys.APP_THEME_BG_1 to activity.findViewById<WdColorPicker>(R.id.bg_1),
                 PrefKeys.APP_THEME_BG_2 to activity.findViewById<WdColorPicker>(R.id.bg_2),
                 PrefKeys.APP_THEME_BG_3 to activity.findViewById<WdColorPicker>(R.id.bg_3),
+                PrefKeys.APP_THEME_BG_4 to activity.findViewById<WdColorPicker>(R.id.bg_4),
                 PrefKeys.APP_THEME_INPUT to activity.findViewById<WdColorPicker>(R.id.input),
                 PrefKeys.APP_THEME_BUTTON_1 to activity.findViewById<WdColorPicker>(R.id.btn_1),
                 PrefKeys.APP_THEME_BUTTON_2 to activity.findViewById<WdColorPicker>(R.id.btn_2),

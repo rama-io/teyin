@@ -1,5 +1,9 @@
 # Changelog
 
+## 4
+
+- Migrating managers to bohio / part 2
+
 ## 3
 
 - Subtract common assets and functionalities into a submodule / part 1

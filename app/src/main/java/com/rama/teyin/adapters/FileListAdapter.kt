@@ -12,10 +12,10 @@ import com.rama.bohio.objects.PrefFontStyle
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.managers.FileManager
-import com.rama.teyin.managers.FontManager
+import com.rama.bohio.managers.FontManager
 import com.rama.teyin.managers.FsEntry
 import com.rama.teyin.managers.PrefsManager
-import com.rama.teyin.managers.ThemeManager
+import com.rama.bohio.managers.ThemeManager
 
 class FileListAdapter(
     private val context: Context,

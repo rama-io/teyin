@@ -15,33 +15,8 @@ android {
         applicationId = "com.rama.teyin"
         minSdk = 21
         targetSdk = 36
-        versionCode = 3
+        versionCode = 4
         versionName = "$currentYear.$versionCode"
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            vcsInfo.include = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("debug")
-        }
-        create("beta") {
-            applicationIdSuffix = ".beta"
-            versionNameSuffix = "-beta"
-
-            isMinifyEnabled = false
-
-            signingConfig = signingConfigs.getByName("debug")
-        }
-        debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-dev"
-            signingConfig = signingConfigs.getByName("debug")
-        }
     }
 
     dependenciesInfo {
@@ -53,6 +28,29 @@ android {
         outputs.all {
             this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
             outputFileName = "teyin_${versionName}.apk"
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            vcsInfo.include = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        create("beta") {
+            applicationIdSuffix = ".beta"
+            versionNameSuffix = "-beta"
+            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-dev"
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 

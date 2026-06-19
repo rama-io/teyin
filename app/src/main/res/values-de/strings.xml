@@ -56,9 +56,6 @@
     <string name="radio_default_system">Standard (System)</string>
     <string name="radio_language_system_default">Systemstandard (Rückfall auf Englisch)</string>
     <string name="radio_font_custom">Benutzerdefinierte Schriftart</string>
-    <string name="radio_theme_mako">Mako</string>
-    <string name="radio_theme_rama">Rama</string>
-    <string name="radio_theme_teyin">Teyin</string>
     <string name="radio_theme_custom">Benutzerdefiniert</string>
 
     <!-- Checkbox -->
@@ -73,7 +70,6 @@
     <string name="label_zoom">Zoom</string>
 
     <!-- Toasts -->
-    <string name="toast_invalid_color">Ungültige Farbe</string>
     <string name="toast_storage_not_available">Speicher nicht verfügbar</string>
     <string name="toast_folder_no_longer_exists">Ordner existiert nicht mehr</string>
     <string name="toast_storage_no_longer_available">Speicher ist nicht mehr verfügbar</string>

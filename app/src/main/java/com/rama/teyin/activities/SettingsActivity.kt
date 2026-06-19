@@ -3,6 +3,7 @@ package com.rama.teyin.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.rama.bohio.objects.PrefFontStyle
 import com.rama.teyin.CsActivity
 import com.rama.teyin.R
 import com.rama.teyin.activities.settings.SettingsAppearanceController

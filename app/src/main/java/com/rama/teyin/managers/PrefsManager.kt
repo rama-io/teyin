@@ -5,31 +5,20 @@ import android.content.SharedPreferences
 import com.rama.bohio.objects.PrefTheme
 import com.rama.bohio.managers.PrefsManager as BohioPrefsManager
 
-/**
- * Teyin-specific preferences. Extends bohio's shared PrefsManager with
- * Teyin's own keys (favorite directories, hidden-files toggle) and first-run
- * defaults.
- *
- * Shared things (PrefKeys, FontStyle, Theme, Language, getTheme/setTheme,
- * getFontStyle, export/import/clear, etc.) are inherited from
- * [BohioPrefsManager] and accessible directly as `PrefsManager.PrefKeys`,
- * `PrefsManager.Theme`, etc.
- */
 class PrefsManager private constructor(context: Context) : BohioPrefsManager(context) {
 
     override val defaultTheme: String = PrefTheme.TEYIN
 
-    /** Teyin-specific (file manager) preference keys. */
+    // Local preference keys
     object FileKeys {
         const val FAVORITE_DIRS = "file:favorite_dirs"
         const val SHOW_HIDDEN_FILES = "file:show_hidden"
     }
 
+    // Local InitPrefs
     override fun applyAppDefaults(editor: SharedPreferences.Editor) {
         editor.putBoolean(FileKeys.SHOW_HIDDEN_FILES, true)
     }
-
-    // --------------- Favorite directories ---------------
 
     fun getFavoriteDirs(): List<String> {
         val raw = prefs.getString(FileKeys.FAVORITE_DIRS, "") ?: ""
@@ -56,7 +45,10 @@ class PrefsManager private constructor(context: Context) : BohioPrefsManager(con
 
         fun getInstance(context: Context): PrefsManager =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: PrefsManager(context.applicationContext).also { INSTANCE = it }
+                INSTANCE ?: PrefsManager(context.applicationContext).also {
+                    INSTANCE = it
+                    register(it)
+                }
             }
     }
 }
