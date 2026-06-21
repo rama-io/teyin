@@ -10,87 +10,102 @@
 
     <View style="@style/Separator" />
 
-    <LinearLayout style="@style/VerticalList">
+    <ScrollView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
 
-        <TextView
-            android:text="@string/info_name"
-            android:textColor="@color/h1"
-            style="@style/Small" />
+        <LinearLayout
+            android:layout_height="0dp"
+            android:padding="16sp"
+            android:focusableInTouchMode="true"
+            style="@style/VerticalListDivided">
 
-        <TextView
-            android:id="@+id/info_name_value"
-            style="@style/Text" />
-    </LinearLayout>
 
-    <View style="@style/Separator" />
+            <LinearLayout style="@style/VerticalList">
 
-    <LinearLayout style="@style/VerticalList">
+                <TextView
+                    android:text="@string/info_name"
+                    android:textColor="@color/h1"
+                    style="@style/Small" />
 
-        <TextView
-            android:text="@string/info_type"
-            android:textColor="@color/h1"
-            style="@style/Small" />
+                <TextView
+                    android:id="@+id/info_name_value"
+                    style="@style/Text" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/info_type_value"
-            style="@style/Text" />
-    </LinearLayout>
+            <View style="@style/Separator" />
 
-    <View style="@style/Separator" />
+            <LinearLayout style="@style/VerticalList">
 
-    <LinearLayout style="@style/VerticalList">
+                <TextView
+                    android:text="@string/info_type"
+                    android:textColor="@color/h1"
+                    style="@style/Small" />
 
-        <TextView
-            android:text="@string/info_size"
-            android:textColor="@color/h1"
-            style="@style/Small" />
+                <TextView
+                    android:id="@+id/info_type_value"
+                    style="@style/Text" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/info_size_value"
-            style="@style/Text" />
-    </LinearLayout>
+            <View style="@style/Separator" />
 
-    <View style="@style/Separator" />
+            <LinearLayout style="@style/VerticalList">
 
-    <LinearLayout style="@style/VerticalList">
+                <TextView
+                    android:text="@string/info_size"
+                    android:textColor="@color/h1"
+                    style="@style/Small" />
 
-        <TextView
-            android:text="@string/info_location"
-            android:textColor="@color/h1"
-            style="@style/Small" />
+                <TextView
+                    android:id="@+id/info_size_value"
+                    style="@style/Text" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/info_location_value"
-            style="@style/Text" />
-    </LinearLayout>
+            <View style="@style/Separator" />
 
-    <View style="@style/Separator" />
+            <LinearLayout style="@style/VerticalList">
 
-    <LinearLayout style="@style/VerticalList">
+                <TextView
+                    android:text="@string/info_location"
+                    android:textColor="@color/h1"
+                    style="@style/Small" />
 
-        <TextView
-            android:text="@string/info_modified"
-            android:textColor="@color/h1"
-            style="@style/Small" />
+                <TextView
+                    android:id="@+id/info_location_value"
+                    style="@style/Text" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/info_modified_value"
-            style="@style/Text" />
-    </LinearLayout>
+            <View style="@style/Separator" />
 
-    <View style="@style/Separator" />
+            <LinearLayout style="@style/VerticalList">
 
-    <LinearLayout style="@style/VerticalList">
+                <TextView
+                    android:text="@string/info_modified"
+                    android:textColor="@color/h1"
+                    style="@style/Small" />
 
-        <TextView
-            android:text="@string/info_permissions"
-            android:textColor="@color/h1"
-            style="@style/Small" />
+                <TextView
+                    android:id="@+id/info_modified_value"
+                    style="@style/Text" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/info_permissions_value"
-            style="@style/Text" />
-    </LinearLayout>
+            <View style="@style/Separator" />
+
+            <LinearLayout style="@style/VerticalList">
+
+                <TextView
+                    android:text="@string/info_permissions"
+                    android:textColor="@color/h1"
+                    style="@style/Small" />
+
+                <TextView
+                    android:id="@+id/info_permissions_value"
+                    style="@style/Text" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <View style="@style/Separator" />
 
