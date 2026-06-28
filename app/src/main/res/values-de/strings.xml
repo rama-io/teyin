@@ -17,9 +17,6 @@
     <!-- Buttons -->
     <string name="btn_about_teyin">Über Teyin</string>
 
-    <!-- Radio -->
-    <string name="radio_default_system">Standard (System)</string>
-
     <!-- Checkbox -->
     <string name="checkbox_show_hidden_files">Versteckte Dateien anzeigen</string>
 

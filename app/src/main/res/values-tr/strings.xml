@@ -17,9 +17,6 @@
     <!-- Buttons -->
     <string name="btn_about_teyin">Teyin Hakkında</string>
 
-    <!-- Radio -->
-    <string name="radio_default_system">Varsayılan (Sistem)</string>
-
     <!-- Checkbox -->
     <string name="checkbox_show_hidden_files">Gizli dosyaları göster</string>
 
@@ -82,7 +79,7 @@
 
     <!-- APP -->
     <string name="app_desc">Hafif, minimal, gizlilik odaklı, hız ve basitlik için tasarlanmış bir dosya yöneticisi.</string>
-    
+
     <string name="dialog_create_folder">Yeni Klasör</string>
     <string name="hint_folder_name">Klasör adı</string>
     <string name="toast_folder_created">Klasör oluşturuldu</string>
