@@ -1,5 +1,9 @@
 # Changelog
 
+## 5
+
+- Fix android 10 and 12 discover
+
 ## 4
 
 - Migrating managers to bohio / part 2

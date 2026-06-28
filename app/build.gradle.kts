@@ -15,7 +15,7 @@ android {
         applicationId = "com.rama.teyin"
         minSdk = 21
         targetSdk = 36
-        versionCode = 4
+        versionCode = 5
         versionName = "$currentYear.$versionCode"
     }
 
