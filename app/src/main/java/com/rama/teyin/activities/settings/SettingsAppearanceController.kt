@@ -47,10 +47,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
 
     private fun setupFontStyle() {
         val group = activity.findViewById<RadioGroup>(R.id.font_style_group)
-        val customContainer = activity.findViewById<View>(R.id.custom_font_container) // add this
-
-        customContainer.visibility =
-            if (prefs.getFontStyle() == PrefFontStyle.CUSTOM) View.VISIBLE else View.GONE
+        val customContainer = activity.findViewById<View>(R.id.custom_font_container)
 
         when (prefs.getFontStyle()) {
             PrefFontStyle.JERSEY_25 -> group.check(R.id.font_jersey)
@@ -58,22 +55,25 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
             else -> group.check(R.id.font_default)
         }
 
+        customContainer.visibility =
+            if (prefs.getFontStyle() == PrefFontStyle.CUSTOM) View.VISIBLE else View.GONE
+
         group.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.font_jersey -> {
-                    customContainer.visibility = View.GONE  // add
+                    customContainer.visibility = View.GONE
                     prefs.setFontStyle(PrefFontStyle.JERSEY_25)
                     activity.refreshFont()
                 }
 
                 R.id.font_default -> {
-                    customContainer.visibility = View.GONE  // add
+                    customContainer.visibility = View.GONE
                     prefs.setFontStyle(PrefFontStyle.DEFAULT)
                     activity.refreshFont()
                 }
 
                 R.id.font_custom -> {
-                    customContainer.visibility = View.VISIBLE  // add
+                    customContainer.visibility = View.VISIBLE
                     prefs.setFontStyle(PrefFontStyle.CUSTOM)
                     activity.refreshFont()
                 }
@@ -118,7 +118,7 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
         val label = activity.findViewById<TextView>(R.id.font_custom_name_label)
         val path = prefs.getCustomFontPath()
         label.text =
-            if (path.isNotBlank()) File(path).name else activity.getString(R.string.filepicker_font_custom_none)
+            if (path.isNotBlank()) File(path).name else activity.getString(BohioR.string.filepicker_font_custom_none)
     }
 
     private fun setupTheme() {
@@ -138,6 +138,8 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
             PrefTheme.DRACULA -> group.check(R.id.theme_dracula)
             PrefTheme.MELANGE -> group.check(R.id.theme_melange)
             PrefTheme.TOKYO_NIGHT -> group.check(R.id.theme_tokyo_night)
+            PrefTheme.MONO_DARK -> group.check(R.id.theme_mono_dark)
+            PrefTheme.MONO_LIGHT -> group.check(R.id.theme_mono_light)
             PrefTheme.CUSTOM -> group.check(R.id.theme_custom)
             else -> group.check(R.id.theme_teyin)
         }
@@ -152,6 +154,8 @@ class SettingsAppearanceController(private val activity: SettingsActivity) {
                 R.id.theme_dracula -> PrefTheme.DRACULA
                 R.id.theme_melange -> PrefTheme.MELANGE
                 R.id.theme_tokyo_night -> PrefTheme.TOKYO_NIGHT
+                R.id.theme_mono_dark -> PrefTheme.MONO_DARK
+                R.id.theme_mono_light -> PrefTheme.MONO_LIGHT
                 R.id.theme_custom -> PrefTheme.CUSTOM
                 else -> PrefTheme.TEYIN
             }

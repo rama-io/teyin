@@ -1,10 +1,5 @@
 <resources>
-    <!-- Activities -->
-    <string name="activity_settings_label">Ayarlar</string>
-    <string name="activity_about_label">Hakkında</string>
-
     <!-- H2 -->
-    <string name="h2_color_picker">Renk Seç</string>
     <string name="dialog_rename_file">Yeniden Adlandır</string>
     <string name="toast_rename_success">Başarıyla yeniden adlandırıldı</string>
     <string name="toast_rename_failed">Yeniden adlandırma başarısız</string>
@@ -18,49 +13,11 @@
     <string name="toast_dir_exists">Zaten favorilerde</string>
     <string name="toast_delete_success">Silindi</string>
     <string name="toast_delete_failed">Silme başarısız</string>
-    <!-- H3 -->
-    <string name="h3_contributors">Katkıda Bulunanlar</string>
-    <string name="h3_icons">Simgeler</string>
-    <string name="h3_fonts">Yazı Tipleri</string>
-    <string name="h3_themes">Temalar</string>
-    <string name="h3_language">Dil</string>
-    <string name="h3_system">Sistem</string>
-    <string name="h3_app">Uygulama</string>
 
-    <!-- Buttons 1 -->
-    <string name="btn_go_back">Geri Git</string>
-    <string name="btn_apply">Uygula</string>
+    <!-- Buttons -->
     <string name="btn_about_teyin">Teyin Hakkında</string>
-    <string name="btn_cancel">İptal</string>
-    <!-- Buttons 2 -->
-    <string name="btn_join_discord">Discord\'a Katıl</string>
-    <string name="btn_theme_apply_custom">Özel Tema Uygula</string>
-    <string name="btn_font_custom_pick">Yazı tipi dosyası seç</string>
-    <!-- ColorPicker -->
-    <string name="colorpicker_theme_foreground">Ön Plan</string>
-    <string name="colorpicker_theme_collapsible_header">Daraltılabilir Başlık</string>
-    <string name="colorpicker_theme_h1">H1</string>
-    <string name="colorpicker_theme_icons">Simgeler</string>
-    <string name="colorpicker_theme_accent">Vurgu</string>
-    <string name="colorpicker_theme_background_1">Arka Plan 1</string>
-    <string name="colorpicker_theme_background_2">Arka Plan 2</string>
-    <string name="colorpicker_theme_background_3">Arka Plan 3</string>
-    <string name="colorpicker_theme_input_background">Giriş Arka Planı</string>
-    <string name="colorpicker_theme_button_1_background">Düğme 1 Arka Planı</string>
-    <string name="colorpicker_theme_button_2_background">Düğme 2 Arka Planı</string>
-    <string name="colorpicker_theme_danger">Tehlike</string>
-    <!-- FilePicker -->
-    <string name="filepicker_font_custom_none">Yazı tipi seçilmedi</string>
-
-    <!-- Radio -->
-    <string name="radio_default_system">Varsayılan (Sistem)</string>
-    <string name="radio_language_system_default">Sistem Varsayılanı (Desteklenmiyorsa İngilizceye Döner)</string>
-    <string name="radio_font_custom">Özel yazı tipi</string>
-    <string name="radio_theme_custom">Özel</string>
 
     <!-- Checkbox -->
-    <string name="checkbox_show_system_bar">Sistem çubuğunu göster</string>
-    <string name="checkbox_prevent_home_screen_rotation">Ekran döndürmeyi kilitle</string>
     <string name="checkbox_show_hidden_files">Gizli dosyaları göster</string>
 
     <!-- ContextMenu -->
@@ -76,9 +33,6 @@
     <string name="info_location">Konum</string>
     <string name="info_modified">Değiştirilme</string>
     <string name="info_permissions">İzinler</string>
-
-    <!-- InputLabel -->
-    <string name="label_zoom">Yakınlaştırma</string>
 
     <!-- Toasts -->
     <string name="toast_storage_not_available">Depolama alanı mevcut değil</string>
@@ -125,10 +79,6 @@
 
     <!-- APP -->
     <string name="app_desc">Hafif, minimal, gizlilik odaklı, hız ve basitlik için tasarlanmış bir dosya yöneticisi.</string>
-    <string name="app_background_tasks_desc">Arka Plan Görevi Yok</string>
-    <string name="app_ads_desc">Reklam Yok</string>
-    <string name="app_trackers_desc">İzleyici Yok</string>
-    <string name="app_offline_desc">Çevrimdışı Çalışır</string>
 
     <string name="dialog_create_folder">Yeni Klasör</string>
     <string name="hint_folder_name">Klasör adı</string>

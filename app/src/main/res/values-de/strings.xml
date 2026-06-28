@@ -1,10 +1,5 @@
 <resources>
-    <!-- Activities -->
-    <string name="activity_settings_label">Einstellungen</string>
-    <string name="activity_about_label">Über</string>
-
     <!-- H2 -->
-    <string name="h2_color_picker">Farbe auswählen</string>
     <string name="dialog_rename_file">Umbenennen</string>
     <string name="toast_rename_success">Erfolgreich umbenannt</string>
     <string name="toast_rename_failed">Umbenennen fehlgeschlagen</string>
@@ -18,56 +13,15 @@
     <string name="toast_dir_exists">Bereits in Favoriten</string>
     <string name="toast_delete_success">Gelöscht</string>
     <string name="toast_delete_failed">Löschen fehlgeschlagen</string>
-    <!-- H3 -->
-    <string name="h3_contributors">Beitragende</string>
-    <string name="h3_icons">Symbole</string>
-    <string name="h3_fonts">Schriftarten</string>
-    <string name="h3_themes">Designs</string>
-    <string name="h3_language">Sprache</string>
-    <string name="h3_system">System</string>
-    <string name="h3_app">App</string>
 
-    <!-- Buttons 1 -->
-    <string name="btn_go_back">Zurück</string>
-    <string name="btn_apply">Übernehmen</string>
+    <!-- Buttons -->
     <string name="btn_about_teyin">Über Teyin</string>
-    <string name="btn_cancel">Abbrechen</string>
-    <!-- Buttons 2 -->
-    <string name="btn_join_discord">Discord beitreten</string>
-    <string name="btn_theme_apply_custom">Benutzerdefiniertes Design übernehmen</string>
-    <string name="btn_font_custom_pick">Schriftartdatei auswählen</string>
-    <!-- ColorPicker -->
-    <string name="colorpicker_theme_foreground">Vordergrund</string>
-    <string name="colorpicker_theme_collapsible_header">Einklappbare Kopfzeile</string>
-    <string name="colorpicker_theme_h1">H1</string>
-    <string name="colorpicker_theme_icons">Symbole</string>
-    <string name="colorpicker_theme_accent">Akzent</string>
-    <string name="colorpicker_theme_background_1">Hintergrund 1</string>
-    <string name="colorpicker_theme_background_2">Hintergrund 2</string>
-    <string name="colorpicker_theme_background_3">Hintergrund 3</string>
-    <string name="colorpicker_theme_input_background">Eingabehintergrund</string>
-    <string name="colorpicker_theme_button_1_background">Schaltfläche 1 Hintergrund</string>
-    <string name="colorpicker_theme_button_2_background">Schaltfläche 2 Hintergrund</string>
-    <string name="colorpicker_theme_danger">Gefahr</string>
-    <!-- FilePicker -->
-    <string name="filepicker_font_custom_none">Keine Schriftart ausgewählt</string>
-
-    <!-- Radio -->
-    <string name="radio_default_system">Standard (System)</string>
-    <string name="radio_language_system_default">Systemstandard (Rückfall auf Englisch)</string>
-    <string name="radio_font_custom">Benutzerdefinierte Schriftart</string>
-    <string name="radio_theme_custom">Benutzerdefiniert</string>
 
     <!-- Checkbox -->
-    <string name="checkbox_show_system_bar">Systemleiste anzeigen</string>
-    <string name="checkbox_prevent_home_screen_rotation">Bildschirmdrehung sperren</string>
     <string name="checkbox_show_hidden_files">Versteckte Dateien anzeigen</string>
 
     <!-- ContextMenu -->
     <string name="ctxmenu_rename">Umbenennen</string>
-
-    <!-- InputLabel -->
-    <string name="label_zoom">Zoom</string>
 
     <!-- Toasts -->
     <string name="toast_storage_not_available">Speicher nicht verfügbar</string>
@@ -114,10 +68,6 @@
 
     <!-- APP -->
     <string name="app_desc">Ein leichter, minimalistischer, datenschutzorientierter Dateimanager, entwickelt für Geschwindigkeit und Einfachheit.</string>
-    <string name="app_background_tasks_desc">Keine Hintergrundaufgaben</string>
-    <string name="app_ads_desc">Keine Werbung</string>
-    <string name="app_trackers_desc">Keine Tracker</string>
-    <string name="app_offline_desc">Funktioniert offline</string>
 
     <string name="dialog_create_folder">Neuer Ordner</string>
     <string name="hint_folder_name">Ordnername</string>
