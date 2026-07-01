@@ -77,7 +77,7 @@ class MainActivity : CsActivity() {
     private lateinit var addToFavoritesBtn: View
     private lateinit var dirAdapter: DirectoryListAdapter
 
-    private val fileManager = FileManager()
+    private val fileManager = FileManager(this)
     private lateinit var adapter: FileListAdapter
     private var isSearchExpanded = false
     private var isProgrammaticSearchUpdate = false
