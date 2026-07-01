@@ -294,7 +294,12 @@ class FileManager(private val context: Context) {
 
         private val standardDirectoryNames = listOf(
             Environment.DIRECTORY_ALARMS,
-            Environment.DIRECTORY_AUDIOBOOKS,
+            // Environment.DIRECTORY_AUDIOBOOKS was only added in API 29.
+            // Referencing the field directly causes a NoSuchFieldError at
+            // class-init time on older OS versions (e.g. API 21), which
+            // crashes this whole class before any code runs. Use the
+            // literal value instead, since it's just a plain string.
+            "Audiobooks",
             Environment.DIRECTORY_DCIM,
             Environment.DIRECTORY_DOCUMENTS,
             Environment.DIRECTORY_DOWNLOADS,

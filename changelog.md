@@ -1,5 +1,9 @@
 # Changelog
 
+## 6
+
+- Fix android 10 and 12 storage permission
+
 ## 5
 
 - Fix color picker
