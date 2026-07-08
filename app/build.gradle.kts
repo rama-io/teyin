@@ -9,12 +9,12 @@ val currentYear = LocalDate.now().year
 
 android {
     namespace = "com.rama.teyin"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.rama.teyin"
         minSdk = 21
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 6
         versionName = "$currentYear.$versionCode"
     }
