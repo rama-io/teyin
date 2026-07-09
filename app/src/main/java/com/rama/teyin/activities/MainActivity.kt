@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
@@ -815,7 +816,12 @@ class MainActivity : CsActivity() {
                 }
 
                 val newFolder = FileManager.resolveNonConflictingName(destDir, name)
-                val ok = newFolder.mkdir()
+                val ok = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                    createFolderViaMediaStore(destDir, newFolder.name)
+                } else {
+                    newFolder.mkdir()
+                }
+
                 Toast.makeText(
                     this,
                     if (ok) getString(R.string.toast_folder_created)
@@ -833,6 +839,30 @@ class MainActivity : CsActivity() {
         editText.requestFocus()
         (getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
             .showSoftInput(editText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun createFolderViaMediaStore(destDir: File, folderName: String): Boolean {
+        return try {
+            val primaryRoot = Environment.getExternalStorageDirectory().canonicalPath
+            val destCanonical = destDir.canonicalPath
+            if (!destCanonical.startsWith(primaryRoot)) return false
+
+            val relativeDir = destCanonical.removePrefix(primaryRoot).trim('/')
+            val relativePath =
+                if (relativeDir.isEmpty()) "$folderName/" else "$relativeDir/$folderName/"
+
+            val values = android.content.ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, ".placeholder")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
+                put(MediaStore.MediaColumns.MIME_TYPE, "application/octet-stream")
+            }
+            val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+                ?: return false
+            contentResolver.openOutputStream(uri)?.close()
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
     private fun showDeleteConfirmationDialog() {

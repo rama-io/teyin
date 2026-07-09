@@ -2,7 +2,6 @@ import java.time.LocalDate
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
 }
 
 val currentYear = LocalDate.now().year
@@ -19,18 +18,6 @@ android {
         versionName = "$currentYear.$versionCode"
     }
 
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
-    applicationVariants.all {
-        outputs.all {
-            this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            outputFileName = "teyin_${versionName}.apk"
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -41,6 +28,7 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
+
         create("beta") {
             applicationIdSuffix = ".beta"
             versionNameSuffix = "-beta"
@@ -51,6 +39,7 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
+
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-dev"
@@ -58,13 +47,18 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlin {
+        jvmToolchain(17)
     }
 
     androidResources {
@@ -72,14 +66,27 @@ android {
     }
 
     packaging {
-        resources.excludes += "META-INF/*.version"
-        resources.excludes += "META-INF/com/android/build/gradle/app-metadata.properties"
-        jniLibs.useLegacyPackaging = true
+        resources {
+            excludes += "META-INF/*.version"
+            excludes += "META-INF/com/android/build/gradle/app-metadata.properties"
+        }
+
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.outputs.forEach { output ->
+            output.outputFileName.set("teyin_${variant.name}.apk")
+        }
     }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.activity.ktx)
+    implementation("androidx.activity:activity-ktx:1.9.3")
     implementation(project(":bohio"))
 }
