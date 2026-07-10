@@ -80,7 +80,11 @@ android {
 androidComponents {
     onVariants { variant ->
         variant.outputs.forEach { output ->
-            output.outputFileName.set("teyin_${variant.name}.apk")
+            output.outputFileName.set(
+                output.versionName.map { name ->
+                    "teyin_${name}.apk"
+                }
+            )
         }
     }
 }
