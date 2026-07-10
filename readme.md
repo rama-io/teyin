@@ -50,15 +50,15 @@ No network access is required.
 
 <p>
   <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/rama-io/teyin">
-    <img src="https://rama-io.github.io/img/obtainium.png" alt="Get teyin From Obtainium">
+    <img src="https://rama-io.github.io/img/obtainium.svg" alt="Get teyin From Obtainium">
   </a>
   &nbsp;
   <a href="https://f-droid.org/app/com.rama.teyin">
-    <img src="https://rama-io.github.io/img/fdroid.png" alt="Get teyin From F-Droid">
+    <img src="https://rama-io.github.io/img/fdroid.svg" alt="Get teyin From F-Droid">
   </a>
   &nbsp;
   <a href="https://github.com/rama-io/teyin/releases/latest">
-    <img src="https://rama-io.github.io/img/github.png" alt="Get teyin From GitHub">
+    <img src="https://rama-io.github.io/img/github.svg" alt="Get teyin From GitHub">
   </a>
 </p>
 
@@ -73,17 +73,15 @@ No network access is required.
 
 | Device | Version | Discover Files | Add Folder | Rename | Copy | Move | Paste | Delete |
 | - | - | - | - | - | - | - | - | - |
-| Pixel | Android 7 / API 25 | Y | Y | Y | Y | Y | Y | Y | 
 | Nexus 5 | Android 5 / API 21 | Y | Y | Y | Y | Y | Y | Y |
-
-
-<!-- | Pixel 9 Pro Fold | Android 16 / API 36 | Y | Y | Y | Y | Y | -->
-<!-- | Pixel 9 | Android 15 / API 35 | Y | Y | Y | Y | Y | -->
-<!-- | Pixel 8 | Android 14 / API 34 | Y | Y | Y | Y | Y | -->
-<!-- | Pixel 7 | Android 13 / API 33 | Y | Y | Y | Y | Y | -->
-<!-- | Pixel 6 | Android 12 / API 31 | Y | Y | Y | Y | Y | -->
-<!-- | Pixel 4 | Android 10 / API 29 | Y | Y | N | N | N | -->
-<!-- | Pixel 2 | Android 8 / API 27 | Y | Y | Y | Y | Y | -->
+| Pixel | Android 7 / API 25 | Y | Y | Y | Y | Y | Y | Y |
+| Pixel 2 | Android 8 / API 27 | Y | ? | ? | ? | ? |
+| Pixel 4 | Android 10 / API 29 | Y | N | ? | ? | ? |
+| Pixel 6 | Android 12 / API 31 | Y | ? | ? | ? | ? |
+| Pixel 7 | Android 13 / API 33 | Y | ? | ? | ? | ? |
+| Pixel 8 | Android 14 / API 34 | Y | ? | ? | ? | ? |
+| Pixel 9 | Android 15 / API 35 | Y | ? | ? | ? | ? |
+| Pixel 9 Pro Fold | Android 16 / API 36 | Y | ? | ? | ? | ? |
 
 ---
 

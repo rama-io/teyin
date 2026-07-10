@@ -5,7 +5,6 @@
     android:descendantFocusability="blocksDescendants"
     android:background="@color/bg_2"
     android:padding="8sp"
-    android:paddingStart="16sp"
     style="@style/HorizontalList">
 
     <FrameLayout
@@ -21,6 +20,16 @@
             android:tint="@color/accent_1"
             style="@style/Icon24" />
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/ext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12sp"
+        android:textColor="@color/accent_1"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="14sp" />
 
     <FrameLayout
         android:visibility="gone"

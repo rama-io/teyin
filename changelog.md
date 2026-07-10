@@ -1,5 +1,12 @@
 # Changelog
 
+## 6
+
+- Fix android 10 and 12 storage permission
+- Fix settings section state
+- API support increase to 37 / Android 17
+- Adding rest of contributors
+
 ## 5
 
 - Fix color picker

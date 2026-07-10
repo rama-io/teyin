@@ -27,7 +27,3 @@ keystore.properties
 
 # Extensions may create this...
 .vscode/
-
-# AI slop stuff
-.agents/
-AGENTS.md
