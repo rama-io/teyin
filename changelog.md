@@ -1,5 +1,7 @@
 # Changelog
 
+## 7
+
 ## 6
 
 - Fix android 10 and 12 storage permission
