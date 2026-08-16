@@ -18,4 +18,12 @@
         <item>@string/radio_language_german</item>
         <item>@string/radio_language_turkish</item>
     </string-array>
+
+    <string-array name="app_claims">
+        <item>@string/app_ads_desc</item>
+        <item>@string/app_background_tasks_desc</item>
+        <item>@string/app_trackers_desc</item>
+        <item>@string/app_offline_desc</item>
+        <item>@string/license_gpl3</item>
+    </string-array>
 </resources>
