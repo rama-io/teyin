@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16sp"
+    android:background="@color/bg_1"
+    style="@style/VerticalListDivided"
+    tools:ignore="ButtonOrder">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:text="@string/dialog_saf_guidance_title"
+        style="@style/H2_center" />
+
+    <TextView
+        android:id="@+id/dialog_message"
+        android:text="@string/dialog_saf_guidance_message"
+        android:gravity="center"
+        style="@style/Disclaimer" />
+
+    <Button
+        android:id="@+id/no_button"
+        android:text="@string/btn_cancel"
+        style="@style/BTN1" />
+
+    <Button
+        android:id="@+id/yes_button"
+        android:text="@string/btn_continue"
+        style="@style/BTN1" />
+</LinearLayout>

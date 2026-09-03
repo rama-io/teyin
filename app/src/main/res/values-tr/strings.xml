@@ -9,6 +9,9 @@
     <string name="toast_not_enough_space">Hedefte yeterli alan yok</string>
     <string name="toast_saf_required">Bu depolama alanına yazma izni verin</string>
     <string name="toast_saf_denied">Yazma izni verilmedi</string>
+    <string name="dialog_saf_guidance_title">Depolama Erişimi</string>
+    <string name="dialog_saf_guidance_message">Tüm dosyalara göz atmak için menüye (⋮) → \"Dahili depolamayı göster\" seçeneğine dokunun, yan menüyü açın ve cihaz depolama alanınızı seçin.</string>
+    <string name="toast_saf_primary_required">Lütfen cihazın ana depolama alanını seçin</string>
     <string name="toast_dir_added">Klasör favorilere eklendi</string>
     <string name="toast_dir_exists">Zaten favorilerde</string>
     <string name="toast_delete_success">Silindi</string>
@@ -17,6 +20,7 @@
     <!-- Buttons -->
     <string name="btn_about_teyin">Teyin Hakkında</string>
 
+    <string name="btn_continue">Devam Et</string>
     <!-- Checkbox -->
     <string name="checkbox_show_hidden_files">Gizli dosyaları göster</string>
 

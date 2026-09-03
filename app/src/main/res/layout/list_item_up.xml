@@ -5,6 +5,7 @@
     style="@style/HorizontalList_BG2">
 
     <TextView
+        android:id="@+id/up_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dir_up_indicator"
