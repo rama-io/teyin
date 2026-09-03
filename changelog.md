@@ -1,5 +1,9 @@
 # Changelog
 
+## 9
+
+- Storage refactor
+
 ## 8
 
 - Reworking about page
