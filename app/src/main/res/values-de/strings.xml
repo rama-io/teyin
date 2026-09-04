@@ -9,6 +9,9 @@
     <string name="toast_not_enough_space">Nicht genug Speicherplatz am Zielort</string>
     <string name="toast_saf_required">Schreibzugriff für diesen Speicher gewähren</string>
     <string name="toast_saf_denied">Schreibzugriff nicht gewährt</string>
+    <string name="dialog_saf_guidance_title">Speicherzugriff</string>
+    <string name="dialog_saf_guidance_message">Um alle Dateien zu durchsuchen, tippe auf Menü (⋮) → \"Internen Speicher anzeigen\", öffne das Seitenmenü und wähle deinen Gerätespeicher aus.</string>
+    <string name="toast_saf_primary_required">Bitte wähle den Hauptspeicher des Geräts aus</string>
     <string name="toast_dir_added">Ordner zu Favoriten hinzugefügt</string>
     <string name="toast_dir_exists">Bereits in Favoriten</string>
     <string name="toast_delete_success">Gelöscht</string>
@@ -17,6 +20,7 @@
     <!-- Buttons -->
     <string name="btn_about_teyin">Über Teyin</string>
 
+    <string name="btn_continue">Weiter</string>
     <!-- Checkbox -->
     <string name="checkbox_show_hidden_files">Versteckte Dateien anzeigen</string>
 
