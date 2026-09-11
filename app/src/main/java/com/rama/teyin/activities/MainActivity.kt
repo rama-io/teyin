@@ -34,13 +34,19 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import com.rama.teyin.CsActivity
 import com.rama.teyin.R
 import com.rama.bohio.R as BohioR
 import com.rama.teyin.adapters.DirEntry
 import com.rama.teyin.adapters.DirectoryListAdapter
 import com.rama.teyin.adapters.FileListAdapter
+import com.rama.teyin.managers.DocumentNode
 import com.rama.teyin.managers.FileManager
+import com.rama.teyin.managers.FileNode
+import com.rama.teyin.managers.FsNode
+import com.rama.teyin.managers.TaskRunner
+import com.rama.teyin.managers.totalSize
 import com.rama.teyin.managers.PrefsManager as BohioPrefsManager
 import com.rama.bohio.managers.ThemeManager
 import java.io.File
@@ -78,9 +84,10 @@ class MainActivity : CsActivity() {
     private lateinit var addToFavoritesBtn: View
     private lateinit var dirAdapter: DirectoryListAdapter
 
-    private val fileManager = FileManager(this)
+    private val fileManager = FileManager()
     private lateinit var adapter: FileListAdapter
     private var isSearchExpanded = false
+    private var activeRefreshId: Long = 0L
     private var isProgrammaticSearchUpdate = false
     private val searchDebounceHandler = Handler(Looper.getMainLooper())
     private var searchDebounceRunnable: Runnable? = null
@@ -93,7 +100,7 @@ class MainActivity : CsActivity() {
     private enum class ClipboardMode { COPY, MOVE }
 
     /** Paths staged for copy/move (null = clipboard empty) */
-    private var clipboard: List<String>? = null
+    private var clipboard: List<FsNode>? = null
     private var clipboardMode: ClipboardMode = ClipboardMode.COPY
 
     /**
@@ -104,7 +111,51 @@ class MainActivity : CsActivity() {
 
     /** Pending SAF callback invoked after the user grants access. */
     private var pendingSafCallback: (() -> Unit)? = null
+    private var pendingSafVolumeRoot: String? = null
+    private val activeTaskTokens = mutableSetOf<TaskRunner.Cancellable>()
+    private var activeNavToken: Any? = null
 
+    private val safLauncher = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        handleSafResult(uri)
+    }
+
+    private class TaskHandle : TaskRunner.Cancellable {
+        @Volatile var inner: TaskRunner.Cancellable? = null
+        @Volatile override var isCancelled: Boolean = false
+            private set
+
+        override fun cancel() {
+            isCancelled = true
+            inner?.cancel()
+        }
+    }
+
+    private fun <T> runBackgroundTask(
+        task: () -> T,
+        onError: ((Throwable) -> Unit)? = null,
+        onResult: (T) -> Unit
+    ): TaskRunner.Cancellable {
+        val handle = TaskHandle()
+        synchronized(activeTaskTokens) { activeTaskTokens.add(handle) }
+        val token = TaskRunner.execute(
+            task = task,
+            onError = { err ->
+                synchronized(activeTaskTokens) { activeTaskTokens.remove(handle) }
+                if (!isFinishing && !isDestroyed) {
+                    onError?.invoke(err)
+                }
+            },
+            onResult = { res ->
+                synchronized(activeTaskTokens) { activeTaskTokens.remove(handle) }
+                if (!isFinishing && !isDestroyed) {
+                    onResult(res)
+                }
+            }
+        )
+        handle.inner = token
+        if (handle.isCancelled) token.cancel()
+        return handle
+    }
     private fun handleBackPress() {
         when {
             adapter.isSelectionMode -> exitSelectionMode()
@@ -128,6 +179,7 @@ class MainActivity : CsActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lastKnownUiScale = prefs.getUiScale()
+        savedInstanceState?.getString("pending_saf_volume_root")?.let { pendingSafVolumeRoot = it }
 
         BohioPrefsManager.getInstance(this).initPrefs()
         setContentView(R.layout.view_home)
@@ -231,8 +283,25 @@ class MainActivity : CsActivity() {
         initSearchbar()
         initFileList()
         requestStoragePermission()
+        handleIncomingIntent(intent)
 
         onBackPressedDispatcher.addCallback(this) { handleBackPress() }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIncomingIntent(intent)
+    }
+
+    private fun handleIncomingIntent(intent: Intent?) {
+        val data = intent?.data ?: return
+        val path = data.path ?: return
+        val target = File(path)
+        if (target.isDirectory) {
+            fileManager.enterAbsolute(target)
+            if (fileSystemReady) refreshList()
+        }
     }
 
     override fun shouldRecreateOnSettingsChange(): Boolean = false
@@ -252,6 +321,8 @@ class MainActivity : CsActivity() {
         if (fileSystemReady) {
             schedulePostResumeRefresh()
             collapseSearch()
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()) {
+            initFileSystem()
         }
     }
 
@@ -260,10 +331,19 @@ class MainActivity : CsActivity() {
         clearPendingResumeRefresh()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("pending_saf_volume_root", pendingSafVolumeRoot)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         clearPendingResumeRefresh()
         searchDebounceRunnable?.let { searchDebounceHandler.removeCallbacks(it) }
+        synchronized(activeTaskTokens) {
+            activeTaskTokens.forEach { it.cancel() }
+            activeTaskTokens.clear()
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean =
@@ -290,39 +370,83 @@ class MainActivity : CsActivity() {
             }
 
             REQ_SAF -> {
-                val treeUri = data?.data
-                if (resultCode == RESULT_OK && treeUri != null) {
-                    // Persist the grant so it survives reboots
-                    contentResolver.takePersistableUriPermission(
-                        treeUri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                    )
-                    // Cache against every removable volume whose UUID appears in the granted URI
-                    val uriDecoded = Uri.decode(treeUri.toString())
-                    val uuidRegex = Regex("[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}")
-                    val uuidDirPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
-                    val storageDir = File("/storage")
-                    storageDir.listFiles()
-                        ?.filter { it.isDirectory && uuidDirPattern.matches(it.name) }
-                        ?.forEach { volumeDir ->
-                            val volUuid = uuidRegex.find(volumeDir.name)?.value ?: volumeDir.name
-                            if (uriDecoded.contains(volUuid, ignoreCase = true)) {
-                                val volRoot = try {
-                                    File(volumeDir, "0").takeIf { it.isDirectory }?.canonicalPath
-                                        ?: volumeDir.canonicalPath
-                                } catch (_: Exception) {
-                                    volumeDir.absolutePath
-                                }
-                                safUriCache[volRoot] = treeUri
-                            }
-                        }
-                    // Retry the pending operation
-                    pendingSafCallback?.invoke()
-                } else {
-                    Toast.makeText(this, getString(R.string.toast_saf_denied), Toast.LENGTH_SHORT)
-                        .show()
+                handleSafResult(data?.data)
+            }
+        }
+    }
+
+    private fun handleSafResult(treeUri: Uri?) {
+        if (treeUri != null) {
+            val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            try {
+                contentResolver.takePersistableUriPermission(treeUri, takeFlags)
+            } catch (_: SecurityException) {
+            }
+            val targetVol = pendingSafVolumeRoot
+            if (targetVol != null) {
+                safUriCache[targetVol] = treeUri
+            }
+            val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+            val uriDecoded = Uri.decode(treeUri.toString())
+            val isPrimaryMatch = uriDecoded.contains("primary", ignoreCase = true) || safUriMatchesVolume(treeUri, primaryRoot)
+
+            var resolvedInitVolume: String? = null
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                if (isPrimaryMatch) {
+                    safUriCache[primaryRoot] = treeUri
+                    resolvedInitVolume = primaryRoot
                 }
-                pendingSafCallback = null
+            }
+
+            val uuidRegex = Regex("[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}")
+            val uuidDirPattern = Regex("^[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}$")
+            val storageDir = File("/storage")
+            storageDir.listFiles()
+                ?.filter { it.isDirectory && uuidDirPattern.matches(it.name) }
+                ?.forEach { volumeDir ->
+                    val volUuid = uuidRegex.find(volumeDir.name)?.value ?: volumeDir.name
+                    if (uriDecoded.contains(volUuid, ignoreCase = true)) {
+                        val volRoot = try {
+                            File(volumeDir, "0").takeIf { it.isDirectory }?.canonicalPath
+                                ?: volumeDir.canonicalPath
+                        } catch (_: Exception) {
+                            volumeDir.absolutePath
+                        }
+                        safUriCache[volRoot] = treeUri
+                        if (resolvedInitVolume == null && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q && !fileSystemReady) {
+                            resolvedInitVolume = volRoot
+                        }
+                    }
+                }
+
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q && !fileSystemReady) {
+                if (resolvedInitVolume != null) {
+                    val rootDoc = safUriCache[resolvedInitVolume]?.let {
+                        DocumentNode.fromTreeUri(this, it, resolvedInitVolume)
+                    }
+                    if (rootDoc != null) {
+                        fileManager.init(rootDoc)
+                        fileSystemReady = true
+                        refreshList()
+                    }
+                } else {
+                    Toast.makeText(this, getString(R.string.toast_saf_primary_required), Toast.LENGTH_LONG).show()
+                    showSafGuidanceDialog(primaryRoot)
+                    return
+                }
+            }
+
+            val callback = pendingSafCallback
+            pendingSafCallback = null
+            pendingSafVolumeRoot = null
+            callback?.invoke()
+        } else {
+            pendingSafCallback = null
+            pendingSafVolumeRoot = null
+            if (!fileSystemReady) {
+                showPermissionDenied()
+            } else {
+                Toast.makeText(this, getString(R.string.toast_saf_denied), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -339,8 +463,63 @@ class MainActivity : CsActivity() {
         directoryList.setOnItemClickListener { _, _, position, _ ->
             val path = dirAdapter.pathAt(position) ?: return@setOnItemClickListener
             val dir = File(path)
+            val volumeRoot = removableVolumeRootFor(dir.absolutePath)
+            if (volumeRoot != null) {
+                val enterAction = {
+                    val treeUri = safUriCache[volumeRoot]
+                    val rootDoc = treeUri?.let { DocumentNode.fromTreeUri(this, it, volumeRoot) }
+                    if (rootDoc != null) {
+                        val relative = dir.absolutePath.removePrefix(volumeRoot).trim('/')
+                        val segments = relative.split('/').filter { it.isNotEmpty() }
+                        if (segments.isEmpty()) {
+                            fileManager.enterNode(rootDoc, asRoot = true)
+                            refreshList()
+                        } else {
+                            fileManager.enterNode(rootDoc, asRoot = true)
+                            val navToken = Any()
+                            activeNavToken = navToken
+                            runBackgroundTask(
+                                task = {
+                                    val matchedNodes = mutableListOf<FsNode>()
+                                    var curr: FsNode = rootDoc
+                                    for (segment in segments) {
+                                        val next = curr.listChildren(showHidden = true)
+                                            .firstOrNull { it.isDirectory && it.name.equals(segment, ignoreCase = true) }
+                                            ?: break
+                                        matchedNodes.add(next)
+                                        curr = next
+                                    }
+                                    matchedNodes
+                                },
+                                onResult = { nodes ->
+                                    if (activeNavToken != navToken) return@runBackgroundTask
+                                    for (node in nodes) {
+                                        fileManager.enter(node)
+                                    }
+                                    refreshList()
+                                }
+                            )
+                        }
+                    } else if (dir.isDirectory) {
+                        fileManager.enterAbsolute(dir)
+                        refreshList()
+                    }
+                }
+
+                if (hasSafAccess(volumeRoot) || dir.canRead()) {
+                    enterAction()
+                } else {
+                    pendingSafCallback = { enterAction() }
+                    requestSafAccess(volumeRoot)
+                }
+                showDirs = false
+                directoriesButton.setBackgroundColor(Color.TRANSPARENT)
+                directoriesFragment.visibility = View.GONE
+                filesFragment.visibility = View.VISIBLE
+                return@setOnItemClickListener
+            }
+
             if (dir.isDirectory) {
-                // enterAbsolute works for SD card, USB, and internal paths alike
                 fileManager.enterAbsolute(dir)
                 showDirs = false
                 directoriesButton.setBackgroundColor(Color.TRANSPARENT)
@@ -348,7 +527,6 @@ class MainActivity : CsActivity() {
                 filesFragment.visibility = View.VISIBLE
                 refreshList()
             } else {
-                // Distinguish: fixed volume entries (SD/USB) vs user bookmarks
                 val entry = dirAdapter.getItem(position)
                 if (entry is DirEntry.Fixed) {
                     // Volume was unplugged — just refresh so it disappears from the list
@@ -374,7 +552,7 @@ class MainActivity : CsActivity() {
         addToFavoritesBtn.setOnClickListener {
             if (!fileSystemReady) return@setOnClickListener
             val prefs = BohioPrefsManager.getInstance(this)
-            val path = fileManager.currentDir.absolutePath
+            val path = fileManager.currentNode.path
             val existing = prefs.getFavoriteDirs()
             if (path in existing) {
                 Toast.makeText(this, getString(R.string.toast_dir_exists), Toast.LENGTH_SHORT)
@@ -413,14 +591,19 @@ class MainActivity : CsActivity() {
             sm.storageVolumes
                 .filter { vol -> !vol.isPrimary && vol.state == android.os.Environment.MEDIA_MOUNTED }
                 .forEach { vol ->
-                    val path = try {
-                        val m = vol.javaClass.getMethod("getPath")
-                        m.invoke(vol) as? String
-                    } catch (_: Exception) {
-                        null
+                    val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        vol.directory?.absolutePath
+                    } else {
+                        try {
+                            val m = vol.javaClass.getMethod("getPath")
+                            m.invoke(vol) as? String
+                        } catch (_: Exception) {
+                            null
+                        }
                     } ?: return@forEach
                     val dir = File(path)
-                    if (!dir.canRead()) return@forEach
+                    val isAccessible = dir.canRead() || hasSafAccess(dir.absolutePath) || dir.exists()
+                    if (!isAccessible) return@forEach
                     val isUsb = vol.isRemovable &&
                             !path.contains("sd", ignoreCase = true) &&
                             !path.matches(Regex(".*/[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}(/.*)?"))
@@ -506,21 +689,6 @@ class MainActivity : CsActivity() {
         dirAdapter.update(list)
     }
 
-    private fun navigateToAbsolutePath(target: File) {
-        val root = Environment.getExternalStorageDirectory().canonicalPath
-        val targetCanon = target.canonicalPath
-
-        if (!targetCanon.startsWith(root)) return
-
-        // Build segment list between root and target
-        val relative = targetCanon.removePrefix(root).trimStart('/')
-        if (relative.isEmpty()) return   // target IS root
-
-        for (segment in relative.split("/")) {
-            val next = File(fileManager.currentDir, segment)
-            if (next.isDirectory) fileManager.enter(next)
-        }
-    }
 
     private fun initFileList() {
         adapter = FileListAdapter(this)
@@ -538,11 +706,11 @@ class MainActivity : CsActivity() {
                 else -> {
                     val entry = adapter.getEntry(position)
                     if (entry.isDirectory) {
-                        fileManager.enter(entry.file)
+                        fileManager.enter(entry)
                         collapseSearch()
                         refreshList()
                     } else {
-                        openFile(entry.file)
+                        openFile(entry)
                     }
                 }
             }
@@ -566,7 +734,18 @@ class MainActivity : CsActivity() {
     }
 
     private fun initFileSystem() {
-        fileManager.init()
+        if (fileManager.currentNode is DocumentNode) {
+            fileSystemReady = true
+            refreshList()
+            return
+        }
+        val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+        val rootDoc = safUriCache[primaryRoot]?.let { DocumentNode.fromTreeUri(this, it, primaryRoot) }
+        if (rootDoc != null) {
+            fileManager.init(rootDoc)
+        } else {
+            fileManager.init()
+        }
         fileSystemReady = true
         refreshList()
     }
@@ -576,43 +755,54 @@ class MainActivity : CsActivity() {
 
         // If current directory no longer exists (e.g. SD card unplugged mid-browse),
         // fall back to primary storage gracefully
-        if (!fileManager.currentDir.isDirectory) {
+        if (!fileManager.currentNode.isDirectory) {
             Toast.makeText(
                 this,
                 getString(R.string.toast_storage_no_longer_available),
                 Toast.LENGTH_SHORT
             ).show()
-            fileManager.init()
+            val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+            val rootDoc = safUriCache[primaryRoot]?.let { DocumentNode.fromTreeUri(this, it, primaryRoot) }
+            fileManager.init(rootDoc)
         }
 
         val showHidden = prefs.getBoolean(BohioPrefsManager.FileKeys.SHOW_HIDDEN_FILES, false)
-        val entries = fileManager.listCurrent(currentSearchQuery, showHidden)
-        val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
-        val hasParent = !fileManager.isAtRoot ||
-                fileManager.currentDir.absolutePath != primaryRoot
-        adapter.update(entries, hasParent = hasParent)
+        val query = currentSearchQuery
+        val queryId = ++activeRefreshId
+        val targetNode = fileManager.currentNode
 
-        val dirName = fileManager.currentDir.let { dir ->
-            when {
-                dir.absolutePath == Environment.getExternalStorageDirectory().absolutePath -> getString(
-                    R.string.dir_label_storage
-                )
+        runBackgroundTask(
+            task = {
+                targetNode.listChildren(query, showHidden)
+            },
+            onResult = { entries ->
+                if (queryId != activeRefreshId || targetNode.path != fileManager.currentNode.path) {
+                    return@runBackgroundTask
+                }
+                val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+                val currentNode = fileManager.currentNode
+                val hasParent = !fileManager.isAtRoot || currentNode.path != primaryRoot
+                adapter.update(entries, hasParent = hasParent)
 
-                dir.name.isEmpty() -> getString(R.string.dir_label_root)
-                else -> dir.name
+                val dirName = when {
+                    currentNode.path == primaryRoot -> getString(R.string.dir_label_storage)
+                    currentNode.name.isEmpty() -> getString(R.string.dir_label_root)
+                    else -> currentNode.name
+                }
+                currentFolderName.text = dirName
+
+                if (adapter.isSelectionMode) updateSelectionBar()
+
+                applyCurrentTheme(rootView)
             }
-        }
-        currentFolderName.text = dirName
-
-        if (adapter.isSelectionMode) updateSelectionBar()
-
-        applyCurrentTheme(rootView)
+        )
     }
 
     private fun navigateUp() {
         if (fileManager.isAtRoot) {
-            // We're at an external volume root (SD card / USB) — go back to primary storage
-            fileManager.init()
+            val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+            val rootDoc = safUriCache[primaryRoot]?.let { DocumentNode.fromTreeUri(this, it, primaryRoot) }
+            fileManager.init(rootDoc)
         } else {
             fileManager.goUp()
         }
@@ -644,82 +834,183 @@ class MainActivity : CsActivity() {
     }
 
     private fun copySelected() {
-        val paths = adapter.selectedEntries.map { it.file.absolutePath }
-        if (paths.isEmpty()) return
-        clipboard = paths
+        val entries = adapter.selectedEntries
+        if (entries.isEmpty()) return
+        clipboard = entries
         clipboardMode = ClipboardMode.COPY
         Toast.makeText(this, getString(R.string.toast_copy_queued), Toast.LENGTH_SHORT).show()
         exitSelectionMode()
     }
 
+    private fun resolveWriteNode(node: FsNode): FsNode {
+        val file = node.file ?: return node
+        if (file.canWrite()) return node
+        val canonicalFilePath = try { file.canonicalPath } catch (_: Exception) { file.absolutePath }
+        val volumeRoot = removableVolumeRootFor(canonicalFilePath)
+            ?: removableVolumeRootFor(file.absolutePath)
+            ?: return node
+        val treeUri = safUriCache[volumeRoot] ?: return node
+        val rootDoc = DocumentNode.fromTreeUri(this, treeUri, volumeRoot) ?: return node
+        val canonVolumeRoot = try { File(volumeRoot).canonicalPath } catch (_: Exception) { volumeRoot }
+        val relative = canonicalFilePath.removePrefix(canonVolumeRoot).trim('/')
+        if (relative.isEmpty()) return rootDoc
+        var curr: FsNode = rootDoc
+        val segments = relative.split('/').filter { it.isNotEmpty() }
+        for ((index, segment) in segments.withIndex()) {
+            val isLast = index == segments.lastIndex
+            val next = curr.listChildren(showHidden = true).firstOrNull {
+                (it.isDirectory || isLast) && it.name.equals(segment, ignoreCase = true)
+            } ?: return node
+            curr = next
+        }
+        return curr
+    }
+
     private fun pasteClipboard() {
         val sources = clipboard ?: return
         if (!fileSystemReady) return
-        val destDir = fileManager.currentDir
+        val currentParentNode = fileManager.currentNode
         val isMove = clipboardMode == ClipboardMode.MOVE
 
-        // ── 1. Space check ──────────────────────────────────────────────────
-        val requiredBytes = sources.sumOf { FileManager.totalSize(File(it)) }
-        if (!FileManager.hasEnoughSpace(destDir, requiredBytes)) {
-            Toast.makeText(this, getString(R.string.toast_not_enough_space), Toast.LENGTH_LONG)
-                .show()
-            return
+        val destFile = currentParentNode.file
+        if (destFile != null) {
+            val destVolume = removableVolumeRootFor(destFile.absolutePath)
+            if (destVolume != null && !hasSafAccess(destVolume) && !destFile.canWrite()) {
+                pendingSafCallback = { pasteClipboard() }
+                requestSafAccess(destVolume)
+                return
+            }
         }
 
-        // ── 2. SAF permission check for removable storage ──────────────────
-        val destVolume = removableVolumeRootFor(destDir.absolutePath)
-        if (destVolume != null && !hasSafAccess(destVolume)) {
-            pendingSafCallback = { pasteClipboard() }
-            requestSafAccess(destVolume)
-            return
-        }
-
-        // ── 3. Execute copy / move ─────────────────────────────────────────
-        var failed = 0
-        val successfullySources = mutableListOf<File>()
-
-        for (sourcePath in sources) {
-            val src = File(sourcePath)
-            // Resolve a non-conflicting destination name
-            val dest = FileManager.resolveNonConflictingName(destDir, src.name)
-            try {
-                if (src.isDirectory) {
-                    src.copyRecursively(dest, overwrite = false)
-                    val srcSize = src.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
-                    val destSize = dest.walkBottomUp().filter { it.isFile }.sumOf { it.length() }
-                    if (destSize == srcSize) successfullySources.add(src)
-                    else {
-                        dest.deleteRecursively(); failed++
-                    }
-                } else {
-                    src.copyTo(dest, overwrite = false)
-                    if (dest.length() == src.length()) successfullySources.add(src)
-                    else {
-                        dest.delete(); failed++
+        if (isMove) {
+            for (src in sources) {
+                val srcFile = src.file
+                if (srcFile != null) {
+                    val srcVolume = removableVolumeRootFor(srcFile.absolutePath)
+                    if (srcVolume != null && !hasSafAccess(srcVolume) && !srcFile.canWrite()) {
+                        pendingSafCallback = { pasteClipboard() }
+                        requestSafAccess(srcVolume)
+                        return
                     }
                 }
+            }
+        }
+
+        val destCanon = (currentParentNode as? FileNode)?.let {
+            try { it.file.canonicalPath } catch (_: Exception) { it.path }
+        } ?: currentParentNode.path
+        val destPrefix = destCanon.trimEnd('/') + "/"
+        for (src in sources) {
+            val srcCanon = (src as? FileNode)?.let {
+                try { it.file.canonicalPath } catch (_: Exception) { it.path }
+            } ?: src.path
+            val srcPrefix = srcCanon.trimEnd('/') + "/"
+            if (src.isDirectory && (destPrefix == srcPrefix || destPrefix.startsWith(srcPrefix))) {
+                Toast.makeText(this, getString(R.string.toast_paste_failed), Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        pasteBtn.isEnabled = false
+
+        runBackgroundTask(
+            task = {
+                val destNode = resolveWriteNode(currentParentNode)
+                val requiredBytes = sources.sumOf { it.totalSize() }
+                if (!FileManager.hasEnoughSpace(destNode, requiredBytes)) {
+                    return@runBackgroundTask -1
+                }
+                var failed = 0
+                val successfulSources = mutableListOf<FsNode>()
+                for (src in sources) {
+                    val nonConflictingName = FsNode.resolveNonConflictingName(destNode, src.name)
+                    val ok = transferNode(src, destNode, nonConflictingName, isMove)
+                    if (ok) successfulSources.add(src) else failed++
+                }
+                if (isMove) {
+                    for (src in successfulSources) {
+                        val writeSrc = resolveWriteNode(src)
+                        writeSrc.delete()
+                    }
+                }
+                failed
+            },
+            onResult = { result ->
+                pasteBtn.isEnabled = true
+                when (result) {
+                    -1 -> {
+                        Toast.makeText(this, getString(R.string.toast_not_enough_space), Toast.LENGTH_LONG).show()
+                    }
+                    0 -> {
+                        clipboard = null
+                        pasteBtn.visibility = View.GONE
+                        if (menuBar.visibility == View.VISIBLE && !adapter.isSelectionMode) {
+                            menuBar.visibility = View.GONE
+                        }
+                        Toast.makeText(this, getString(R.string.toast_paste_success), Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        Toast.makeText(this, getString(R.string.toast_paste_failed), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                refreshList()
+            }
+        )
+    }
+
+    private fun transferNode(
+        src: FsNode,
+        destParent: FsNode,
+        newName: String,
+        isMove: Boolean
+    ): Boolean {
+        if (isMove && src is FileNode && destParent is FileNode) {
+            val target = File(destParent.file, newName)
+            if (src.file.renameTo(target)) return true
+        }
+        if (src.isDirectory) {
+            val newFolder = destParent.createFolder(newName) ?: return false
+            var allOk = true
+            for (child in src.listChildren(showHidden = true)) {
+                val childOk = transferNode(child, newFolder, child.name, isMove)
+                if (!childOk) {
+                    allOk = false
+                    break
+                }
+            }
+            if (!allOk) {
+                newFolder.delete()
+            }
+            return allOk
+        } else {
+            val ext = src.extension
+            val mime = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+                ?: "application/octet-stream"
+            val newFile = destParent.createFile(newName, mime) ?: return false
+            return try {
+                src.openInputStream()?.use { inStream ->
+                    val outStream = newFile.openOutputStream() ?: run {
+                        newFile.delete()
+                        return false
+                    }
+                    outStream.use { out ->
+                        val buffer = ByteArray(64 * 1024)
+                        var bytesRead: Int
+                        while (inStream.read(buffer).also { bytesRead = it } != -1) {
+                            out.write(buffer, 0, bytesRead)
+                        }
+                        out.flush()
+                    }
+                    true
+                } ?: run {
+                    newFile.delete()
+                    false
+                }
             } catch (_: Exception) {
-                failed++
+                newFile.delete()
+                false
             }
         }
-
-        // For move: delete sources that were verified successfully
-        if (isMove) {
-            for (src in successfullySources) {
-                if (src.isDirectory) src.deleteRecursively() else src.delete()
-            }
-        }
-
-        clipboard = null
-        pasteBtn.visibility = View.GONE
-        if (menuBar.visibility == View.VISIBLE && !adapter.isSelectionMode) {
-            menuBar.visibility = View.GONE
-        }
-
-        val msg = if (failed == 0) getString(R.string.toast_paste_success)
-        else getString(R.string.toast_paste_failed)
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-        refreshList()
     }
 
     private fun showRenameDialog() {
@@ -729,21 +1020,21 @@ class MainActivity : CsActivity() {
                 .show()
             return
         }
-        val target = entries[0].file
+        val entry = entries[0]
 
         // SAF check for rename on removable storage
-        val targetVolume = removableVolumeRootFor(target.absolutePath)
-        if (targetVolume != null && !hasSafAccess(targetVolume)) {
+        val targetFile = entry.file
+        val targetVolume = targetFile?.let { removableVolumeRootFor(it.absolutePath) }
+        if (targetVolume != null && !hasSafAccess(targetVolume) && !targetFile.canWrite()) {
             pendingSafCallback = { showRenameDialog() }
             requestSafAccess(targetVolume)
             return
         }
-
         val dialogView = layoutInflater.inflate(R.layout.dialog_rename_file, null)
         ThemeManager.applyTheme(this, dialogView)
 
         val editText = dialogView.findViewById<EditText>(R.id.edit_text)
-        editText.setText(target.name)
+        editText.setText(entry.name)
         editText.selectAll()
 
         val dialog = AlertDialog.Builder(this)
@@ -753,23 +1044,28 @@ class MainActivity : CsActivity() {
 
         dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
             val newName = editText.text.toString().trim()
-            if (newName.isNotEmpty() && newName != target.name) {
-                // If a file/folder with that name already exists, use a unique name
-                val resolvedDest = FileManager.resolveNonConflictingName(
-                    target.parentFile ?: fileManager.currentDir,
-                    newName
+            if (newName.isNotEmpty() && newName != entry.name) {
+                val parentNode = fileManager.currentNode
+                runBackgroundTask(
+                    task = {
+                        val writeParent = resolveWriteNode(parentNode)
+                        val resolvedName = FsNode.resolveNonConflictingName(writeParent, newName)
+                        val writeTarget = resolveWriteNode(entry)
+                        writeTarget.rename(resolvedName) != null
+                    },
+                    onResult = { ok ->
+                        Toast.makeText(
+                            this,
+                            if (ok) getString(R.string.toast_rename_success)
+                            else getString(R.string.toast_rename_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        if (ok) {
+                            exitSelectionMode()
+                            refreshList()
+                        }
+                    }
                 )
-                val ok = target.renameTo(resolvedDest)
-                Toast.makeText(
-                    this,
-                    if (ok) getString(R.string.toast_rename_success)
-                    else getString(R.string.toast_rename_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (ok) {
-                    exitSelectionMode()
-                    refreshList()
-                }
             }
             dialog.dismiss()
         }
@@ -804,31 +1100,31 @@ class MainActivity : CsActivity() {
         dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
             val name = editText.text.toString().trim()
             if (name.isNotEmpty()) {
-                val destDir = fileManager.currentDir
-
-                // SAF check for removable storage
-                val volume = removableVolumeRootFor(destDir.absolutePath)
-                if (volume != null && !hasSafAccess(volume)) {
+                val currentParent = fileManager.currentNode
+                val destFile = currentParent.file
+                val volume = destFile?.let { removableVolumeRootFor(it.absolutePath) }
+                if (volume != null && !hasSafAccess(volume) && !destFile.canWrite()) {
                     dialog.dismiss()
                     pendingSafCallback = { showCreateFolderDialog() }
                     requestSafAccess(volume)
                     return@setOnClickListener
                 }
-
-                val newFolder = FileManager.resolveNonConflictingName(destDir, name)
-                val ok = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                    createFolderViaMediaStore(destDir, newFolder.name)
-                } else {
-                    newFolder.mkdir()
-                }
-
-                Toast.makeText(
-                    this,
-                    if (ok) getString(R.string.toast_folder_created)
-                    else getString(R.string.toast_folder_create_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (ok) refreshList()
+                runBackgroundTask(
+                    task = {
+                        val destNode = resolveWriteNode(currentParent)
+                        val resolvedName = FsNode.resolveNonConflictingName(destNode, name)
+                        destNode.createFolder(resolvedName) != null
+                    },
+                    onResult = { ok ->
+                        Toast.makeText(
+                            this,
+                            if (ok) getString(R.string.toast_folder_created)
+                            else getString(R.string.toast_folder_create_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        if (ok) refreshList()
+                    }
+                )
             }
             dialog.dismiss()
         }
@@ -840,31 +1136,6 @@ class MainActivity : CsActivity() {
         (getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
             .showSoftInput(editText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
     }
-
-    private fun createFolderViaMediaStore(destDir: File, folderName: String): Boolean {
-        return try {
-            val primaryRoot = Environment.getExternalStorageDirectory().canonicalPath
-            val destCanonical = destDir.canonicalPath
-            if (!destCanonical.startsWith(primaryRoot)) return false
-
-            val relativeDir = destCanonical.removePrefix(primaryRoot).trim('/')
-            val relativePath =
-                if (relativeDir.isEmpty()) "$folderName/" else "$relativeDir/$folderName/"
-
-            val values = android.content.ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, ".placeholder")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
-                put(MediaStore.MediaColumns.MIME_TYPE, "application/octet-stream")
-            }
-            val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
-                ?: return false
-            contentResolver.openOutputStream(uri)?.close()
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
-
     private fun showDeleteConfirmationDialog() {
         val entries = adapter.selectedEntries
         if (entries.isEmpty()) return
@@ -882,8 +1153,10 @@ class MainActivity : CsActivity() {
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
-            val volume = entries.map { it.file.absolutePath }
-                .firstNotNullOfOrNull { removableVolumeRootFor(it) }
+            val toDelete = adapter.selectedEntries
+            val volume = toDelete.mapNotNull { it.file }
+                .firstOrNull { removableVolumeRootFor(it.absolutePath) != null && !it.canWrite() }
+                ?.let { removableVolumeRootFor(it.absolutePath) }
             if (volume != null && !hasSafAccess(volume)) {
                 dialog.dismiss()
                 pendingSafCallback = { showDeleteConfirmationDialog() }
@@ -891,21 +1164,26 @@ class MainActivity : CsActivity() {
                 return@setOnClickListener
             }
 
-            var failed = 0
-            for (entry in entries) {
-                val ok = if (entry.file.isDirectory) entry.file.deleteRecursively()
-                else entry.file.delete()
-                if (!ok) failed++
-            }
-
-            Toast.makeText(
-                this,
-                if (failed == 0) getString(R.string.toast_delete_success)
-                else getString(R.string.toast_delete_failed),
-                Toast.LENGTH_SHORT
-            ).show()
-            exitSelectionMode()
-            refreshList()
+            runBackgroundTask(
+                task = {
+                    var failed = 0
+                    for (entry in toDelete) {
+                        val target = resolveWriteNode(entry)
+                        if (!target.delete()) failed++
+                    }
+                    failed
+                },
+                onResult = { failed ->
+                    Toast.makeText(
+                        this,
+                        if (failed == 0) getString(R.string.toast_delete_success)
+                        else getString(R.string.toast_delete_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    exitSelectionMode()
+                    refreshList()
+                }
+            )
             dialog.dismiss()
         }
 
@@ -928,21 +1206,30 @@ class MainActivity : CsActivity() {
         else "${getString(R.string.info_type_file)} (${entry.extension.uppercase()})"
         dialogView.findViewById<TextView>(R.id.info_type_value).text = type
 
-        val size = if (entry.isDirectory) {
-            FileManager.formatSize(resources, FileManager.totalSize(entry.file))
+        val sizeView = dialogView.findViewById<TextView>(R.id.info_size_value)
+        if (entry.isDirectory) {
+            sizeView.text = "…"
+            runBackgroundTask(
+                task = {
+                    FileManager.totalSize(entry)
+                },
+                onResult = { rawBytes ->
+                    sizeView.text = FileManager.formatSize(resources, rawBytes)
+                }
+            )
         } else {
-            FileManager.formatSize(resources, entry.size)
+            sizeView.text = FileManager.formatSize(resources, entry.size)
         }
-        dialogView.findViewById<TextView>(R.id.info_size_value).text = size
 
-        dialogView.findViewById<TextView>(R.id.info_location_value).text = entry.file.parent
+        dialogView.findViewById<TextView>(R.id.info_location_value).text =
+            entry.file?.parent ?: entry.path.substringBeforeLast('/', "/")
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         dialogView.findViewById<TextView>(R.id.info_modified_value).text =
             sdf.format(Date(entry.lastModified))
 
         dialogView.findViewById<TextView>(R.id.info_permissions_value).text =
-            buildPermissionsString(entry.file)
+            buildPermissionsString(entry)
 
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -954,19 +1241,23 @@ class MainActivity : CsActivity() {
         dialog.show()
     }
 
-    private fun buildPermissionsString(file: File): String {
-        val sb = StringBuilder()
-        sb.append(if (file.isDirectory) 'd' else '-')
-        sb.append(if (file.canRead()) 'r' else '-')
-        sb.append(if (file.canWrite()) 'w' else '-')
-        sb.append(if (file.canExecute()) 'x' else '-')
-        return sb.toString()
+    private fun buildPermissionsString(entry: FsNode): String {
+        val file = entry.file
+        if (file != null) {
+            val sb = StringBuilder()
+            sb.append(if (file.isDirectory) 'd' else '-')
+            sb.append(if (file.canRead()) 'r' else '-')
+            sb.append(if (file.canWrite()) 'w' else '-')
+            sb.append(if (file.canExecute()) 'x' else '-')
+            return sb.toString()
+        }
+        return if (entry.isDirectory) "drwx" else "-rw-"
     }
 
     private fun moveSelected() {
-        val paths = adapter.selectedEntries.map { it.file.absolutePath }
-        if (paths.isEmpty()) return
-        clipboard = paths
+        val entries = adapter.selectedEntries
+        if (entries.isEmpty()) return
+        clipboard = entries
         clipboardMode = ClipboardMode.MOVE
         Toast.makeText(this, getString(R.string.toast_navigate_and_paste), Toast.LENGTH_SHORT)
             .show()
@@ -1001,12 +1292,39 @@ class MainActivity : CsActivity() {
      * they are declared by the picker and returned on the result uri. We only need
      * FLAG_GRANT_PERSISTABLE_URI_PERMISSION when calling takePersistableUriPermission().
      */
-    private fun requestSafAccess(volumeRoot: String) {
-        Toast.makeText(this, getString(R.string.toast_saf_required), Toast.LENGTH_LONG).show()
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-        startActivityForResult(intent, REQ_SAF)
+    private fun showSafGuidanceDialog(volumeRoot: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_saf_guidance, null)
+        ThemeManager.applyTheme(this, dialogView)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.no_button).setOnClickListener {
+            dialog.dismiss()
+            if (!fileSystemReady) showPermissionDenied()
+        }
+
+        dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
+            dialog.dismiss()
+            pendingSafVolumeRoot = volumeRoot
+            safLauncher.launch(null)
+        }
+
+        dialog.show()
     }
 
+    private fun requestSafAccess(volumeRoot: String) {
+        val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q && volumeRoot == primaryRoot) {
+            showSafGuidanceDialog(volumeRoot)
+        } else {
+            pendingSafVolumeRoot = volumeRoot
+            Toast.makeText(this, getString(R.string.toast_saf_required), Toast.LENGTH_LONG).show()
+            safLauncher.launch(null)
+        }
+    }
     /**
      * Checks whether a SAF tree [uri] corresponds to [volumeRoot].
      * SAF URIs look like:
@@ -1015,23 +1333,27 @@ class MainActivity : CsActivity() {
      */
     private fun safUriMatchesVolume(uri: Uri, volumeRoot: String): Boolean {
         val uriStr = Uri.decode(uri.toString())
-        // Extract UUID-like segment from the volume root path
-        // e.g. /storage/1234-ABCD → "1234-ABCD", /storage/1234-ABCD/0 → "1234-ABCD"
+        val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+        if (volumeRoot == primaryRoot) {
+            return uriStr.contains("primary", ignoreCase = true)
+        }
         val uuidRegex = Regex("[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}")
         val volumeUuid = uuidRegex.find(volumeRoot)?.value
         if (volumeUuid != null) {
             return uriStr.contains(volumeUuid, ignoreCase = true)
         }
-        // Fallback: match on the last meaningful path segment of volumeRoot
         val seg = volumeRoot.trimEnd('/').substringAfterLast('/')
-        return seg.isNotEmpty() && uriStr.contains(seg, ignoreCase = true)
+        return seg.isNotEmpty() && seg != "0" && !seg.equals("primary", ignoreCase = true) && uriStr.contains(seg, ignoreCase = true)
     }
 
-    private fun openFile(file: File) {
-        val uri: Uri = androidx.core.content.FileProvider.getUriForFile(
-            this, "${packageName}.fileprovider", file
-        )
-        val mime = contentResolver.getType(uri) ?: "*/*"
+    private fun openFile(node: FsNode) {
+        val uri: Uri = node.uri ?: node.file?.let {
+            androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.fileprovider", it)
+        } ?: return
+        val ext = node.extension
+        val mime = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+            ?: contentResolver.getType(uri)
+            ?: "*/*"
         val intent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(uri, mime)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -1053,6 +1375,19 @@ class MainActivity : CsActivity() {
                     Uri.parse("package:$packageName")
                 ), REQ_MANAGE_ALL_FILES
             )
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            val primaryRoot = Environment.getExternalStorageDirectory().absolutePath
+            if (hasSafAccess(primaryRoot)) {
+                val uri = safUriCache[primaryRoot]
+                val rootDoc = uri?.let { DocumentNode.fromTreeUri(this, it, primaryRoot) }
+                if (rootDoc != null) {
+                    fileManager.init(rootDoc)
+                    fileSystemReady = true
+                    refreshList()
+                    return
+                }
+            }
+            requestSafAccess(primaryRoot)
         } else {
             val perms = arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
